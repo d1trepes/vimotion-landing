@@ -9,6 +9,12 @@
   var inn=hero.querySelector('.hero-in'),wm=hero.querySelector('.wm'),pt=document.getElementById('pt'),
       copy=hero.querySelector('.copy'),stats=hero.querySelector('.stats'),hdr=document.querySelector('.hdr');
   var WM=471/1600,PT=690/744;
+  /* силуэт человека по всей петле: левый и правый край в долях ширины кадра, 32 полосы сверху вниз */
+  var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
+      SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
+  /* параметры композиции десктопа; ?fit=b для сравнения варианта */
+  var VARS={a:{grow:1.32,wmMin:.8,head:.1},b:{grow:1.16,wmMin:.9,head:.12}};
+  var P=VARS[(location.search.match(/[?&]fit=(\w)/)||[])[1]]||VARS.a;
   /* те же границы, что в 01-hero.css */
   var mqT=matchMedia('(max-width:1180px)'),mqP=matchMedia('(max-width:720px), (max-width:1180px) and (orientation:portrait)');
 
@@ -25,7 +31,7 @@
   function place(e,l,t,w,s){
     var st=e.style;st.left=px(l);st.top=px(t);
     if(w!=null)st.width=px(w);
-    if(s!=null){st.transform=s<1?'scale('+s.toFixed(4)+')':'';st.transformOrigin='0 0'}
+    if(s!=null){st.transform=s!==1?'scale('+s.toFixed(4)+')':'';st.transformOrigin='0 0'}
   }
 
   function fit(){
@@ -37,6 +43,11 @@
     var hh=hdr?hdr.offsetHeight:76;
     var cr=copy.getBoundingClientRect(),sr=stats.getBoundingClientRect();
     var Cw=cr.width,Ch=cr.height,Sw=sr.width,Sh=sr.height;
+    /* фактические рамки строк заголовка, абзаца и кнопки относительно колонки (без пустоты справа) */
+    var boxes=[];copy.querySelectorAll('.ln,.sub,.btn').forEach(function(e){
+      var r=e.getBoundingClientRect(),right=r.right;
+      if(!e.classList.contains('btn')){var rg=document.createRange();rg.selectNodeContents(e);right=rg.getBoundingClientRect().right}
+      boxes.push({t:r.top-cr.top,b:r.bottom-cr.top,r:right-cr.left})});
     var phone=mqP.matches,desk=!mqT.matches;
     var wmFull=W-2*m,s=1,wmW=wmFull,heroH,pw,ph,pl,ptop,wmTop=hh,col,gap;
 
@@ -45,18 +56,37 @@
       gap=desk?6:28;
       var sg=desk?0:26;
       col=desk?Math.max(Ch,Sh):Ch+sg+Sh;
-      var free=H-hh-gap-m-wmFull*WM;
-      s=Math.min(1,free/col);
-      if(s<.82){s=.82;wmW=Math.max(wmFull*.5,(H-hh-gap-m-col*s)/WM)}
+      /* на больших экранах текст и цифры крупнее: от 1440 растут вместе с шириной */
+      var ds=desk?Math.min(P.grow,Math.max(1,W/1440)):1;
+      var room=function(w){return H-hh-gap-m-w*WM};
+      s=Math.min(ds,room(wmFull)/col);
+      if(s<ds){
+        /* ради крупного текста вордмарк можно немного сузить */
+        wmW=Math.max(wmFull*P.wmMin,(room(0)-col*ds)/WM);
+        s=Math.min(ds,room(wmW)/col);
+      }
+      if(s<.82){s=.82;wmW=Math.max(wmFull*.5,(room(0)-col*s)/WM)}
       var wmH=wmW*WM;
       heroH=Math.max(H,hh+wmH+gap+col*s+m);
       var wmL=(W-wmW)/2;
-      /* портрет привязан к вордмарку в тех же пропорциях, что на макете 1440 */
-      var kw=desk?.5196:.554,kc=desk?.5787:.756;
-      pw=kw*wmW;ph=pw*PT;
-      var minTop=wmTop+.36*wmH;
-      if(heroH-ph<minTop){ph=heroH-minTop;pw=ph/PT}
-      ptop=heroH-ph;pl=Math.min(W-pw,wmL+kc*wmW-pw/2);
+      /* портрет: голова заходит на вордмарк, низ по краю экрана; крупнее за счёт всей свободной высоты */
+      var kc=desk?.5787:.756,cx=wmL+kc*wmW;
+      ph=heroH-(wmTop+P.head*wmH);pw=ph/PT;
+      /* куртка и плечи не наезжают на текст слева и на цифры справа: проверка по силуэту, построчно */
+      var cTop=heroH-m-(desk?Ch:(Sh+sg+Ch))*s,sTop=heroH-m-Sh*s,sLeft=desk?W-m-Sw*s:m,pad=desk?20:16,cx0=cx;
+      var lefts=boxes.map(function(bx){return {t:cTop+bx.t*s,b:cTop+bx.b*s,r:m+bx.r*s}});
+      if(!desk)lefts.push({t:sTop,b:heroH-m,r:m+Sw*s});
+      for(var it=0;it<60;it++){
+        var top=heroH-ph,lo=-1e9,hi=desk?1e9:W-pw/2;
+        for(var k=1;k<32;k++){
+          var y0=top+k*ph/32,y1=y0+ph/32;
+          lefts.forEach(function(bx){if(bx.b>y0&&bx.t<y1)lo=Math.max(lo,bx.r+pad-(SL[k]-.5)*pw)});
+          if(desk&&sTop<y1)hi=Math.min(hi,sLeft-pad-(SR[k]-.5)*pw);
+        }
+        if(lo<=hi){cx=Math.max(lo,Math.min(cx0,hi));break}
+        ph*=.97;pw=ph/PT;
+      }
+      ptop=heroH-ph;pl=Math.min(W-pw,cx-pw/2);
       root.classList.add('vm-fit');
       hero.style.height=px(heroH);
       place(wm,wmL,wmTop,wmW);
@@ -71,9 +101,9 @@
     }else{
       /* телефон и вертикальный планшет: портрет сверху на вордмарке, текст и цифры внизу */
       wmTop=hh+(m<20?4:0);
-      var ptTop=wmTop+.17*wmFull*WM,g1=16,sg2=20;
+      var ptTop=wmTop+.08*wmFull*WM,g1=16,sg2=20;
       col=Ch+sg2+Sh;
-      var phFull=Math.min(.96*W,W-2*m+48)*PT;
+      var phFull=W*PT;
       ph=Math.min(phFull,H-ptTop-g1-col-m);
       if(ph<phFull*.56){
         ph=phFull*.56;
