@@ -35,6 +35,10 @@
   }
 
   function fit(){
+    fitInner();
+    if(window.vmLive&&window.vmLive.relayout)window.vmLive.relayout();
+  }
+  function fitInner(){
     reset();
     /* старые стили из кеша: ничего не трогаем, работает CSS-вёрстка */
     if(getComputedStyle(root).getPropertyValue('--hero-fit').trim()!=='1')return;

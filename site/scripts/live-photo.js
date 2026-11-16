@@ -24,13 +24,13 @@
         '  float k=step(0.,q.x)*step(q.x,1.)*step(0.,q.y)*step(q.y,1.);return mix(cream,m.rgb,m.a*k);}',
         'void main(){vec3 c=texture2D(t,vec2(uv.x,clamp(uv.y*.5,h,.5-h))).rgb;float a=A(uv);',
         '  if(on>.5&&a>.003){',
-        '    vec2 r=px*3.5,r2=px*7.;',
-        '    float b=(A(uv+vec2(r.x,0.))+A(uv-vec2(r.x,0.))+A(uv+vec2(0.,r.y))+A(uv-vec2(0.,r.y))',
-        '      +A(uv+r)+A(uv-r)+A(uv+vec2(r.x,-r.y))+A(uv+vec2(-r.x,r.y))',
-        '      +A(uv+vec2(r2.x,0.))+A(uv-vec2(r2.x,0.))+A(uv+vec2(0.,r2.y))+A(uv-vec2(0.,r2.y)))/12.;',
-        '    float e=clamp(a*(1.-b)*1.8,0.,1.);',
-        '    if(e>.001){',
-        '      vec3 bg=(B(uv)*2.+B(uv+vec2(r2.x,0.))+B(uv-vec2(r2.x,0.))+B(uv+vec2(0.,r2.y))+B(uv-vec2(0.,r2.y)))/6.;',
+        '    vec2 r=px*5.;',
+        /* дешёвая проверка: 4 выборки по диагонали; внутри сплошного силуэта (почти весь кадр) дальше не считаем */
+        '    float q=A(uv+r)+A(uv-r)+A(uv+vec2(r.x,-r.y))+A(uv+vec2(-r.x,r.y));',
+        '    if(q<3.99){',
+        '      float b=(q+A(uv+vec2(r.x,0.))+A(uv-vec2(r.x,0.))+A(uv+vec2(0.,r.y))+A(uv-vec2(0.,r.y)))/8.;',
+        '      float e=clamp(a*(1.-b)*1.8,0.,1.);',
+        '      vec3 bg=(B(uv)+B(uv+vec2(r.x*1.4,0.))+B(uv-vec2(r.x*1.4,0.)))/3.;',
         '      c*=1.-.16*e;',            /* светлый «студийный» ободок прядей приглушается */
         '      c=mix(c,bg,.42*e);',      /* и подхватывает цвет фона под ним */
         '    }',
@@ -70,26 +70,38 @@
   var mq=matchMedia('(max-width:720px)'),cur='';
   function setSrc(){
     /* версия в адресе: при замене файла браузер не возьмёт старое видео из кеша */
-    var s=(mq.matches?'media/valentin-live-m.mp4':'media/valentin-live.mp4')+'?v=20261117e';
+    var s=(mq.matches?'media/valentin-live-m.mp4':'media/valentin-live.mp4')+'?v=20261117f';
     if(s===cur)return;
     cur=s;video.src=s;video.load();sync();
   }
 
   function draw(){
     if(video.readyState<2||!video.videoWidth)return;
-    if(cv.width!==video.videoWidth||cv.height!==video.videoHeight/2){cv.width=video.videoWidth;cv.height=video.videoHeight/2}
+    /* холст в размере показа (с учётом плотности экрана), но не больше самого видео */
+    var vw=video.videoWidth,vh=video.videoHeight/2;
+    if(rectDirty||!cw){var P0=cv.getBoundingClientRect(),d=Math.min(window.devicePixelRatio||1,3);
+      cw=Math.min(vw,Math.max(64,Math.round(P0.width*d)));ch=Math.round(cw*vh/vw)}
+    if(cv.width!==cw||cv.height!==ch){cv.width=cw;cv.height=ch}
     gl.viewport(0,0,cv.width,cv.height);
     gl.uniform1f(hLoc,1.5/video.videoHeight);
-    gl.uniform2f(pxLoc,1/cv.width,1/cv.height);
-    if(wOK){var P=cv.getBoundingClientRect(),M=wmImg.getBoundingClientRect();
-      if(P.width&&P.height)gl.uniform4f(wrLoc,(M.left-P.left)/P.width,(M.top-P.top)/P.height,(M.right-P.left)/P.width,(M.bottom-P.top)/P.height)}
+    gl.uniform2f(pxLoc,1/vw,1/vh);
+    /* положение вордмарка относительно портрета: пересчёт только при изменении раскладки и во время анимации появления */
+    if(wOK&&(rectDirty||performance.now()<rectUntil)){var P=cv.getBoundingClientRect(),M=wmImg.getBoundingClientRect();
+      if(P.width&&P.height){gl.uniform4f(wrLoc,(M.left-P.left)/P.width,(M.top-P.top)/P.height,(M.right-P.left)/P.width,(M.bottom-P.top)/P.height);rectDirty=false}}
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,video);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     pt.classList.add('live');
   }
-  var raf=0;
+  var rectDirty=true,rectUntil=0,cw=0,ch=0;
+  addEventListener('resize',function(){rectDirty=true});
+  /* рисуем только когда видео выдало новый кадр (requestVideoFrameCallback), а не на каждом обновлении экрана */
+  var raf=0,vfc=0,hasVFC='requestVideoFrameCallback' in HTMLVideoElement.prototype;
+  function onFrame(){vfc=0;draw();if(!video.paused&&!video.ended)vfc=video.requestVideoFrameCallback(onFrame)}
   function loop(){draw();raf=(!video.paused&&!video.ended)?requestAnimationFrame(loop):0}
-  video.addEventListener('play',function(){cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)});
+  video.addEventListener('play',function(){
+    if(hasVFC){if(vfc)video.cancelVideoFrameCallback(vfc);vfc=video.requestVideoFrameCallback(onFrame)}
+    else{cancelAnimationFrame(raf);raf=requestAnimationFrame(loop)}
+  });
   video.addEventListener('seeked',draw);
 
   /* ---------- играет только после прелоадера, на видимой вкладке и пока hero на экране ---------- */
@@ -107,6 +119,7 @@
   setSrc();
   window.vmLive={
     video:video,
-    start:function(){if(started)return;started=true;sync()}
+    start:function(){if(started)return;started=true;rectUntil=performance.now()+2500;sync()},
+    relayout:function(){rectDirty=true;if(video.paused)draw()}
   };
 })();
