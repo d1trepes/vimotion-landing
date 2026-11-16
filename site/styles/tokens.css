@@ -1,0 +1,17 @@
+/* ViMotion: дизайн-токены. Сверить цвета и шрифты с клиентом */
+:root{
+  --red:#9E1823;
+  --red-deep:#93010E;
+  --maroon:#5D1219;
+  --cream:#F9EFE3;
+  --white:#FFFFFF;
+  --ink:#121212;
+  --ink-2:#1E1E1E;
+  --muted:#6B6B6B;
+  --radius:22px;
+  --radius-pill:999px;
+  --shadow:0 18px 40px rgba(18,18,18,.08);
+  --font-display:"Fira Sans Extra Condensed","Roboto Condensed","Oswald",sans-serif;
+  --font-text:"Manrope","Inter",system-ui,sans-serif;
+  --cta-url:"https://vi-motion.pro/quiz/";
+}

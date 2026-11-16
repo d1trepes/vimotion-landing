@@ -1,0 +1,450 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>ViMotion · прототип нового лендинга и анализ</title><style>
+*{box-sizing:border-box}html{scroll-padding-top:60px}body{margin:0;background:#fff;color:#161616;font:17px/1.5 Arial,Helvetica,sans-serif}
+header,main,footer{width:min(1080px,calc(100% - 64px));margin:auto}
+a{color:inherit;text-decoration:none}a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid #161616;outline-offset:4px}[hidden]{display:none!important}
+h1,h2,h3,p{margin:0}h1,h2{letter-spacing:-.025em;text-wrap:balance}h1,h2,h3,p{overflow-wrap:break-word}
+h1{font-size:clamp(32px,3.7vw,48px);line-height:1.08}h2{font-size:clamp(28px,3.2vw,40px);line-height:1.12;max-width:820px}h3{font-size:20px;line-height:1.25}
+p{max-width:640px}.sub{font-size:18px;color:#333;margin-top:18px;max-width:600px}
+.center{text-align:center}.center h2,.center .sub{margin-left:auto;margin-right:auto}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 26px;border:1.5px solid #161616;background:transparent;font-size:16px;line-height:1.2;cursor:pointer;transition:background .15s,color .15s}.btn:hover{background:#161616;color:#fff}
+.acts{display:flex;gap:12px;flex-wrap:wrap;margin-top:32px}.center .acts{justify-content:center}
+.wire{border:1px dashed #9a9a9a;background:#f6f6f6;color:#777;display:grid;place-items:center;text-align:center;padding:14px;font-size:14px}
+.bar{position:sticky;top:0;z-index:20;background:#161616;color:#fff;font-size:13px}.bar-in{width:min(1080px,calc(100% - 32px));margin:auto;display:flex;gap:8px 18px;align-items:center;flex-wrap:wrap;padding:9px 0}.bar a{padding:3px 0;border-bottom:1px solid transparent}.bar a.on{border-color:#fff}.bar .sp{flex:1}.bar button{font:inherit;color:#161616;background:#fff;border:0;padding:5px 10px;cursor:pointer}
+.site-head{padding:22px 0;display:flex;align-items:center;gap:24px;flex-wrap:wrap}.logo{font-size:20px;font-weight:700;letter-spacing:.05em}.site-head nav{display:flex;gap:26px;flex-wrap:wrap;font-size:15px;flex:1;justify-content:center}.site-head nav a:hover{color:#777}.site-head .btn{min-height:42px;padding:9px 18px;font-size:15px}
+section{padding:88px 0;position:relative}.line{border-top:1px solid #e6e6e6}.body{margin-top:36px}
+.grid{display:grid;gap:16px}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tile{background:#f3f3f3;padding:28px 26px;min-width:0}.tile h3{font-size:20px}.tile p{margin-top:10px;font-size:16px;color:#333}.tile .n{display:block;font-size:14px;color:#8a8a8a;margin-bottom:28px}.tile.t p.tt{font-size:20px;line-height:1.35;color:#161616;margin:0}
+/* hero */
+.hero{display:grid;grid-template-columns:1.6fr .75fr .45fr;gap:28px;align-items:stretch;padding:36px 0 56px}.hero .copy{display:flex;flex-direction:column;justify-content:center}.portrait{min-height:420px}.metrics{display:grid;gap:12px;align-content:center}.metrics>div{border:1.5px solid #161616;padding:18px 14px}.metrics strong{display:block;font-size:30px;line-height:1.1}.metrics span{display:block;font-size:13px;margin-top:6px;color:#444}
+.people{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:14px;margin-top:30px;text-align:center}.people a{display:block}.people .wire{width:76px;height:76px;border-radius:50%;margin:0 auto;padding:0;font-size:11px}.people h3{font-size:16px;margin-top:12px}.people p{font-size:13px;color:#444;margin:4px auto 0}
+.video{aspect-ratio:16/9;margin-top:36px}.ticker{margin-top:20px;font-size:15px;color:#555;text-align:center}
+/* боль */
+.bubble{position:relative;max-width:640px;margin:52px auto 0;border:1.5px solid #161616;border-radius:28px;padding:26px 32px;font-size:18px;line-height:1.5;text-align:center}.bubble::after{content:"";position:absolute;left:50%;bottom:-13px;width:24px;height:24px;background:#fff;border-right:1.5px solid #161616;border-bottom:1.5px solid #161616;transform:translateX(-50%) rotate(45deg)}.who{display:flex;flex-direction:column;align-items:center;gap:10px;margin-top:32px;font-size:15px}.ava{width:72px;height:72px;border-radius:50%;padding:0;font-size:11px}
+/* лестница */
+.ladder{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:end;margin-top:44px}.ladder>div{background:#f3f3f3;padding:20px 16px}.ladder>div:nth-child(1){min-height:150px}.ladder>div:nth-child(2){min-height:190px}.ladder>div:nth-child(3){min-height:230px}.ladder>div:nth-child(4){min-height:270px}.ladder>div:nth-child(5){min-height:310px;background:#161616;color:#fff}.ladder strong{display:block;font-size:24px;line-height:1.1}.ladder span{display:block;font-size:13px;opacity:.7;margin-top:4px}.ladder p{font-size:15px;margin-top:12px}
+/* вакансии */
+.shots{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}.shots .wire{aspect-ratio:3/4}.check{display:flex;justify-content:space-between;align-items:end;gap:20px;margin-top:44px}.check h3{font-size:24px}
+.punch{margin-top:40px;font-size:21px;line-height:1.4;max-width:760px}
+/* маршрут */
+.track{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:52px;border-top:3px solid #161616}.track>div{padding:24px 24px 0 0;position:relative}.track>div::before{content:"";position:absolute;top:-10px;left:0;width:17px;height:17px;border-radius:50%;background:#fff;border:3px solid #161616}.track>div:last-child::before{background:#161616}.track .wk{font-size:14px;color:#777}.track h3{font-size:23px;margin-top:6px}.track p{font-size:16px;margin-top:10px;color:#333}.track .res{margin-top:16px;font-size:15px;font-weight:700;color:#161616}
+/* программа */
+details{border-top:1px solid #d6d6d6}details:last-of-type{border-bottom:1px solid #d6d6d6}summary{cursor:pointer;padding:20px 0;display:grid;grid-template-columns:56px 1fr 24px;gap:12px;list-style:none;font-size:19px;align-items:baseline}summary::-webkit-details-marker{display:none}summary::after{content:"+";font-size:22px;line-height:1}details[open] summary::after{content:"−"}summary .num{color:#8a8a8a;font-size:16px}summary small{display:block;font-size:15px;color:#555;margin-top:4px}details>p{padding:0 40px 22px 68px;font-size:16px;color:#333;max-width:none}
+.outc{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.outc>div{border:1.5px solid #161616;padding:20px 18px;font-size:17px;line-height:1.35;min-height:110px}
+/* ментор */
+.mentor{display:grid;grid-template-columns:.85fr 1.15fr;gap:48px;align-items:start}.mentor .ph{min-height:320px}.mentor .cap{margin-top:16px;font-size:16px;color:#333}.facts3>div{display:grid;grid-template-columns:120px 1fr;gap:20px;align-items:baseline;padding:20px 0;border-top:1px solid #ddd}.facts3 strong{font-size:34px;line-height:1}.facts3 p{font-size:17px}
+.support{background:#161616;color:#fff;padding:56px 52px}.support .sub{color:#ddd}.support .tile{background:#262626}.support .tile p{color:#d8d8d8}.support .btn{border-color:#fff}.support .btn:hover{background:#fff;color:#161616}
+/* истории */
+.story-c{display:flex;flex-direction:column}.story-c .but{font-size:16px;color:#666;margin-top:6px;font-style:italic}.story-c .num{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-top:24px;line-height:1.1}.story-c p.d{font-size:15px;margin-top:10px}.mini{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-top:16px}.mini>div{border-top:1.5px solid #161616;padding-top:12px;font-size:15px}.mini strong{display:block;font-size:17px}
+/* автор */
+.author{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:center}.author .wire{min-height:480px}.author .sub{max-width:none}.nums{display:grid;grid-template-columns:repeat(2,1fr);gap:22px 16px;margin-top:34px}.nums>div{border-top:1px solid #ccc;padding-top:12px}.nums strong{display:block;font-size:26px;line-height:1.1}.nums span{font-size:14px;color:#555}
+/* форматы */
+.fmt .tile{padding:36px 32px;display:flex;flex-direction:column}.fmt .for{font-size:16px;color:#666;margin-top:6px}.fmt .tile h3{font-size:28px}.fmt .tile p.d{margin:20px 0 30px;font-size:17px;color:#222}.fmt .tile .btn{margin-top:auto;align-self:flex-start}.fmt .dark{background:#161616;color:#fff}.fmt .dark .for{color:#aaa}.fmt .dark p.d{color:#e8e8e8}.fmt .dark .btn{border-color:#fff}.fmt .dark .btn:hover{background:#fff;color:#161616}.choose{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;font-size:16px}.choose>div{border:1.5px solid #161616;padding:18px 22px}
+.fear .tile{min-height:200px;display:flex;flex-direction:column;justify-content:space-between}.fear .tile p{margin-top:28px}
+.faq{display:grid;grid-template-columns:.8fr 1.2fr;gap:56px}.faq summary{grid-template-columns:1fr 24px;font-size:18px}.faq details>p{padding:0 40px 22px 0}
+.final{padding:110px 0 120px}.final h2{font-size:clamp(32px,4.2vw,52px)}.final .row{display:flex;justify-content:center;gap:10px;margin-top:30px}.final .row .wire{width:56px;height:56px;border-radius:50%;padding:0;font-size:10px}
+.site-foot{display:flex;justify-content:space-between;gap:28px;flex-wrap:wrap;padding:34px 0 40px;border-top:1px solid #161616;font-size:14px;color:#444}.site-foot nav{display:flex;gap:20px;flex-wrap:wrap}
+.s-row{display:grid;grid-template-columns:1fr 1.25fr;gap:56px;padding:68px 0;border-top:1px solid #e6e6e6}.s-row .nums{margin-top:26px}.s-row p+p{margin-top:14px}.s-row blockquote{margin:24px 0 0;font-size:20px;line-height:1.4;padding-left:18px;border-left:3px solid #161616}.ev{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:26px}.ev .wire{min-height:100px}
+.note{display:none;margin-top:34px;border:2px solid #161616;background:#fff7d6;padding:16px 18px;font-size:14px;line-height:1.45;max-width:none;text-align:left}.note b{display:block;font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}.notes .note{display:block}
+.doc section{padding:52px 0;border-top:1px solid #e6e6e6}.doc h1{font-size:40px}.doc h2{font-size:30px}.doc h3{margin-top:26px}.doc p{max-width:820px}.doc p+p{margin-top:12px}.doc .body{margin-top:20px}.doc ul{max-width:820px;padding-left:20px}.doc li+li{margin-top:6px}.tbl-wrap{overflow-x:auto;margin-top:20px}.tbl{width:100%;border-collapse:collapse;font-size:15px}.tbl th,.tbl td{border:1px solid #cfcfcf;padding:10px 12px;text-align:left;vertical-align:top}.tbl th{background:#f2f2f2}.u4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}.u4>div{border:1.5px solid #161616;padding:14px;font-size:14px}.u4 b{display:block;font-size:12px;letter-spacing:.06em;margin-bottom:4px}.h1v{border:1px solid #bbb;padding:20px;margin-top:14px}.h1v .t{font-size:22px;font-weight:700;line-height:1.2}.h1v p{font-size:15px;margin-top:8px}.toc{display:flex;flex-wrap:wrap;gap:10px;margin-top:24px}.toc a{border:1.5px solid #161616;padding:8px 14px;font-size:14px}.toc a:hover{background:#161616;color:#fff}
+@media(max-width:960px){.hero{grid-template-columns:1fr 1fr}.metrics{grid-column:1/-1;grid-template-columns:repeat(3,1fr)}.people{grid-template-columns:repeat(4,1fr);row-gap:24px}.track{grid-template-columns:1fr 1fr;row-gap:30px}.ladder{grid-template-columns:repeat(3,1fr)}.ladder>div{min-height:0!important}.outc,.g4,.mini{grid-template-columns:1fr 1fr}.shots{grid-template-columns:repeat(2,1fr)}.u4{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){header,main,footer{width:calc(100% - 36px)}body{font-size:16px}section{padding:60px 0}.site-head nav{order:3;flex-basis:100%;justify-content:flex-start;gap:6px 18px;font-size:14px}.hero,.mentor,.author,.faq,.s-row,.g2,.g3,.choose{grid-template-columns:1fr}.portrait{min-height:260px}.metrics>div{padding:12px 8px}.metrics strong{font-size:22px}.people{grid-template-columns:repeat(2,1fr)}.track{grid-template-columns:1fr;border-top:0;border-left:3px solid #161616;padding-left:22px}.track>div{padding:0 0 4px}.track>div::before{left:-33px;top:4px}.ladder{grid-template-columns:1fr 1fr}.ladder>div:nth-child(5){grid-column:1/-1}.check{flex-direction:column;align-items:flex-start}.support{padding:36px 22px}.facts3>div{grid-template-columns:90px 1fr}.facts3 strong{font-size:26px}.bubble{padding:22px 20px;font-size:17px}.punch{font-size:18px}.fear .tile{min-height:0}.author .wire{min-height:280px}.btn{width:100%}.site-head .btn{width:auto}.fmt .tile .btn{align-self:stretch}details>p{padding-left:0}summary{grid-template-columns:40px 1fr 20px;font-size:17px}}
+.compare{width:100%;border-collapse:collapse;font-size:16px}.compare th,.compare td{border-top:1px solid #d0d0d0;padding:16px 14px 16px 0;text-align:left;vertical-align:top}.compare th{font-size:14px;color:#666;font-weight:400}.compare td:first-child{font-weight:700;width:22%}.compare tr.win td{border-top:2px solid #161616;background:#f3f3f3;font-weight:700}.compare tr.win td:first-child{padding-left:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 40px 24px 68px}.chips span{border:1px solid #bbb;padding:6px 12px;font-size:14px}
+.pf{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:36px}.pf .wire{aspect-ratio:9/16}.msg{margin-top:28px;border:1.5px solid #161616;padding:22px 26px;max-width:600px;font-size:17px}.msg p{font-size:14px;color:#666;margin-bottom:8px}
+.yn{display:grid;grid-template-columns:1fr 1fr;gap:16px}.yn .tile p{font-size:17px;color:#161616;margin-top:14px}.yn .tile p+p{margin-top:10px}
+.phone{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}.phone .wire{min-height:360px}.need{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}.need>div{border:1.5px solid #161616;padding:16px 18px;font-size:16px}.need>div span{display:block;font-size:13px;color:#777;margin-bottom:4px}
+@media(max-width:720px){.chips{padding-left:0;padding-right:0}.pf{grid-template-columns:repeat(3,1fr)}.yn,.phone{grid-template-columns:1fr}.compare{font-size:14px}}
+.line{border-top:0}.s-row{border-top:0!important}
+.marquee{overflow:hidden;margin-top:44px;border-top:1.5px solid #161616;border-bottom:1.5px solid #161616;padding:14px 0}.mq{display:flex;gap:40px;width:max-content;animation:mq 22s linear infinite;font-size:20px;font-weight:700;text-transform:uppercase;letter-spacing:.02em}.mq span::after{content:"$";margin-left:40px;color:#9a9a9a}@keyframes mq{to{transform:translateX(-50%)}}@media(prefers-reduced-motion:reduce){.mq{animation:none}}
+.thought{display:grid;grid-template-columns:200px 1fr;gap:36px;align-items:center;max-width:820px;margin:60px auto 0;text-align:left}.thought .face{width:200px;height:200px;border-radius:50%;padding:0}.cloud p{font-size:21px;line-height:1.45;max-width:none}.cloud span{display:block;margin-top:14px;font-size:15px;color:#666}
+.whales{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:0;background:#161616;color:#fff}.w-img{position:relative;padding:28px}.w-tags{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.w-tags span{font-size:13px;color:#bbb}.w-tags b{display:block;color:#fff;font-size:15px;text-transform:uppercase}.w-pic{min-height:320px;margin-top:18px;background:#222;border-color:#555;color:#999}.w-text{padding:40px 36px}.w-text .sub{color:#ddd}.w-list>div{display:grid;grid-template-columns:40px 1fr;gap:10px;padding:14px 0;border-top:1px solid #333}.w-list b{color:#999}.w-list p{font-size:16px;color:#e8e8e8}.btn.light{border-color:#fff}.btn.light:hover{background:#fff;color:#161616}
+@media(max-width:820px){.whales{grid-template-columns:minmax(0,1fr)}.w-img,.w-text{padding:24px 20px;min-width:0}.w-tags{grid-template-columns:1fr}.w-tags b{font-size:14px}.thought{grid-template-columns:1fr;justify-items:center;text-align:center}.thought .face{width:150px;height:150px}.cloud p{font-size:18px}}
+</style></head><body>
+<div class="bar"><div class="bar-in"><strong>ViMotion · new-landing v9</strong><a href="#home" data-tab="proto">Прототип</a><a href="#cases" data-tab="cases">Истории</a><a href="#analysis" data-tab="analysis">Анализ и логика</a><span class="sp"></span><button type="button" id="notesBtn" aria-pressed="false">Показать пояснения к блокам</button></div></div>
+<header class="site-head" id="siteHead"><a href="#home" class="logo">VIMOTION</a><nav aria-label="Разделы сайта"><a href="#how">Как устроено</a><a href="#route">Программа</a><a href="#stories">Истории</a><a href="#formats">Форматы</a><a href="#questions">Вопросы</a></nav><a class="btn" href="https://vi-motion.pro/quiz/">Заполнить анкету</a></header>
+<main>
+
+<article data-page="home">
+
+<!-- 1 -->
+<section class="hero" data-note="Компоновка драфта: текст, портрет, три цифры. H1 по 4U: «которого ищет бизнес» (востребованная профессия), «с нуля» (освоит даже новичок), «$1 000 в месяц» (конкретика), «за 2 месяца» (срочность). Подзаголовок одной строкой отвечает на «а как». Та же кнопка, что в шапке">
+<div class="copy">
+<h1>Из монтажёра в контент-креатора с доходом от $1&nbsp;000 за&nbsp;2&nbsp;месяца</h1>
+<p class="sub">Даже если начинаешь с нуля. Снимаешь с телефона, ментор рядом на каждом шаге, а первых клиентов ищем вместе</p>
+<div class="acts"><a class="btn" href="https://vi-motion.pro/quiz/">Записаться на разбор</a></div>
+</div>
+<div class="wire portrait" role="img" aria-label="Портрет Валентина Сушнёва">Портрет Валентина</div>
+<div class="metrics"><div><strong>400+</strong><span>учеников за всё время</span></div><div><strong>7 лет</strong><span>в контенте · своё агентство</span></div><div><strong>4,61/5</strong><span>оценка учеников</span></div></div>
+</section>
+
+<!-- 2 -->
+<section style="padding-top:8px" class="center" data-note="Блок из драфта сразу под hero: живые лица с одной цифрой. Доказательство до того, как человек начал сомневаться. Подпись короткая, формула «откуда → куда». Каждое лицо ведёт на свою историю">
+<h2>Это сделали люди без опыта</h2>
+<div class="people">
+<a href="#alena"><div class="wire">фото</div><h3>Алёна</h3><p>$3&nbsp;000 в месяц с ребёнком на руках</p></a>
+<a href="#ivan"><div class="wire">фото</div><h3>Иван</h3><p>из Таиланда на $2&nbsp;000 в месяц</p></a>
+<a href="#veronika"><div class="wire">фото</div><h3>Вероника</h3><p>с завода к $4&nbsp;000+</p></a>
+<a href="#artem"><div class="wire">фото</div><h3>Артём</h3><p>24 своих YouTube-канала</p></a>
+<a href="#gaiduk"><div class="wire">фото</div><h3>Иван Гайдук</h3><p>от оператора до партнёра агентства</p></a>
+<a href="#nastya"><div class="wire">фото</div><h3>Настя</h3><p>$500 ещё на обучении</p></a>
+<a href="#reality"><div class="wire">фото</div><h3>Ангелина и Остап</h3><p>~$2&nbsp;000 за 10 дней</p></a>
+</div>
+</section>
+
+<!-- 3 -->
+<section class="center" data-note="Видео, на которое клиент указал стрелкой. Заголовок продаёт ценность урока: семь лет пути Валентина сжаты в одно видео. Под кнопкой бегущая строка форматов, за которые платят">
+<h2>Мои 7 лет в контенте в одном уроке</h2>
+<p class="sub">Куда идти новичку, за что платят и где взять первого клиента, если нет ни опыта, ни портфолио</p>
+<div class="wire video" role="img" aria-label="Видео-урок">Видео-урок Валентина</div>
+<div class="acts"><a class="btn" href="https://vi-motion.pro/quiz/">Хочу на разбор</a></div>
+<div class="marquee" aria-label="Форматы: Reels, Shorts, TikTok, YouTube, реклама, креативы, сценарии"><div class="mq"><span>Reels</span><span>Shorts</span><span>TikTok</span><span>YouTube</span><span>реклама</span><span>креативы</span><span>сценарии</span><span>Reels</span><span>Shorts</span><span>TikTok</span><span>YouTube</span><span>реклама</span><span>креативы</span><span>сценарии</span></div></div>
+</section>
+
+<!-- 4 -->
+<section class="center" data-note="Боль словами самих учеников: фразы из их историй и из видео («жизнь проходит мимо», «ребёнка вижу только по выходным», «опять не то», «не высовывайся»). Ниже фото Валентина и его история с мамой из видео: в дизайне это будет облако-мысль с анимацией. Он был в той же точке, значит выход есть">
+<h2>Хочется большего, а ощущение, что жизнь проходит мимо</h2>
+<div class="body grid g4" style="text-align:left">
+<div class="tile t"><p class="tt">«Работаю всё больше, а денег столько же»</p></div>
+<div class="tile t"><p class="tt">«Ребёнка вижу только по выходным»</p></div>
+<div class="tile t"><p class="tt">«Пробовал крипту, курсы, свои каналы. Опять не то»</p></div>
+<div class="tile t"><p class="tt">«Близкие говорят: сиди и не высовывайся»</p></div>
+</div>
+<div class="thought"><div class="wire face">Фото Валентина</div><div class="cloud"><p>Мне было 14, когда мама сказала: «Сынок, ты такой, с этим ничего не поделать». Я закрылся в комнате и пообещал себе, что не остановлюсь, пока не получится. Через год у меня была серебряная кнопка YouTube</p><span>Валентин Сушнёв</span></div></div>
+</section>
+
+<!-- 5 -->
+<section data-note="Блок драфта «А можно зайти с другой стороны». Три барьера, которые человек держит в голове (надо быть блогером, надо показывать лицо, доход растёт раз в год), переворачиваются в преимущества профессии">
+<h2>Не нужно светить лицом и собирать миллионы подписчиков</h2>
+<div class="body grid g3">
+<div class="tile"><span class="n">01</span><h3>Аудитория уже есть у бизнеса</h3><p>Кофейне, стоматологии и эксперту нужны ролики каждую неделю. Их делаешь ты</p></div>
+<div class="tile"><span class="n">02</span><h3>Ты за кадром</h3><p>В кадре продукт или эксперт, а ты отвечаешь за то, чтобы ролик продавал</p></div>
+<div class="tile"><span class="n">03</span><h3>Доход растёт с каждым клиентом</h3><p>Один бизнес платит $200-1&nbsp;000 в месяц. Взял второго, и доход удвоился</p></div>
+</div>
+</section>
+
+<!-- 6 -->
+<section data-note="Блок драфта «Из монтажёра в контент-креатора» с лестницей дохода. Заголовок переписан под главную боль сегмента, который уже учил монтаж и остался без клиентов. Мысль «клиенту нужен не красивый, а продающий ролик» встречается у англоязычных курсов по монтажу, здесь она стоит в подзаголовке">
+<h2>Монтажёру платят за ролик, креатору за результат</h2>
+<p class="sub">Клиенту нужен не красивый ролик, а ролик, который приводит людей. Чем больше задач ты берёшь на себя, тем выше чек</p>
+<div class="ladder">
+<div><strong>$10</strong><span>за ролик</span><p>Склеиваешь то, что прислали</p></div>
+<div><strong>$100-300</strong><span>в месяц</span><p>Монтаж готовых исходников</p></div>
+<div><strong>$300-500</strong><span>в месяц</span><p>Монтаж и сценарии</p></div>
+<div><strong>$500-1&nbsp;000</strong><span>в месяц</span><p>Идеи, съёмка и монтаж</p></div>
+<div><strong>$1&nbsp;000+</strong><span>в месяц</span><p>Весь контент клиента и своя команда</p></div>
+</div>
+</section>
+
+<!-- 7 -->
+<section data-note="Спрос. Одна мысль и доказательство: заголовок, одна строка, скриншоты реальных вакансий из презентации. Последняя фраза превращает страх «рынок забит» в шанс">
+<h2>Пока ты думаешь, эти вакансии уже кто-то закрывает</h2>
+<p class="sub">Мы нашли их за 10 минут. На каждую приходит около 30 откликов, и почти все звучат как «Здравствуйте, нужен монтаж?». С правильным сообщением ответят именно тебе</p>
+<div class="shots body"><div class="wire">Скрин вакансии</div><div class="wire">Скрин вакансии</div><div class="wire">Скрин вакансии</div><div class="wire">Скрин вакансии</div></div>
+</section>
+
+<!-- 8 -->
+<section id="how" data-note="Три кита оформлены как в презентации: слева картинка с тремя китами и подписями, справа заголовок и три коротких пункта. Текст живой: проблема и ответ в одной фразе">
+<div class="whales">
+<div class="w-img"><div class="w-tags"><span><b>Пошаговый план</b>что делать</span><span><b>Сопровождение</b>чтобы не застрять</span><span><b>Окружение</b>чтобы не бросить</span></div><div class="wire w-pic">Картинка: три кита ViMotion</div></div>
+<div class="w-text">
+<h2>Три кита ViMotion</h2>
+<p class="sub">Дело не в таланте. Новички бросают, когда не знают, что делать, застревают или остаются одни. Мы закрыли все три причины</p>
+<div class="w-list">
+<div><b>01</b><p><strong>Пошаговый план:</strong> ты всегда знаешь следующий шаг, а каждое задание сразу идёт в портфолио</p></div>
+<div><b>02</b><p><strong>Сопровождение:</strong> застрял, ментор разберёт. Пропал, он напишет первым</p></div>
+<div><b>03</b><p><strong>Окружение:</strong> рядом поток людей на том же пути и эфиры с Валентином</p></div>
+</div>
+<div class="acts"><a class="btn light" href="https://vi-motion.pro/quiz/">Обсудить свою точку старта</a></div>
+</div>
+</div>
+</section>
+
+<!-- 9 -->
+<section id="route" data-note="Именной блок «Маршрут заезда» из драфта, четыре участка как трасса. Без списков: у каждого участка одна фраза и жирный результат. Человек видит, что будет у него на руках через месяц и через два">
+<h2>Маршрут заезда</h2>
+<p class="sub">Не 7 лет, как у меня, а 8 недель. Каждый участок проходишь с ментором</p>
+<div class="track">
+<div><p class="wk">Старт</p><h3>Подготовка</h3><p>Знакомишься с ментором и потоком, настраиваешься на два месяца работы</p><p class="res">План на весь заезд</p></div>
+<div><p class="wk">Недели 1-4</p><h3>Навык</h3><p>Снимаешь и монтируешь на телефоне, пишешь сценарии, подключаешь ИИ</p><p class="res">5 работ для реальных бизнесов</p></div>
+<div><p class="wk">Недели 5-6</p><h3>Клиенты</h3><p>Выбираешь нишу, считаешь цену и пишешь бизнесам каждый день</p><p class="res">Оффер, прайс и первые диалоги</p></div>
+<div><p class="wk">Недели 7-8</p><h3>Деньги</h3><p>«Денежный спринт»: созвоны, договор, предоплата и выпускной «Аллея славы»</p><p class="res">Первый платный клиент</p></div>
+</div>
+</section>
+
+<!-- 10 -->
+<section data-note="Программа из драфта аккордеоном: кто хочет деталей, открывает модуль. Внутри не список уроков, а одна фраза о том, что человек научится делать">
+<h2>Программа</h2>
+<p class="sub">9 модулей и больше 70 уроков. Новый модуль открывается каждый понедельник</p>
+<div class="body">
+<details><summary><span class="num">00</span><span>Подготовка к старту<small>Маршрут, мышление и дисциплина, чтобы дойти до конца</small></span></summary><p>Разбираешь, какими качествами отличаются креаторы, которые доходят до денег, и собираешь свою систему на два месяца</p><div class="chips"><span>Твой маршрут на продукте</span><span>Сила комьюнити</span><span>Качества успешного креатора</span><span>Работа с мышлением</span><span>Формула роста</span><span>Дисциплина</span></div></details>
+<details><summary><span class="num">01</span><span>Контент для бизнеса<small>Как ролик приводит клиентов и какие форматы работают</small></span></summary><p>Учишься смотреть на видео глазами владельца бизнеса: из чего состоит ролик, какой визуал и формат приносит заявки</p><div class="chips"><span>Роль контента в бизнесе</span><span>Анатомия ролика</span><span>Форматы видео</span><span>Визуал видео</span></div></details>
+<details><summary><span class="num">02</span><span>Съёмка и монтаж<small>Телефон и CapCut: от первого кадра до сдачи клиенту</small></span></summary><p>Снимаешь за один день материал на неделю, монтируешь с субтитрами, звуком, цветом и динамичными вставками, сдаёшь работу по стандарту агентства</p><div class="chips"><span>CapCut</span><span>Подготовка к съёмке</span><span>Съёмка за день</span><span>Нарезка</span><span>Наложение</span><span>Субтитры</span><span>Звук</span><span>Цветокоррекция</span><span>Динамичные вставки</span><span>Ролик с нуля в деле</span><span>Правки и стандарт сдачи</span></div></details>
+<details><summary><span class="num">03</span><span>Контент под ключ<small>Аудит, бриф, стратегия, сценарии и отчёт</small></span></summary><p>Делаешь то, за что платят больше всего: разбираешь аккаунт клиента и конкурентов, пишешь стратегию и сценарии, показываешь результат в цифрах</p><div class="chips"><span>Аудит аккаунта</span><span>Бриф</span><span>Анализ конкурентов и аудитории</span><span>Позиционирование клиента</span><span>Контент-стратегия</span><span>Сценарии</span><span>Работа с текстом</span><span>Метрики</span><span>Отчёт клиенту</span></div></details>
+<details><summary><span class="num">04</span><span>ИИ-ассистент креатора<small>Нейросети в идеях, сценариях и монтаже</small></span></summary><p>Собираешь свою связку нейросетей и делаешь за день то, на что раньше уходила неделя</p><div class="chips"><span>Карта ИИ-инструментов</span><span>Контент-план с ИИ</span><span>Сценарии с ИИ</span><span>ИИ в монтаже</span><span>Эфир «Магия нейросетей»</span></div></details>
+<details><summary><span class="num">05</span><span>Упаковка и цена<small>Ниша, профиль, прайс и оффер</small></span></summary><p>Выбираешь нишу, упаковываешь профиль и собираешь предложение, от которого бизнесу сложно отказаться</p><div class="chips"><span>Нишевание</span><span>Упаковка профиля</span><span>Личная система креатора</span><span>Ценообразование</span><span>Оффер No Brainer</span><span>Презентация</span></div></details>
+<details><summary><span class="num">06</span><span>Поиск клиентов<small>Все способы, которыми мы находим клиентов сами</small></span></summary><p>Сарафан и знакомые, чаты, биржи, Threads, рассылки и локальный бизнес. Плюс эфир Валентина «Как бы я искал первого клиента сегодня»</p><div class="chips"><span>Психология поиска клиентов</span><span>Сарафан и близкий круг</span><span>Вакансии и биржи</span><span>Threads</span><span>Тематические чаты</span><span>Персональные рассылки</span><span>Локальный бизнес</span><span>Личный бренд</span><span>Тёплый поиск в жизни</span><span>Эфир «Как бы я искал первого клиента»</span></div></details>
+<details><summary><span class="num">07</span><span>Сделка и деньги<small>Созвон, договор, предоплата и налоги</small></span></summary><p>Проводишь продающий созвон, берёшь предоплату, подписываешь договор и разбираешься с налогами в РБ и РФ</p><div class="chips"><span>Навык продаж</span><span>План сделки</span><span>Оплата и договор</span><span>Налоги и декларирование</span></div></details>
+<details><summary><span class="num">08</span><span>Рост<small>Чек выше, команда и партнёрства</small></span></summary><p>Поднимаешь цену, делегируешь монтаж и выстраиваешь путь от одного клиента к своей команде</p><div class="chips"><span>Лестница дохода</span><span>Делегирование</span><span>Партнёрства</span><span>Маршрут роста</span><span>Эфир «Аллея славы»</span></div></details>
+</div>
+</section>
+
+<!-- 11 -->
+<section data-note="Блок драфта «К концу программы у тебя будет». 15 пунктов сжаты до 8 результатов, оформленных плитками, а не галочками. Человек покупает то, что останется у него на руках">
+<h2>К концу программы у тебя на руках</h2>
+<div class="body outc"><div>Навык делать контент от идеи до публикации</div><div>5 работ для реальных бизнесов</div><div>Ясная ниша и направление</div><div>Оффер и пакет услуг</div><div>Понимание своей цены</div><div>Упакованный профиль</div><div>Способы поиска клиентов, проверенные на практике</div><div>Сообщения, на которые отвечают</div><div>Первые диалоги с клиентами</div><div>Структура продающего созвона</div><div>Шаблоны договоров и брифов</div><div>Контент-стратегия и аудит для клиента</div><div>Своя система работы с ИИ</div><div>Окружение и сертификат выпускника</div></div>
+</section>
+
+<!-- 12 -->
+<section data-note="Заголовок из слов Валентина в видео: лучший способ выйти на $1 000, иметь рядом человека, который делает $3 000. Ментор показан живым человеком из историй учеников. Три цифры вместо списка обязанностей. Лимит 30 учеников объясняет качество и создаёт дефицит">
+<div class="mentor">
+<div><div class="wire ph">Фото Артёма</div><p class="cap">Артём сам прошёл обучение с нуля, запустил 24 YouTube-канала и теперь ведёт учеников ViMotion</p></div>
+<div>
+<h2>Чтобы выйти на $1&nbsp;000, рядом нужен тот, кто уже делает $3&nbsp;000, и он у тебя будет</h2>
+<div class="body facts3">
+<div><strong>100%</strong><p>заданий с разбором ментора</p></div>
+<div><strong>1 раз</strong><p>в неделю созвон по твоим затыкам</p></div>
+<div><strong>30</strong><p>учеников максимум на одного ментора</p></div>
+<div><strong>4,80</strong><p>из 5 ученики поставили кураторам</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 13 -->
+<section data-note="Блок драфта «Сопровождение до первого клиента», выделен тёмным фоном как в драфте. Заголовок отвечает на главный страх «отучусь и останусь без клиентов». Условия одной фразой, без юридического тона">
+<div class="support">
+<h2>Будем рядом, пока не найдёшь первого клиента</h2>
+<p class="sub">Если ты сделал все задания, прошёл «Денежный спринт», а клиента ещё нет, продолжаем вместе до 3 месяцев после обучения</p>
+<div class="body grid g3">
+<div class="tile"><h3>План на неделю</h3><p>Ментор каждую неделю даёт конкретные шаги и смотрит на результат</p></div>
+<div class="tile"><h3>Биржа ViMotion</h3><p>Заказы от людей, которые приходят к нам за контентом</p></div>
+<div class="tile"><h3>Рекомендации</h3><p>Лучших выпускников советуем партнёрам и забираем в агентство</p></div>
+</div>
+</div>
+</section>
+
+<!-- 14 -->
+<section id="stories" data-note="Блок драфта «Люди с именами и цифрами». Заголовок по фразе Валентина из видео: у каждого было своё «но». Человек находит своё возражение и видит, что оно не остановило другого. Цифры по презентации и видео">
+<h2>Они тоже думали, что у них не получится</h2>
+<p class="sub">У кого-то не было времени, у кого-то опыта, у кого-то веры в себя. Вот что было дальше</p>
+<div class="body grid g3">
+<a class="tile story-c" href="#alena"><h3>Алёна</h3><p class="but">«Мне не хватает времени»</p><p class="num">$3&nbsp;000 в месяц</p><p class="d">Пришла на 7-м месяце беременности. Сейчас у неё своя команда и машина, купленная на контенте</p></a>
+<a class="tile story-c" href="#ivan"><h3>Иван</h3><p class="but">«Не знаю, где искать клиентов»</p><p class="num">$2&nbsp;000 в месяц</p><p class="d">Уехал в Таиланд на последние сбережения. Нашёл клиентов на монтаже и остался</p></a>
+<a class="tile story-c" href="#veronika"><h3>Вероника</h3><p class="but">«Не знаю, как совместить с работой»</p><p class="num">$4&nbsp;000+</p><p class="d">10 часов в день на мебельном производстве сменила на продюсирование YouTube</p></a>
+<a class="tile story-c" href="#gaiduk"><h3>Иван Гайдук</h3><p class="but">«Не могу быть на двух съёмках сразу»</p><p class="num">$10&nbsp;000+ за полгода</p><p class="d">Был оператором в Минске. Сейчас партнёр Валентина в агентстве</p></a>
+<a class="tile story-c" href="#nariman"><h3>Нариман</h3><p class="but">«Ниша слишком странная»</p><p class="num">$5&nbsp;000 в месяц</p><p class="d">ИИ-мультфильмы для детей: ролик обходится в $15, продаёт за $75</p></a>
+<a class="tile story-c" href="#nastya"><h3>Настя</h3><p class="but">«Вдруг не разберусь»</p><p class="num">$500 ещё на обучении</p><p class="d">Работала баристой. Запустила рекламу своих услуг и выключила: заказов стало слишком много</p></a>
+</div>
+<div class="mini">
+<div><strong>Артём</strong>написал свой софт и запустил 24 канала</div>
+<div><strong>Илья</strong>в 17 лет открыл своё контент-агентство</div>
+<div><strong>Нина</strong>нашла клиента прямо в поезде из Москвы</div>
+<div><strong>Ангелина и Остап</strong>~$2&nbsp;000 на двоих за 10 дней реалити</div>
+</div>
+<div class="acts"><a class="btn" href="#cases">Читать истории полностью</a><a class="btn" href="https://vi-motion.pro/quiz/">Хочу так же</a></div>
+</section>
+
+<!-- 15 -->
+<section data-note="Блок драфта об авторе. Заголовок даёт мотив, которого нет у конкурентов: Валентин сам нанимает креаторов. Отсюда бонус «лучших забираю в свои проекты». Четыре факта из драфта с короткой подписью">
+<div class="author">
+<div class="wire" role="img" aria-label="Фото Валентина">Фото Валентина</div>
+<div>
+<h2>Я создал ViMotion, потому что сам не мог найти сильных креаторов</h2>
+<p class="sub">Мне 21, семь лет в контенте и своё агентство G-Agency. Каждый месяц мы ищем людей в команду, и лучших выпускников я забираю в свои проекты</p>
+<div class="nums">
+<div><strong>15 лет</strong><span>серебряная кнопка YouTube, начинал на мамином компьютере в Орше</span></div>
+<div><strong>Машина маме</strong><span>всё, что у меня есть, заработано одним навыком</span></div>
+<div><strong>G-Agency</strong><span>300+ роликов за год для крупных экспертов</span></div>
+<div><strong>500 человек</strong><span>в зале на моих выступлениях о контенте</span></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- 16 -->
+<section id="formats" class="fmt" data-note="Форматы из драфта: «для кого» одной строкой, состав коротким абзацем вместо списка. Ниже подсказка, как выбрать, из презентации. Цену не показываем по решению клиента">
+<h2>Форматы участия</h2>
+<p class="sub">Оба ведут к первому клиенту. Разница в том, сколько личного внимания ты получишь</p>
+<div class="body grid g2">
+<div class="tile"><h3>Прорыв</h3><p class="for">Маршрут с личным ментором</p><p class="d">Ментор на 2 месяца, разбор каждого задания, созвоны раз в неделю, база шаблонов, «Денежный спринт», Биржа ViMotion и сопровождение до первого клиента</p><a class="btn" href="https://vi-motion.pro/quiz/">Узнать условия «Прорыва»</a></div>
+<div class="tile dark"><h3>VIP</h3><p class="for">Личная работа с Валентином</p><p class="d">Всё из «Прорыва», плюс четыре разбора с Валентином, встречи 1 на 1 с ментором раз в две недели, тренировка переговоров, экскурсия в агентство и приоритет в рекомендациях</p><a class="btn" href="https://vi-motion.pro/quiz/">Узнать условия VIP</a></div>
+</div>
+<div class="choose"><div>Нужен понятный маршрут и ментор рядом: «Прорыв»</div><div>Хочешь, чтобы я лично разбирал твой путь: VIP</div></div>
+</section>
+
+<!-- 17 -->
+<section class="fear" data-note="Страхи из драфта объединены с блоками «Мы берём не всех» и «Для старта хватит телефона». Заголовок проговаривает мысль, которая мешает начать. Подзаголовок работает как фильтр: не подойдёт только тем, кто ждёт волшебную таблетку">
+<h2>Кажется, что уже поздно и это не для тебя?</h2>
+<p class="sub">Эти мысли были почти у всех наших учеников. Не подойдёт ViMotion только тем, кто ждёт волшебную таблетку</p>
+<div class="body grid g3">
+<div class="tile"><h3>«Рынок забит»</h3><p>Он не забит, он слабый. Из 30 откликов на вакансию сильных два-три</p></div>
+<div class="tile"><h3>«ИИ всех заменит»</h3><p>Нейросеть не знает бизнес клиента. Креатор с ИИ просто работает в несколько раз быстрее</p></div>
+<div class="tile"><h3>«У меня нет опыта»</h3><p>Большинство пришли с нуля, и им не пришлось ломать старые привычки</p></div>
+<div class="tile"><h3>«Нет хорошего компьютера»</h3><p>Хватит телефона и CapCut. Технику ученики покупают уже с первых денег</p></div>
+<div class="tile"><h3>«Нет времени»</h3><p>Нужно 8-15 часов в неделю. Алёна училась с младенцем, Вероника после смен на заводе</p></div>
+<div class="tile"><h3>«Я не умею продавать»</h3><p>Дадим сообщения, на которые отвечают, и разберём твой первый созвон</p></div>
+</div>
+</section>
+
+<!-- 18 -->
+<section id="questions" class="faq" data-note="Частые вопросы из драфта. Только практическое: время, техника, деньги, оплата, что дальше. Страхи уже закрыты блоком выше">
+<div><h2>Остались вопросы?</h2><div class="acts"><a class="btn" href="https://t.me/way_toyoutube">Написать в Telegram</a></div></div>
+<div>
+<details><summary>Совсем с нуля, реально потяну?</summary><p>Да. Каждый шаг опирается на предыдущий, а ментор проверяет все задания</p></details>
+<details><summary>Сколько времени нужно в неделю?</summary><p>8-15 часов. Этого хватает, чтобы совмещать с работой или учёбой</p></details>
+<details><summary>Это курс монтажа?</summary><p>Нет. Монтаж только часть. Ты учишься делать для бизнеса контент целиком, и за это платят больше</p></details>
+<details><summary>Когда появятся первые деньги?</summary><p>Искать клиентов начнёшь уже на втором месяце. Срок зависит от того, сколько сообщений отправишь, и мы поможем отправить их правильно</p></details>
+<details><summary>Можно оплатить частями?</summary><p>Да. Варианты обсудим на разборе, до оплаты</p></details>
+<details><summary>Что будет после анкеты?</summary><p>Куратор напишет в Telegram, и на созвоне разберём твою ситуацию. Решение принимаешь после разговора</p></details>
+</div>
+</section>
+
+<!-- 19 -->
+<section class="final center" id="start" data-note="Финал драфта: ряд лиц учеников и пустое место со знаком вопроса. Список историй продолжается человеком">
+<h2>Следующая история в этом списке твоя</h2>
+<div class="row"><div class="wire">фото</div><div class="wire">фото</div><div class="wire">фото</div><div class="wire">фото</div><div class="wire">фото</div><div class="wire">фото</div><div class="wire" style="font-size:22px">?</div></div>
+<p class="sub">Оставь анкету, и мы разберём, с какой точки ты стартуешь и как дойти до первого клиента</p>
+<div class="acts"><a class="btn" href="https://vi-motion.pro/quiz/">Стать следующим</a></div>
+</section>
+</article>
+
+<article data-page="cases" hidden>
+<section data-note="Страница «Зал славы» из драфта. Каждая история по одной схеме: откуда пришёл, что сделал, две цифры, прямая речь, места под доказательства">
+<h1>Пьедестал ViMotion</h1>
+<p class="sub">Мама в декрете, инженер с завода, бариста и парень, который уехал в Таиланд на последние деньги. Все начинали с нуля, и все уже на финише с первыми деньгами</p>
+</section>
+<div class="s-row" id="alena"><div><h2>Алёна. Первый заказ нашёлся у бывшего работодателя</h2><div class="nums"><div><strong>$3&nbsp;000</strong><span>в месяц</span></div><div><strong>70-120</strong><span>обложек в месяц на пике</span></div></div></div>
+<div><p>Пришла на 7-м месяце беременности, уже с маленьким ребёнком. Вместо своего канала предложила работодателю делать обложки. Потом добавились сценарии и монтаж, клиент стал рекомендовать её коллегам</p><p>Когда заказов стало слишком много, наняла дизайнеров. Сейчас большую часть работы делает её команда</p><blockquote>Всегда, когда начинаю что-то новое, всем рассказываю. Так появляются возможности</blockquote><div class="ev"><div class="wire">Видео-разбор</div><div class="wire">Чеки по проектам</div><div class="wire">Рабочий стол после родов</div></div></div></div>
+<div class="s-row" id="ivan"><div><h2>Иван. Свои каналы не пошли, работа на других пошла</h2><div class="nums"><div><strong>$2&nbsp;000</strong><span>в месяц</span></div><div><strong>~30</strong><span>роликов в месяц</span></div></div></div>
+<div><p>Ушёл с работы и уехал в Таиланд на все сбережения. Пробовал разные ниши, но подушка заканчивалась: либо деньги, либо домой</p><p>Нашёл себя в монтаже. Первые клиенты пришли по рекомендации, дальше реклама, мотопрокат и полный продакшн игрового канала. Обучение окупил и остался в Таиланде</p><blockquote>Я шёл с мыслью найти то, что подойдёт именно мне</blockquote><div class="ev"><div class="wire">Интервью Ивана</div><div class="wire">Переписка про доход за полгода</div></div></div></div>
+<div class="s-row" id="veronika"><div><h2>Вероника. С мебельного производства в продюсеры</h2><div class="nums"><div><strong>$4&nbsp;000+</strong><span>на контенте</span></div><div><strong>2</strong><span>YouTube-проекта</span></div></div></div>
+<div><p>По 10 часов на производстве, семью почти не видела, к заработку онлайн относилась со скепсисом</p><p>Выложила сторис с консультациями по YouTube, первых клиентов привели знакомые. Потом взяла два проекта на продюсирование и ушла с завода. Теперь есть время на ребёнка</p><blockquote>Иногда сама не верю, как сильно можно изменить жизнь за пару месяцев</blockquote><div class="ev"><div class="wire">История Вероники</div><div class="wire">До и после</div></div></div></div>
+<div class="s-row" id="gaiduk"><div><h2>Иван Гайдук. На две съёмки сразу не успеть</h2><div class="nums"><div><strong>$10&nbsp;000+</strong><span>за первые полгода</span></div><div><strong>до 9</strong><span>каналов параллельно</span></div></div></div>
+<div><p>Был оператором в Минске: снимал для других и зависел от того, где находится. Первому клиенту написал как монтажёр, договорились на три месяца</p><p>Потом вошёл в команду продюсеров и вёл до девяти каналов. Сейчас сооснователь агентства вместе с Валентином</p><blockquote>Нельзя сравнивать себя с чужим тысячным днём. Только со вчерашним собой</blockquote><div class="ev"><div class="wire">Интервью</div><div class="wire">Подтверждения оплат</div></div></div></div>
+<div class="s-row" id="nariman"><div><h2>Нариман. Деньги нашлись там, куда никто не смотрел</h2><div class="nums"><div><strong>$5&nbsp;000</strong><span>в месяц</span></div><div><strong>$15 → $75</strong><span>себестоимость и цена ролика</span></div></div></div>
+<div><p>Выбрал нишу, которую все обходят: ИИ-мультфильмы и колыбельные для детей. Запустил рекламу на свою услугу и работает в паре с дизайнером</p><blockquote>Даже в странных нишах есть деньги</blockquote><div class="ev"><div class="wire">Скрин заказов</div><div class="wire">Пример ролика</div></div></div></div>
+<div class="s-row" id="nastya"><div><h2>Настя. Первые заказы ещё во время обучения</h2><div class="nums"><div><strong>$500</strong><span>на обучении</span></div><div><strong>0</strong><span>опыта на старте</span></div></div></div>
+<div><p>Работала баристой: ни монтажа, ни клиентов, ни понимания, как всё устроено. Одной из первых начала применять советы на практике</p><p>Запустила рекламу своих услуг, и заявок стало так много, что рекламу пришлось выключить</p><div class="ev"><div class="wire">Первые оплаты</div><div class="wire">Выпускной</div></div></div></div>
+<div class="s-row" id="artem"><div><h2>Артём. Применил навык по-своему</h2><div class="nums"><div><strong>24</strong><span>YouTube-канала</span></div><div><strong>1/3</strong><span>на монетизации</span></div></div></div>
+<div><p>Работал в найме в Челябинске и мечтал о работе онлайн. После обучения написал свой софт, который собирает видео в несколько кликов, и запустил сеть каналов без лица. Сейчас сам ведёт учеников ViMotion</p><div class="ev"><div class="wire">Интерфейс софта</div><div class="wire">Статистика каналов</div></div></div></div>
+<div class="s-row" id="reality"><div><h2>Ангелина и Остап. 10 дней с нуля</h2><div class="nums"><div><strong>~$2&nbsp;000</strong><span>на двоих</span></div><div><strong>~50</strong><span>сообщений бизнесам каждый</span></div></div></div>
+<div><p>Ноль опыта, ноль связей, ноль кейсов. Первые дни монтировали до ночи, потом писали бизнесам и получали отказы. Первые €50 заработали на трёх рилс</p><p>Всё изменилось, когда перестали продавать один монтаж и начали предлагать контент целиком с оплатой вперёд</p><div class="ev"><div class="wire">Переписки</div><div class="wire">Поступления</div></div></div></div>
+<section class="final center"><h2>Следующая история в этом списке твоя</h2><div class="acts"><a class="btn" href="https://vi-motion.pro/quiz/">Стать следующим</a></div></section>
+</article>
+
+<article data-page="contacts" hidden>
+<section><h1>Связаться с ViMotion</h1><p class="sub">Напиши команде по программе, участию или своей заявке</p><div class="body grid g3"><div class="tile"><h3>Telegram</h3><p>@way_toyoutube</p></div><div class="tile"><h3>Email</h3><p>valentinyoutuube@gmail.com</p></div><div class="tile"><h3>Телефон</h3><p>+375 25 519 02 82</p></div></div><div class="acts"><a class="btn" href="https://vi-motion.pro/quiz/">Заполнить анкету</a></div></section>
+</article>
+
+<article data-page="analysis" class="doc" hidden>
+<section style="border-top:0;padding-top:44px">
+<h1>ViMotion: аудитория, конкуренты и логика лендинга</h1>
+<p class="body">Документ объясняет, кому продаёт новый лендинг ViMotion, что у этих людей болит и чего они боятся, что сильного есть у конкурентов и почему блоки стоят именно в таком порядке. Основа: драфт сайта, презентация к эфиру, видео-урок Валентина, истории учеников с vi-motion.pro и разбор конкурентов из России и США</p>
+<div class="toc"><a href="#a-ca">Целевая аудитория</a><a href="#a-test">Страница глазами сегментов</a><a href="#a-comp">Конкуренты и референсы</a><a href="#a-utp">УТП по 4U</a><a href="#a-ux">UX-путь</a></div>
+</section>
+
+<section id="a-ca">
+<h2>1. Целевая аудитория</h2>
+<p class="body">Сегменты собраны по реальным ученикам ViMotion, по вопросу из презентации «С какой точки ты стартуешь» и по портрету, который Валентин описывает в видео. Общее для всех: 17-35 лет, Беларусь и Россия, часть живёт за границей, доход считают в долларах, приходят из роликов Валентина в Instagram, YouTube и Telegram</p>
+<div class="tbl-wrap"><table class="tbl">
+<tr><th>Сегмент</th><th>Кто это</th><th>Что болит</th><th>Чего боится</th><th>Чего хочет</th></tr>
+<tr><td><b>А. Упёрся в потолок в найме</b></td><td>24-35 лет, смены или 5/2, $400-800 в месяц. Как Вероника, Иван Гайдук, Артём</td><td>Работает всё больше, а денег столько же. Семью почти не видит</td><td>Развод. Онлайн-заработок «не для меня». Уйти с работы в никуда</td><td>Удалёнку, которую можно начать параллельно с работой</td></tr>
+<tr><td><b>Б. Мама в декрете</b></td><td>23-33 года, один-два ребёнка. Как Алёна</td><td>Не хочет возвращаться на нелюбимую работу. Время только урывками</td><td>Не потянет с ребёнком. Потратит семейные деньги впустую</td><td>Доход из дома и ощущение, что она снова что-то может сама</td></tr>
+<tr><td><b>В. Молодой и ищущий</b></td><td>17-23 года, пробовал крипту, курсы, свои каналы. Как Иван из Таиланда и Илья</td><td>Всё перепробовал, ничего не выстрелило. Подушка заканчивается</td><td>Снова «не то». Не найдёт клиентов. Близкие окажутся правы</td><td>Понятный путь к деньгам и окружение, где уже зарабатывают</td></tr>
+<tr><td><b>Г. Уже делает видео, но без клиентов</b></td><td>18-30 лет, учился монтажу сам или на курсах, берёт заказы за $10 или сидит без них</td><td>Работает за копейки и не понимает, как поднять чек</td><td>Рынок забит. ИИ заменит</td><td>Перейти от разовых роликов к постоянным клиентам</td></tr>
+</table></div>
+<h3>Что на самом деле покупают</h3>
+<p>Все четыре сегмента покупают одно и то же: удалённую профессию, которую можно освоить с телефона без опыта, и человека рядом, который доведёт до первых денег и не даст бросить. Поэтому лендинг продаёт не уроки, а маршрут с ментором до первого клиента</p>
+<h3>Главные возражения</h3>
+<div class="tbl-wrap"><table class="tbl">
+<tr><th>Возражение</th><th>Где закрываем</th></tr>
+<tr><td>«У меня нет опыта»</td><td>H1 «с нуля», полоса «Это сделали люди без опыта», блок страхов</td></tr>
+<tr><td>«Нет времени»</td><td>Блок страхов: 8-15 часов в неделю, Алёна с младенцем и Вероника после смен</td></tr>
+<tr><td>«Нет компьютера»</td><td>Подзаголовок первого экрана «снимаешь с телефона», блок страхов</td></tr>
+<tr><td>«Отучусь и не найду клиентов»</td><td>Блок «Будем рядом, пока не найдёшь первого клиента»</td></tr>
+<tr><td>«Рынок забит, ИИ заменит»</td><td>Блок вакансий и блок страхов</td></tr>
+<tr><td>«А вдруг это развод»</td><td>Истории с именами и цифрами, автор, ментор с результатом</td></tr>
+</table></div>
+</section>
+
+<section id="a-test">
+<h2>2. Проходим страницу от лица каждого сегмента</h2>
+<p class="body">Проверка: зацепит ли страница человека из каждого сегмента, где у него снимется главный страх и в какой момент он нажмёт кнопку</p>
+<div class="tbl-wrap"><table class="tbl">
+<tr><th>Сегмент</th><th>Где зацепило</th><th>Где снялся страх</th><th>Где решился</th></tr>
+<tr><td>А. Вероника, 34, инженер на смене</td><td>Карточка «Ребёнка вижу только по выходным» под заголовком «Хочется большего, а ощущение, что жизнь проходит мимо»</td><td>«Нет времени: 8-15 часов в неделю, Вероника после смен на заводе»</td><td>Маршрут заезда: «Не 7 лет, как у меня, а 8 недель»</td></tr>
+<tr><td>Б. Алёна, 26, в декрете</td><td>Полоса учеников: «$3 000 в месяц с ребёнком на руках»</td><td>«Снимаешь с телефона», история Алёны в зале славы</td><td>Форматы участия и «можно оплатить частями»</td></tr>
+<tr><td>В. Иван, 22, без дохода</td><td>«Пробовал крипту, курсы, свои каналы. Опять не то» и история Валентина с мамой</td><td>Три кита: «Дело не в таланте»</td><td>Автор: «лучших выпускников забираю в свои проекты»</td></tr>
+<tr><td>Г. Делает видео за $10</td><td>«Монтажёру платят за ролик, креатору за результат»</td><td>Лестница дохода и «рынок не забит, он слабый»</td><td>Вакансии: «С правильным сообщением ответят именно тебе»</td></tr>
+</table></div>
+</section>
+
+<section id="a-comp">
+<h2>3. Конкуренты и референсы</h2>
+<div class="tbl-wrap"><table class="tbl">
+<tr><th>Источник</th><th>Сильная позиция</th><th>Что взяли в ViMotion</th></tr>
+<tr><td><b>Varfolomeev</b>, курс по ИИ для дизайнеров</td><td>Пишет голосом человека, который понимает тревогу читателя. Мысль автора рядом с его фото. Возражение «уже поздно» называет оправданием</td><td>Блок боли, где говорят сами ученики, и история Валентина рядом с его фото. Блок «Кажется, что уже поздно и это не для тебя?»</td></tr>
+<tr><td><b>Monetise</b>, Иман Гаджи, США</td><td>Главный аргумент: большинство бросает ещё до первого доллара, застряв в изучении. Путь рассчитан на того, кто никогда этим не занимался</td><td>Три кита: «Дело не в таланте. Новички бросают, когда…». «С нуля» в H1</td></tr>
+<tr><td><b>Ultimate Editors</b>, США</td><td>Конкретный план: 90 дней и $1 000-2 000. Еженедельные созвоны и комьюнити внутри продукта</td><td>Маршрут заезда с неделями и результатом каждого участка, еженедельный созвон с ментором</td></tr>
+<tr><td><b>Курс по рекламным роликам</b>, Udemy</td><td>Клиенту нужен результат, а не красивый монтаж</td><td>Лестница дохода: «Клиенту нужен не красивый ролик, а ролик, который приводит людей»</td></tr>
+<tr><td><b>ITEDUCATION</b>, системный аналитик</td><td>H1 по 4U: профессия, доход, срок, «с полного нуля». Кейсы «медсестра → аналитик». Ментор пишет, если ученик пропал</td><td>Формула H1, полоса учеников «откуда → куда», «Пропал, он напишет первым»</td></tr>
+<tr><td><b>PROD</b>, simonprod.ru</td><td>Молодой автор, кейсы с именем, возрастом и доходом в месяц</td><td>Карточки историй: имя, сомнение, одна цифра, одна строка</td></tr>
+<tr><td><b>Skillbox</b>, «Контент-креатор»</td><td>Учит снимать на телефон, но не искать клиентов</td><td>Отстройка: «Монтажёру платят за ролик, креатору за результат»</td></tr>
+</table></div>
+<h3>Чем ViMotion сильнее всех</h3>
+<p>Автор сам нанимает креаторов в своё агентство и забирает лучших выпускников. Ментор-практик ведёт до первого клиента и не отпускает ещё до 3 месяцев. Стартовать можно с одним телефоном. Ни у одного из разобранных конкурентов нет всех трёх пунктов сразу</p>
+</section>
+
+<section id="a-utp">
+<h2>4. УТП по 4U</h2>
+<div class="h1v"><p class="t">Из монтажёра в контент-креатора с доходом от $1 000 за 2 месяца</p><p>Даже если начинаешь с нуля. Снимаешь с телефона, ментор рядом на каждом шаге, а первых клиентов ищем вместе</p>
+<div class="u4"><div><b>ПОЛЕЗНОСТЬ</b>«контент-креатор»: востребованная профессия, следующая ступень после монтажёра</div><div><b>СРОЧНОСТЬ</b>«за 2 месяца»</div><div><b>УНИКАЛЬНОСТЬ</b>«даже если начинаешь с нуля»: освоит даже новичок</div><div><b>КОНКРЕТИКА</b>«доход от $1 000»</div></div>
+<p>H1 показывает результат: кем ты станешь, сколько будешь зарабатывать и за какой срок. «Из монтажёра в контент-креатора» взято из драфта клиента и сразу объясняет разницу. Подзаголовок снимает страх «у меня нет опыта» и отвечает на вопрос «а как»</p></div>
+<h3>Варианты H1 для A/B-теста</h3>
+<div class="h1v"><p class="t">Профессия, за которую бизнес платит каждый месяц: освой с нуля за 2 месяца и выйди на $1 000</p><p>Сильнее давит на регулярный доход. Для сегментов А и Б</p></div>
+<div class="h1v"><p class="t">Сними первый ролик на телефон сегодня, а через 2 месяца зарабатывай от $1 000 ежемесячно на контенте для бизнеса</p><p>Снимает страх «нет техники и опыта». Для сегментов Б и В</p></div>
+<div class="h1v"><p class="t">Монтаж за $10 или контент за $1 000 в месяц: разница в 2 месяцах с ментором</p><p>Для сегмента Г, который уже делает видео</p></div>
+</section>
+
+<section id="a-ux">
+<h2>5. UX-путь по странице</h2>
+<p class="body">Порядок блоков повторяет драфт. Каждый блок отвечает на следующий вопрос, который появляется у человека. Кнопки называют действие своими словами, чтобы не повторять одно и то же: в шапке «Заполнить анкету», на первом экране «Записаться на разбор», после видео «Хочу на разбор», в трёх китах «Обсудить свою точку старта», в историях «Хочу так же», в форматах «Узнать условия», в финале «Стать следующим»</p>
+<div class="tbl-wrap"><table class="tbl">
+<tr><th>#</th><th>Блок и заголовок</th><th>Вопрос в голове</th><th>Чем отвечаем</th></tr>
+<tr><td>1</td><td>Первый экран: «Из монтажёра в контент-креатора с доходом от $1 000 за 2 месяца»</td><td>Что это и для меня ли?</td><td>Профессия, срок, цель и три цифры: 400+ учеников, 7 лет, 4,61/5</td></tr>
+<tr><td>2</td><td>«Это сделали люди без опыта»</td><td>Это вообще работает?</td><td>7 лиц, у каждого одна цифра</td></tr>
+<tr><td>3</td><td>«Мои 7 лет в контенте в одном уроке»</td><td>Не хочу читать, расскажи</td><td>Видео Валентина и бегущая строка форматов, за которые платят</td></tr>
+<tr><td>4</td><td>«Хочется большего, а ощущение, что жизнь проходит мимо»</td><td>Он понимает, что со мной?</td><td>Боль словами учеников и история Валентина с мамой</td></tr>
+<tr><td>5</td><td>«Не нужно светить лицом и собирать миллионы подписчиков»</td><td>Мне надо становиться блогером?</td><td>Нет, работаешь за кадром на аудиторию бизнеса</td></tr>
+<tr><td>6</td><td>«Монтажёру платят за ролик, креатору за результат»</td><td>Почему у меня раньше не вышло?</td><td>Лестница дохода от $10 за ролик до $1 000+ в месяц</td></tr>
+<tr><td>7</td><td>«Пока ты думаешь, эти вакансии уже кто-то закрывает»</td><td>Это кому-то нужно?</td><td>Скриншоты реальных вакансий, 30 слабых откликов на каждую</td></tr>
+<tr><td>8</td><td>«Три кита ViMotion»</td><td>Почему в этот раз получится?</td><td>План, сопровождение, окружение</td></tr>
+<tr><td>9</td><td>«Маршрут заезда»</td><td>Что я буду делать и когда будут деньги?</td><td>4 участка за 8 недель, на финише первый клиент</td></tr>
+<tr><td>10</td><td>«Программа»</td><td>Чему конкретно научат?</td><td>9 модулей, внутри все уроки</td></tr>
+<tr><td>11</td><td>«К концу программы у тебя на руках»</td><td>Что у меня останется?</td><td>14 конкретных результатов</td></tr>
+<tr><td>12</td><td>«Чтобы выйти на $1 000, рядом нужен тот, кто уже делает $3 000, и он у тебя будет»</td><td>Кто мне поможет?</td><td>Ментор-практик и цифры: 100% заданий с разбором, созвон раз в неделю, до 30 учеников, оценка 4,80</td></tr>
+<tr><td>13</td><td>«Будем рядом, пока не найдёшь первого клиента»</td><td>А если не найду клиента?</td><td>До 3 месяцев сопровождения, Биржа ViMotion, рекомендации</td></tr>
+<tr><td>14</td><td>«Они тоже думали, что у них не получится»</td><td>У таких, как я, получилось?</td><td>6 историй через их сомнение и цифру</td></tr>
+<tr><td>15</td><td>«Я создал ViMotion, потому что сам не мог найти сильных креаторов»</td><td>Кто за этим стоит и зачем ему это?</td><td>Валентин сам нанимает креаторов и забирает лучших</td></tr>
+<tr><td>16</td><td>«Форматы участия»</td><td>Как участвовать?</td><td>Прорыв и VIP, разница в уровне личного внимания</td></tr>
+<tr><td>17</td><td>«Кажется, что уже поздно и это не для тебя?»</td><td>Потяну ли я?</td><td>Шесть сомнений и честные ответы</td></tr>
+<tr><td>18</td><td>«Остались вопросы?»</td><td>Время, оплата, что после анкеты</td><td>Короткие ответы и кнопка в Telegram</td></tr>
+<tr><td>19</td><td>«Следующая история в этом списке твоя»</td><td>Что дальше?</td><td>Один шаг: анкета на бесплатный разбор</td></tr>
+</table></div>
+<h3>Отдельная страница историй: «Пьедестал ViMotion»</h3>
+<p>Для тех, кто сомневается и хочет подробностей. Название продолжает гоночный язык Валентина (маршрут заезда, участки, финиш), а подзаголовок сразу объясняет, кто здесь. Каждая история по одной схеме: откуда пришёл, что сделал, две цифры, прямая речь и места под доказательства</p>
+</section>
+</article>
+</main>
+<footer class="site-foot" id="siteFoot"><div><strong style="color:#161616">VIMOTION</strong><br>Менторская программа по контенту для бизнеса<br>ИП Сушнёв Валентин Андреевич · ИНН 775189986429</div><nav><a href="#">Оферта</a><a href="#">Политика данных</a><a href="#cases">Истории</a><a href="#contacts">Контакты</a><a href="https://t.me/way_toyoutube">Telegram</a><a href="#">YouTube</a><a href="#">Instagram</a></nav></footer>
+<script>
+const pages=[...document.querySelectorAll('[data-page]')],names=new Set(pages.map(p=>p.dataset.page));
+document.querySelectorAll('[data-note]').forEach(s=>{const n=document.createElement('aside');n.className='note';n.innerHTML='<b>Почему так</b>'+s.dataset.note;s.appendChild(n)});
+const btn=document.getElementById('notesBtn');btn.addEventListener('click',()=>{const on=document.body.classList.toggle('notes');btn.setAttribute('aria-pressed',on);btn.textContent=on?'Скрыть пояснения':'Показать пояснения к блокам'});
+function route(){const raw=location.hash.slice(1)||'home';if(raw==='apply'||raw==='thanks'){location.replace('https://vi-motion.pro/quiz/');return}
+let page='home',target=null;if(names.has(raw))page=raw;else{target=document.getElementById(raw);const host=target&&target.closest('[data-page]');if(host)page=host.dataset.page;else target=null}
+pages.forEach(el=>el.hidden=el.dataset.page!==page);const isDoc=page==='analysis';document.getElementById('siteHead').hidden=isDoc;document.getElementById('siteFoot').hidden=isDoc;
+document.querySelectorAll('[data-tab]').forEach(a=>a.classList.toggle('on',(a.dataset.tab==='proto'&&(page==='home'||page==='contacts'))||a.dataset.tab===page));
+requestAnimationFrame(()=>{if(target)target.scrollIntoView();else window.scrollTo(0,0)})}
+addEventListener('hashchange',route);route();
+</script></body></html>
