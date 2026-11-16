@@ -2,7 +2,9 @@
 .hero{position:relative;min-height:max(760px,100svh);overflow:hidden;background:var(--cream)}
 /* композиция шириной --W по центру; текст в потоке и прижат к низу, но не выше низа вордмарка */
 .hero-in{position:relative;width:var(--W);max-width:100%;margin:0 auto;min-height:inherit;display:flex;flex-direction:column;justify-content:flex-end;
-  padding:calc(76px + (var(--W) - 2*var(--m))*471/1600 + 6px) 0 64px}
+  /* нижний отступ 64px, на невысоких экранах сжимается до 32px */
+  --pb:clamp(32px,calc(100svh - 445px - (var(--W) - 2*var(--m))*471/1600),64px);
+  padding:calc(76px + (var(--W) - 2*var(--m))*471/1600 + 6px) 0 var(--pb)}
 /* зерно поверх всего первого экрана, включая шапку */
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:30;opacity:.08;mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .15 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -29,7 +31,7 @@
 .cta-row{margin-top:28px}
 
 /* цифры в рамке-видоискателе */
-.stats{--c:var(--ink);--k:22px;list-style:none;position:absolute;z-index:5;right:var(--m);bottom:64px;width:212px;padding:20px 22px;
+.stats{--c:var(--ink);--k:22px;list-style:none;position:absolute;z-index:5;right:var(--m);bottom:var(--pb);width:212px;padding:20px 22px;
   background:
    linear-gradient(var(--c),var(--c)) left top/var(--k) 2px no-repeat,linear-gradient(var(--c),var(--c)) left top/2px var(--k) no-repeat,
    linear-gradient(var(--c),var(--c)) right top/var(--k) 2px no-repeat,linear-gradient(var(--c),var(--c)) right top/2px var(--k) no-repeat,
