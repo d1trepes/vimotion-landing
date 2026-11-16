@@ -1,5 +1,8 @@
 /* Блок 1. Первый экран */
-.hero{position:relative;height:100svh;min-height:760px;overflow:hidden;background:var(--cream)}
+.hero{position:relative;min-height:max(760px,100svh);overflow:hidden;background:var(--cream)}
+/* композиция шириной --W по центру; текст в потоке и прижат к низу, но не выше низа вордмарка */
+.hero-in{position:relative;width:var(--W);max-width:100%;margin:0 auto;min-height:inherit;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:calc(76px + (var(--W) - 2*var(--m))*471/1600 + 6px) 0 64px}
 /* зерно поверх всего первого экрана, включая шапку */
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:30;opacity:.08;mix-blend-mode:multiply;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .3 0 0 0 0 .2 0 0 0 0 .15 0 0 0 .9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
@@ -9,15 +12,15 @@
 .wm img{width:100%;height:100%}
 
 /* живое фото: голова перекрывает вордмарк, низ ровно по краю экрана */
-.pt{position:absolute;z-index:3;bottom:0;left:33.3vw;width:47.9vw;aspect-ratio:744/690}
+.pt{position:absolute;z-index:3;bottom:0;left:33.3%;width:47.9%;aspect-ratio:744/690}
 .pt img,.pt canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .pt canvas{opacity:0;transition:opacity .2s}
 .pt.live canvas{opacity:1}
 .pt.live img{opacity:0;transition:opacity .2s .1s}
 
 /* текст */
-.copy{position:absolute;z-index:4;left:var(--m);bottom:64px;width:48vw}
-.h1{font:900 min(3.45vw,50px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink)}
+.copy{position:relative;z-index:4;margin-left:var(--m);width:48%}
+.h1{font:900 min(calc(var(--W)*.0345),50px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink)}
 .h1 .ln{display:block}
 .h1 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0;border-radius:3px}
 .nw{white-space:nowrap}
@@ -64,8 +67,9 @@
 
 /* ---------- планшет: текст и цифры в потоке, цифры строкой под кнопкой ---------- */
 @media (max-width:1180px){
-  .hero{height:auto;min-height:100svh;padding-bottom:8px}
-  .copy{position:relative;left:auto;bottom:auto;width:46vw;margin:calc(76px + (100vw - 2*var(--m))*471/1600 + 28px) 0 0 var(--m)}
+  .hero{min-height:100svh}
+  .hero-in{display:flow-root;width:100%;padding:0 0 8px}
+  .copy{width:46vw;margin:calc(76px + (100vw - 2*var(--m))*471/1600 + 28px) 0 0 var(--m)}
   .h1{font-size:min(3.5vw,40px)}
   .sub{font-size:16px;max-width:none}
   .cta-row{margin-top:24px}
@@ -82,7 +86,7 @@
 
 /* ---------- телефон: портрет сверху, текст ниже, цифры могут уйти под первый экран ---------- */
 @media (max-width:720px){
-  .hero{padding-bottom:40px}
+  .hero-in{padding-bottom:40px}
   .wm{top:66px}
   .pt{left:2vw;width:96vw;top:84px;bottom:auto}
   .copy{width:auto;margin:calc(84px + 96vw*690/744 + 16px) var(--m) 0}

@@ -1,5 +1,5 @@
 /* Шапка */
-.hdr{position:absolute;inset:0 0 auto 0;z-index:20;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--m)}
+.hdr{position:absolute;inset:0 0 auto 0;z-index:20;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 max(var(--m),calc((100% - var(--W))/2 + var(--m)))}
 .logo{font:400 30px/1 var(--logo);color:var(--red);transform:skewX(-11deg);text-decoration:none;display:inline-block;letter-spacing:.01em}
 .nav{display:flex;gap:34px}
 .nav a{font:500 15px var(--text);color:var(--ink);text-decoration:none;position:relative}
