@@ -30,6 +30,8 @@
 
   function fit(){
     reset();
+    /* старые стили из кеша: ничего не трогаем, работает CSS-вёрстка */
+    if(getComputedStyle(root).getPropertyValue('--hero-fit').trim()!=='1')return;
     var W=inn.clientWidth,H=probe.getBoundingClientRect().height||innerHeight;
     var m=parseFloat(getComputedStyle(root).getPropertyValue('--m'))||56;
     var hh=hdr?hdr.offsetHeight:76;
