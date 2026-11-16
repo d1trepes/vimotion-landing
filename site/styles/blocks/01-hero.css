@@ -25,7 +25,7 @@
 .copy{position:relative;z-index:4;margin-left:var(--m);width:48%}
 .h1{font:900 min(calc(var(--W)*.0345),50px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink)}
 .h1 .ln{display:block}
-.h1 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0;border-radius:3px}
+.h1 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0;border-radius:0}
 .nw{white-space:nowrap}
 /* абзац не заходит на плечо портрета (левый край портрета 33.3vw + ~8% его ширины) */
 .sub{margin-top:20px;font:400 18px/1.55 var(--text);color:#2a2522;max-width:min(470px,calc(37.2vw - var(--m) - 12px));text-wrap:pretty}
@@ -88,8 +88,8 @@
   .stat-lbl{font-size:9.5px;letter-spacing:.05em}
 }
 
-/* ---------- телефон: портрет сверху, текст ниже, цифры могут уйти под первый экран ---------- */
-@media (max-width:720px){
+/* ---------- телефон и вертикальный планшет: портрет сверху, текст ниже ---------- */
+@media (max-width:720px),(max-width:1180px) and (orientation:portrait){
   .hero-in{padding-bottom:40px}
   .wm{top:66px}
   .pt{left:2vw;width:96vw;top:84px;bottom:auto}
@@ -105,3 +105,20 @@
   .stat-lbl{font-size:9px;letter-spacing:.05em}
   .stats::before{top:8px;right:8px;width:6px;height:6px}
 }
+
+/* вертикальный планшет: кнопка по содержимому, текст чуть крупнее */
+@media (min-width:721px) and (max-width:1180px) and (orientation:portrait){
+  .wm{top:76px}
+  .pt{top:94px}
+  .copy{margin-top:calc(94px + 96vw*690/744 + 16px)}
+  .sub{font-size:17px}
+  .hero .btn-red{width:auto}
+}
+
+/* подгонка под окно (scripts/hero-fit.js): hero ровно в высоту экрана,
+   снизу тот же отступ, что по бокам; координаты задаёт скрипт */
+.vm-fit .hero{min-height:0}
+.vm-fit .hero-in{min-height:0;height:100%;padding:0;display:block}
+.vm-fit .wm{right:auto}
+.vm-fit .pt{bottom:auto;aspect-ratio:auto}
+.vm-fit .copy,.vm-fit .stats{position:absolute;margin:0;right:auto;bottom:auto}
