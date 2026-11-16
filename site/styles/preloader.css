@@ -1,0 +1,10 @@
+/* Прелоадер-спидометр. Показывается, только пока на <html> есть класс is-loading или is-leaving */
+.pre{display:none;position:fixed;inset:0;z-index:100;background:var(--cream);place-items:center}
+.is-loading .pre,.is-leaving .pre{display:grid}
+.gauge{width:min(420px,86vw);text-align:center;transition:transform .6s var(--ease),opacity .4s}
+.gauge svg{display:block;width:100%;height:auto;overflow:visible}
+.g-brand{margin-top:22px;font:800 italic 15px var(--display);letter-spacing:.32em}
+.is-leaving .pre{clip-path:inset(0 0 100% 0);transition:clip-path .75s cubic-bezier(.7,0,.2,1) .15s}
+.is-leaving .gauge{transform:translateY(-40px) scale(.94);opacity:0}
+
+@media (prefers-reduced-motion:reduce){.pre{display:none!important}}

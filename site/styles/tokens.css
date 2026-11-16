@@ -1,17 +1,55 @@
-/* ViMotion: дизайн-токены. Сверить цвета и шрифты с клиентом */
+/* ViMotion: дизайн-токены (палитра vi-motion.pro, утверждено в блоке 1) */
+@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Inter:wght@400;500;600&family=Anton&display=swap");
+
+@font-face{
+  font-family:"Fira XC";
+  src:url(../fonts/fira-xc-900.woff2) format("woff2");
+  font-weight:900;
+  font-display:swap;
+}
+
 :root{
-  --red:#9E1823;
-  --red-deep:#93010E;
-  --maroon:#5D1219;
-  --cream:#F9EFE3;
-  --white:#FFFFFF;
-  --ink:#121212;
-  --ink-2:#1E1E1E;
-  --muted:#6B6B6B;
-  --radius:22px;
-  --radius-pill:999px;
-  --shadow:0 18px 40px rgba(18,18,18,.08);
-  --font-display:"Fira Sans Extra Condensed","Roboto Condensed","Oswald",sans-serif;
-  --font-text:"Manrope","Inter",system-ui,sans-serif;
-  --cta-url:"https://vi-motion.pro/quiz/";
+  /* цвета */
+  --cream:#EFE6DE;
+  --red:#9A0002;
+  --red-hover:#7a0002;
+  --ink:#111111;
+  --muted:#6A625C;
+  --line:rgba(17,17,17,.14);
+  --on-red:#F6EEE6;
+
+  /* шрифты */
+  --display:"Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --text:"Inter","Helvetica Neue",Arial,sans-serif;
+  --cond:"Fira XC","Fira Sans Extra Condensed","Arial Narrow",sans-serif;
+  --logo:"Anton","Inter Tight",Arial,sans-serif;
+
+  /* волнистая текстура для красных плашек */
+  --wave:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='9'%3E%3Cpath d='M0 4.5 Q7 0 14 4.5 T28 4.5' fill='none' stroke='%23ffffff' stroke-opacity='.13' stroke-width='1.6'/%3E%3C/svg%3E");
+
+  --ease:cubic-bezier(.16,1,.3,1);
+
+  /* сетка: поле страницы */
+  --m:56px;
+}
+@media (max-width:1180px){:root{--m:32px}}
+@media (max-width:720px){:root{--m:16px}}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
+body{overflow-x:clip;-webkit-font-smoothing:antialiased}
+img{display:block;max-width:100%}
+
+/* общие кнопки: красная заливка, тонкая стрелка */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:14px;height:64px;padding:0 34px;border-radius:6px;text-decoration:none;
+  font:700 15px/1 var(--display);letter-spacing:.07em;text-transform:uppercase;white-space:nowrap;transition:background .25s,color .25s;
+  background:var(--red);color:#fff}
+.btn:hover{background:var(--red-hover)}
+.btn .bt{display:block;line-height:1;padding-top:.13em}
+@supports (text-box:cap alphabetic){.btn .bt{padding-top:0;text-box:cap alphabetic}}
+.btn svg{width:16px;height:16px;flex:none;transition:transform .35s var(--ease)}
+.btn:hover svg{transform:translate(3px,-3px)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
 }

@@ -3,10 +3,81 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ViMotion</title>
+<title>ViMotion: из монтажёра в контент-креатора</title>
+<meta name="description" content="Менторская программа Валентина Сушнёва: из монтажёра в контент-креатора с доходом от $1 000 за 2 месяца">
+<meta name="theme-color" content="#EFE6DE">
+<link rel="icon" href="data:,">
+<script>
+  /* прелоадер и анимации только без prefers-reduced-motion */
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.documentElement.classList.add('is-loading');
+    /* страховка: если скрипты не загрузились, через 6 с всё равно показываем сайт */
+    setTimeout(function(){document.documentElement.classList.remove('is-loading')},6000);
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" href="fonts/fira-xc-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="img/wordmark.webp" as="image" type="image/webp">
+<link rel="preload" href="img/valentin-poster.webp" as="image" type="image/webp">
 <link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/preloader.css">
+<link rel="stylesheet" href="styles/blocks/00-header.css">
+<link rel="stylesheet" href="styles/blocks/01-hero.css">
+<script src="scripts/live-photo.js" defer></script>
+<script src="scripts/hero.js" defer></script>
+<script src="scripts/preloader.js" defer></script>
 </head>
 <body>
-<!-- Блоки добавляются по одному, см. PROJECT_INSTRUCTIONS.md -->
+
+<!-- Прелоадер: спидометр -->
+<div class="pre" id="pre" aria-hidden="true">
+  <div class="gauge">
+    <svg id="gsvg" viewBox="0 30 400 300"></svg>
+    <div class="g-brand">VIMOTION</div>
+  </div>
+</div>
+
+<header class="hdr">
+  <a class="logo" href="./">VIMOTION</a>
+  <nav class="nav" aria-label="Разделы"><a href="#">Как устроено</a><a href="#">Программа</a><a href="#">Истории</a><a href="#">Форматы</a><a href="#">Вопросы</a></nav>
+  <div class="hdr-right">
+    <a class="btn btn-line" href="https://vi-motion.pro/quiz/"><span class="bt">Заполнить анкету</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+    <button class="burger" type="button" aria-label="Меню"><i></i></button>
+  </div>
+</header>
+
+<main>
+
+<!-- Блок 1. Первый экран -->
+<section class="hero" id="hero">
+  <div class="wm"><img src="img/wordmark.webp" alt="" width="1600" height="471"></div>
+
+  <div class="pt" id="pt">
+    <img src="img/valentin-poster.webp" alt="Валентин Сушнёв" width="744" height="690" fetchpriority="high">
+    <canvas id="live" width="744" height="690" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="copy">
+    <h1 class="h1">
+      <span class="ln">Из монтажёра</span>
+      <span class="ln"><span class="hl">в контент-креатора</span></span>
+      <span class="ln">с доходом от $1&nbsp;000 <span class="nw">за&nbsp;2&nbsp;месяца</span></span>
+    </h1>
+    <p class="sub"><b>Даже если начинаешь с нуля.</b> Снимаешь с телефона, ментор рядом на каждом шаге, а первых клиентов ищем&nbsp;вместе</p>
+    <div class="cta-row">
+      <a class="btn btn-red" href="https://vi-motion.pro/quiz/"><span class="bt">Записаться на разбор</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+    </div>
+  </div>
+
+  <ul class="stats">
+    <li class="stat"><div class="stat-num" data-to="400" data-suffix="+">400+</div><div class="stat-lbl">учеников за всё&nbsp;время</div></li>
+    <li class="stat"><div class="stat-num" data-to="7" data-unit="лет">7<small>лет</small></div><div class="stat-lbl">в контенте · своё&nbsp;агентство</div></li>
+    <li class="stat"><div class="stat-num" data-to="4.61" data-dec="2" data-suffix="/5">4,61/5</div><div class="stat-lbl">оценка учеников</div></li>
+  </ul>
+</section>
+
+</main>
+
 </body>
 </html>
