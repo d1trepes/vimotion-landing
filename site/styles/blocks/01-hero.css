@@ -1,6 +1,7 @@
 /* Блок 1. Первый экран */
 .hero{position:relative;min-height:max(760px,100svh);overflow:hidden;background:var(--cream)}
-/* композиция шириной --W по центру; текст в потоке и прижат к низу, но не выше низа вордмарка */
+/* текст в потоке и прижат к низу, но никогда не выше низа вордмарка:
+   на невысоких экранах hero становится выше окна, поля остаются 56px */
 .hero-in{position:relative;width:var(--W);max-width:100%;margin:0 auto;min-height:inherit;display:flex;flex-direction:column;justify-content:flex-end;
   /* нижний отступ 64px, на невысоких экранах сжимается до 32px */
   --pb:clamp(32px,calc(100svh - 445px - (var(--W) - 2*var(--m))*471/1600),64px);
@@ -26,7 +27,8 @@
 .h1 .ln{display:block}
 .h1 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0;border-radius:3px}
 .nw{white-space:nowrap}
-.sub{margin-top:20px;font:400 18px/1.55 var(--text);color:#2a2522;max-width:470px;text-wrap:pretty}
+/* абзац не заходит на плечо портрета (левый край портрета 33.3vw + ~8% его ширины) */
+.sub{margin-top:20px;font:400 18px/1.55 var(--text);color:#2a2522;max-width:min(470px,calc(37.2vw - var(--m) - 12px));text-wrap:pretty}
 .sub b{font-weight:600;color:var(--ink)}
 .cta-row{margin-top:28px}
 
