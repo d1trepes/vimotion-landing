@@ -105,9 +105,9 @@
   video.addEventListener('seeked',draw);
 
   /* ---------- играет только после прелоадера, на видимой вкладке и пока hero на экране ---------- */
-  var started=false,inView=true,visible=!document.hidden;
+  var started=false,inView=true,visible=!document.hidden,covered=false;
   function sync(){
-    if(started&&inView&&visible){var p=video.play();if(p&&p.catch)p.catch(function(){})}
+    if(started&&inView&&visible&&!covered){var p=video.play();if(p&&p.catch)p.catch(function(){})}
     else if(!video.paused)video.pause();
   }
   document.addEventListener('visibilitychange',function(){visible=!document.hidden;sync()});
@@ -120,6 +120,8 @@
   window.vmLive={
     video:video,
     start:function(){if(started)return;started=true;rectUntil=performance.now()+2500;sync()},
-    relayout:function(){rectDirty=true;if(video.paused)draw()}
+    relayout:function(){rectDirty=true;if(video.paused)draw()},
+    /* hero sticky: когда блок 2 закрыл его целиком, он всё ещё «на экране» для IntersectionObserver */
+    cover:function(c){if(covered!==c){covered=c;sync()}}
   };
 })();

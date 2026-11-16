@@ -1,0 +1,83 @@
+/* Блок 2. Это сделали люди без опыта
+   Наезд: hero липнет к верху (только когда hero-fit подогнал его ровно в окно),
+   блок 2 выше по z-index и едет поверх; hero под ним темнеет (--cover ставит people.js).
+   Вау-момент: рамка видоискателя с REC переезжает с человека на человека,
+   тот, на ком рамка, цветной, остальные чёрно-белые. */
+
+.vm-fit .hero{position:sticky;top:0}
+.hero::before{content:"";position:absolute;inset:0;z-index:31;pointer-events:none;background:#111;opacity:calc(var(--cover,0)*.5)}
+.hero-covered .hero{visibility:hidden}
+/* всё, что после hero, лежит поверх него */
+.hero~section{position:relative;z-index:40;background:var(--cream)}
+
+.ppl{padding:112px var(--m) 128px;box-shadow:0 -28px 64px -12px rgba(17,17,17,.32)}
+
+/* H2 как H1: Fira XC 900, один размер и цвет, акцент только плашкой */
+.h2{font:900 min(3.4722vw,50px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink);text-align:center;text-wrap:balance}
+.h2 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0;border-radius:0}
+@media (min-width:1441px){.h2{font-size:min(calc(50px + (100vw - 1440px)/60),58px)}}
+
+.ppl-row{position:relative;list-style:none;margin-top:56px;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:40px 16px}
+.pc-2{grid-column:span 2}
+.pc a{display:block;color:inherit;text-decoration:none;outline:none}
+.ph{position:relative;display:block;aspect-ratio:3/4;background:#d9cec5}
+.pc-2 .ph{aspect-ratio:auto;display:grid;grid-template-columns:1fr 1fr;gap:16px;background:none}
+.ph img{width:100%;height:100%;object-fit:cover}
+.pc-2 .ph img{height:auto;aspect-ratio:3/4;background:#d9cec5}
+.nm{display:block;margin-top:16px;font:900 24px/1.05 var(--cond);color:var(--ink)}
+.cp{display:block;margin-top:6px;font:400 15px/1.45 var(--text);color:var(--muted);text-wrap:pretty}
+.pc a:focus-visible .nm{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:4px}
+
+/* чёрно-белые все, кроме того, на ком рамка (только с JS и без reduced-motion) */
+.ppl.is-vf .ph img{filter:grayscale(1) contrast(.95);transition:filter .7s var(--ease)}
+.ppl.is-vf .pc.on .ph img{filter:none}
+
+/* рамка видоискателя: уголки 22px/2px, как у цифр в hero, и мигающая точка REC */
+.vf{position:absolute;left:0;top:0;width:0;height:0;pointer-events:none;z-index:2;opacity:0;--o:10px;
+  transition:transform .75s var(--ease),width .75s var(--ease),height .75s var(--ease),opacity .4s}
+.vf.ready{opacity:1}
+.vf.jump{transition:opacity .4s}
+.vf::before{content:"";position:absolute;inset:calc(-1*var(--o));
+  --c:var(--ink);--l:22px;--t:2px;
+  background:
+    linear-gradient(var(--c),var(--c)) 0 0/var(--l) var(--t),linear-gradient(var(--c),var(--c)) 0 0/var(--t) var(--l),
+    linear-gradient(var(--c),var(--c)) 100% 0/var(--l) var(--t),linear-gradient(var(--c),var(--c)) 100% 0/var(--t) var(--l),
+    linear-gradient(var(--c),var(--c)) 0 100%/var(--l) var(--t),linear-gradient(var(--c),var(--c)) 0 100%/var(--t) var(--l),
+    linear-gradient(var(--c),var(--c)) 100% 100%/var(--l) var(--t),linear-gradient(var(--c),var(--c)) 100% 100%/var(--t) var(--l);
+  background-repeat:no-repeat}
+.vf::after{content:"";position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%;background:#d0141a;box-shadow:0 0 0 3px rgba(17,17,17,.22);animation:vf-rec 1.6s steps(1) infinite}
+@keyframes vf-rec{50%{opacity:.15}}
+
+/* планшет: 4 колонки, двойная карточка в конце второго ряда */
+@media (max-width:1180px){
+  .ppl{padding:96px var(--m) 104px}
+  .h2{font-size:min(3.5vw,40px)}
+  .ppl-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 20px;margin-top:48px}
+  .pc-2 .ph{gap:20px}
+}
+/* вертикальный планшет и телефон: 2 колонки, «Ангелина и Остап» на всю ширину */
+@media (max-width:720px), (max-width:1180px) and (orientation:portrait){
+  .h2{font-size:min(9.4vw,37px)}
+  .ppl-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:1180px) and (min-width:721px) and (orientation:portrait){
+  .h2{font-size:min(5.6vw,50px)}
+  .ppl-row{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .pc-2{grid-column:span 3}
+  .pc-2 .ph{grid-template-columns:repeat(3,1fr)}
+}
+@media (max-width:720px){
+  .ppl{padding:64px var(--m) 72px;box-shadow:0 -20px 44px -10px rgba(17,17,17,.32)}
+  .ppl-row{gap:28px 12px;margin-top:32px}
+  .pc-2 .ph{gap:12px}
+  .nm{margin-top:12px;font-size:22px}
+  .cp{margin-top:4px;font-size:14px}
+  .vf{--o:6px}
+  .vf::before{--l:16px}
+  .vf::after{top:8px;right:8px;width:6px;height:6px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .ppl.is-vf .ph img{filter:none}
+  .vf{display:none}
+}
