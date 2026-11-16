@@ -125,3 +125,11 @@
 .vm-fit .wm{right:auto}
 .vm-fit .pt{bottom:auto;aspect-ratio:auto}
 .vm-fit .copy,.vm-fit .stats{position:absolute;margin:0;right:auto;bottom:auto}
+
+/* телефон в невысоком окне (браузер внутри Telegram и т. п.): плотнее колонка, место отдаётся портрету */
+.hero-compact .sub{margin-top:10px}
+.hero-compact .cta-row{margin-top:14px}
+.hero-compact .hero .btn-red{height:50px}
+.hero-compact .stats{padding:10px 12px}
+.hero-compact .stat-num{font-size:28px}
+.hero-compact .stat-lbl{margin-top:4px}

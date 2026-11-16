@@ -12,9 +12,9 @@
   /* силуэт человека по всей петле: левый и правый край в долях ширины кадра, 32 полосы сверху вниз */
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
-  /* параметры композиции десктопа; ?fit=b для сравнения варианта */
-  var VARS={a:{grow:1.32,wmMin:.8,head:.1},b:{grow:1.16,wmMin:.9,head:.12}};
-  var P=VARS[(location.search.match(/[?&]fit=(\w)/)||[])[1]]||VARS.a;
+  /* параметры композиции десктопа (вариант B, утверждён 17.11): текст растёт с шириной экрана до 116%,
+     вордмарк ради этого сужается не больше чем до 90%, голова заходит на вордмарк на 12% его высоты */
+  var P={grow:1.16,wmMin:.9,head:.12};
   /* те же границы, что в 01-hero.css */
   var mqT=matchMedia('(max-width:1180px)'),mqP=matchMedia('(max-width:720px), (max-width:1180px) and (orientation:portrait)');
 
@@ -40,6 +40,7 @@
     if(getComputedStyle(root).getPropertyValue('--hero-fit').trim()!=='1')return;
     var W=inn.clientWidth,H=probe.getBoundingClientRect().height||innerHeight;
     var m=parseFloat(getComputedStyle(root).getPropertyValue('--m'))||56;
+    root.classList.toggle('hero-compact',mqP.matches&&W<=720&&H<760);
     var hh=hdr?hdr.offsetHeight:76;
     var cr=copy.getBoundingClientRect(),sr=stats.getBoundingClientRect();
     var Cw=cr.width,Ch=cr.height,Sw=sr.width,Sh=sr.height;
@@ -101,10 +102,12 @@
     }else{
       /* телефон и вертикальный планшет: портрет сверху на вордмарке, текст и цифры внизу */
       wmTop=hh+(m<20?4:0);
-      var ptTop=wmTop+.08*wmFull*WM,g1=16,sg2=20;
-      col=Ch+sg2+Sh;
+      var ptTop=wmTop+.04*wmFull*WM,g1=12,sg2=20;
+      col=Ch+(root.classList.contains("hero-compact")?12:sg2)+Sh;
       var phFull=W*PT;
-      ph=Math.min(phFull,H-ptTop-g1-col-m);
+      /* человек в приоритете: текст сначала чуть уменьшается (до 86%), чтобы портрет был не меньше 78% ширины экрана */
+      s=Math.max(.84,Math.min(1,(H-ptTop-g1-.78*phFull-m)/col));
+      ph=Math.min(phFull,H-ptTop-g1-col*s-m);
       if(ph<phFull*.56){
         ph=phFull*.56;
         s=Math.max(.8,Math.min(1,(H-ptTop-g1-ph-m)/col));
@@ -116,8 +119,9 @@
       place(wm,m,wmTop,wmFull);
       place(pt,(W-pw)/2,ptTop,pw);pt.style.height=px(ph);
       /* колонка на всю ширину между полями и после уменьшения */
+      var sg3=root.classList.contains('hero-compact')?12:sg2;
       place(stats,m,heroH-m-Sh*s,(W-2*m)/s,s);
-      place(copy,m,heroH-m-(Sh+sg2+Ch)*s,(W-2*m)/s,s);
+      place(copy,m,heroH-m-(Sh+sg3+Ch)*s,(W-2*m)/s,s);
     }
   }
 
