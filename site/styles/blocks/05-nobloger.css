@@ -17,12 +17,12 @@
 .nob-h.h2{position:sticky;top:var(--t0);text-align:left;color:var(--on-red);font-size:min(5vw,72px)}
 
 /* стопка */
-.nob-st{list-style:none;display:flex;flex-direction:column;gap:44vh}
+.nob-st{list-style:none;display:flex;flex-direction:column;gap:calc(var(--vhl,100vh)*0.44)}
 .nob-c{position:sticky;top:calc(var(--t0) + var(--i)*var(--st));height:var(--ch);padding:30px 44px 44px;
   display:flex;flex-direction:column;overflow:hidden;background:var(--bg);
   box-shadow:0 -14px 30px -16px rgba(0,0,0,.9);transform-origin:50% 0;will-change:transform}
 /* нижний край у всех карточек один, чтобы стопка уезжала целиком, а не 03 наползала на 01 и 02 */
-.nob-c{margin-bottom:calc(22vh + (2 - var(--i))*var(--st))}
+.nob-c{margin-bottom:calc(calc(var(--vhl,100vh)*0.22) + (2 - var(--i))*var(--st))}
 /* наклонная полоса, как ливрея */
 .nob-c::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 62%,rgba(255,255,255,.035) 62% 70%,transparent 70%);pointer-events:none}
 .nob-c:nth-child(1){--i:0;--bg:#191817}
@@ -49,7 +49,7 @@
   .hero~.nob{padding:72px var(--m) 80px;--ch:330px;--st:84px}
   .nob-in{grid-template-columns:1fr;gap:40px}
   .nob-h.h2{position:static;font-size:min(10.2vw,42px)}
-  .nob-st{gap:8vh} /* 02 и 03 едут сразу следом за 01, без паузы на пустом экране */
+  .nob-st{gap:calc(var(--vhl,100vh)*0.08)} /* 02 и 03 едут сразу следом за 01, без паузы на пустом экране */
   .nob-c{padding:18px 24px 28px}
   .nob-n{font-size:64px;-webkit-text-stroke-width:1.5px}
   .nob-t{font-size:23px}.nob-p{font-size:16px}

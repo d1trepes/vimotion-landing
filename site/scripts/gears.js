@@ -35,7 +35,7 @@
   var DWELL=.4;
   function smooth(t){return t*t*(3-2*t)}
   function target(){
-    var r=run.getBoundingClientRect(),len=r.height-innerHeight;
+    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight);
     var p=len>0?Math.max(0,Math.min(1,-r.top/len)):1,u=p*4,i=Math.min(3,Math.floor(u)),f=u-i;
     if(p>=1)return GEAR[4];
     var k=Math.max(0,Math.min(1,(f-DWELL/2)/(1-DWELL)));

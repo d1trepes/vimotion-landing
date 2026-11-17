@@ -42,7 +42,7 @@
   var tick=0,last=-1;
   function upd(){
     tick=0;
-    var r=frame.getBoundingClientRect(),vh=innerHeight||1;
+    var r=frame.getBoundingClientRect(),vh=window.vmVH||innerHeight||1;
     if(r.top>vh*1.2||r.bottom<-vh*.2)return;
     var p=(vh-r.top)/(vh*.45);
     p=Math.max(0,Math.min(1,p));

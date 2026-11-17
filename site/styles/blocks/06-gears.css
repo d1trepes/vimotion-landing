@@ -11,7 +11,7 @@
 .gb-sub{max-width:700px;margin:24px auto 0;text-align:center;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:balance}
 
 /* сцена: закреплена, пока идёт переключение */
-.gb-run{position:relative;height:380vh;margin-top:24px}
+.gb-run{position:relative;height:calc(var(--vhl,100vh)*3.8);margin-top:24px}
 .gb-stage{position:sticky;top:0;height:var(--vhl,100svh);display:grid;place-items:center}
 
 /* --pw ширина кулисы: не шире 1000, влезает по высоте вместе с подписями */
@@ -57,7 +57,7 @@
   .gb{padding-top:72px}
   .gb-h span{display:inline}
   .gb-sub{font-size:16px;margin-top:18px}
-  .gb-run{height:320vh;margin-top:8px}
+  .gb-run{height:calc(var(--vhl,100vh)*3.2);margin-top:8px}
   .gb-board{--pw:100%;padding:0;display:flex;flex-direction:column;gap:22px}
   .gb-plate{order:-1;margin:0 calc(var(--m)*-1);width:calc(100% + var(--m)*2)}
   .gb-lv{display:grid;gap:14px}

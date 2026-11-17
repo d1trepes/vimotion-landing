@@ -14,7 +14,7 @@
   var cov=-1,hidden=false,tick=0;
   function cover(){
     tick=0;
-    var top=sec.getBoundingClientRect().top,vh=innerHeight||1;
+    var top=sec.getBoundingClientRect().top,vh=window.vmVH||innerHeight||1;
     var p=Math.max(0,Math.min(1,1-top/vh));
     p=Math.round(p*100)/100;
     if(p!==cov){cov=p;root.style.setProperty('--cover',p)}

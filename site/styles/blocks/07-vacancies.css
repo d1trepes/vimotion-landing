@@ -16,11 +16,11 @@
 .vc-sub{max-width:1000px;margin:20px auto 0;text-align:center;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:pretty}
 
 /* сцена */
-.vc-run{position:relative;height:190vh}
+.vc-run{position:relative;height:calc(var(--vhl,100vh)*1.9)}
 /* один экран: заголовок сверху, веер занимает всё оставшееся место (вписывается по ширине и высоте) */
-.vc-stage{position:sticky;top:0;height:var(--vhl,100svh);display:flex;flex-direction:column;padding:clamp(40px,7vh,72px) 0 clamp(20px,3.5vh,40px)}
+.vc-stage{position:sticky;top:0;height:var(--vhl,100svh);display:flex;flex-direction:column;padding:clamp(40px,calc(var(--vhl,100vh)*0.07),72px) 0 clamp(20px,calc(var(--vhl,100vh)*0.035),40px)}
 .vc-head{flex:none}
-.vc-area{flex:1;min-height:0;container-type:size;display:grid;place-items:center;perspective:1700px;margin-top:clamp(12px,2.5vh,28px)}
+.vc-area{flex:1;min-height:0;container-type:size;display:grid;place-items:center;perspective:1700px;margin-top:clamp(12px,calc(var(--vhl,100vh)*0.025),28px)}
 .vc-board{position:relative;container-type:inline-size;width:min(1328px,100cqw,calc(100cqh*2.075));aspect-ratio:1328/640;
   transform-style:preserve-3d;transform:rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg))}
 .vc-cards{list-style:none;position:absolute;inset:0}
@@ -47,7 +47,7 @@
 @media (max-width:720px){
   .vc-stage{padding:28px 0 16px}
   .vc-sub{font-size:15px;margin-top:12px}
-  .vc-run{height:170vh}
+  .vc-run{height:calc(var(--vhl,100vh)*1.7)}
   .vc-board{width:min(100cqw,calc(100cqh*.64));aspect-ratio:358/560}
   .vc-c{display:none}
   .vc-c.vc-mob{display:block;left:calc(var(--mx)*1%);top:calc(var(--my)*1%);width:calc(var(--mw)*1%);--rr:var(--mr)}
