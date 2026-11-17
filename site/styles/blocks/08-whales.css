@@ -1,0 +1,107 @@
+/* Блок 8. Три кита ViMotion
+   Чёрный блок, раскладка как на слайде презентации: слева киты с плашками на штангах, справа заголовок и три пункта.
+   Номера пунктов контурные с наклоном, как на болидах (из варианта B).
+   Вау-момент: прожектор. На десктопе сцена закреплена (sticky), по скроллу свет переезжает с кита на кита,
+   плашка активного кита поднимается и загорается, справа подсвечивается его пункт.
+   На телефоне закреплена только картинка, пункты едут под ней, свет следует за пунктом у середины экрана.
+   Без JS и при prefers-reduced-motion: всё освещено, без закрепления. */
+
+.hero~.wh{background:#0e0d0d;color:var(--on-red);overflow:clip;
+  --c1:15.5%;--c2:48%;--c3:80%;        /* центры платформ китов на картинке */
+}
+.wh-run{position:relative}
+.wh-stage{padding:128px var(--m) 136px}
+.wh-in{max-width:1328px;margin:0 auto;display:grid;grid-template-columns:7fr 5fr;column-gap:clamp(40px,5vw,80px);
+  grid-template-areas:"pic top" "pic bot";align-items:center}
+.wh-top{grid-area:top;align-self:end}
+.wh-bot{grid-area:bot;align-self:start}
+.wh-pic{grid-area:pic}
+
+.wh-h.h2{text-align:left;color:var(--on-red);font-size:min(5vw,72px)}
+.wh-sub{margin-top:24px;font:400 19px/1.5 var(--text);color:rgba(246,238,230,.66);max-width:30em}
+
+/* картинка и плашки. Размеры плашек в cqw (доля ширины картинки): на любом экране текст занимает ту же долю плашки,
+   поля одинаковые со всех четырёх сторон и текст не упирается в рамку */
+.wh-pic{position:relative;container-type:inline-size;--top:23cqw}
+/* отступ под плашки задан у картинки: cqw считаются от ширины .wh-pic только у её потомков */
+.wh-img{position:relative;aspect-ratio:1100/585;overflow:hidden;margin-top:var(--top)}
+.wh-img img{width:100%;height:100%}  /* края уже растворены в фон прямо в файле: без CSS-маски, она стоила отдельного прохода отрисовки */
+/* вуаль прожектора: широкий слой с вырезом едет по transform (без перерисовки), --sx ставит whales.js на .wh-img */
+.wh-img::after{content:"";position:absolute;top:0;bottom:0;left:-100%;width:300%;pointer-events:none;opacity:0;transition:opacity .6s;
+  background:radial-gradient(ellipse 7% 62% at 50% 48%,transparent 52%,rgba(9,9,9,.74) 100%);
+  transform:translateX(calc((var(--sx,48) - 50) * 1% / 3));will-change:transform}
+.wh.js .wh-img::after{opacity:1}
+
+.wh-tags{position:absolute;inset:0;list-style:none;z-index:2;pointer-events:none}
+.wh-tag{position:absolute;bottom:calc(100% - var(--top) + var(--pole));left:var(--x);width:30cqw;transform:translateX(-50%);
+  padding:var(--tp);--tp:2.2cqw;text-align:center;
+  background:rgba(28,27,26,.9);border:1px solid rgba(255,255,255,.09);
+  transition:transform .55s var(--ease),opacity .45s,border-color .45s,box-shadow .45s}
+.wh-tag b{display:block;font:900 3.45cqw/1 var(--cond);text-transform:uppercase;color:#fff;text-wrap:balance}
+.wh-tag span{display:block;margin-top:.9cqw;font:400 1.95cqw/1.2 var(--text);color:rgba(246,238,230,.7)}
+/* поля плашки по видимым краям букв: обрезаем межстрочный воздух сверху у заголовка и снизу у подписи */
+@supports (text-box:trim-both cap alphabetic){
+  .wh-tag b{text-box:trim-both cap alphabetic}
+  .wh-tag span{text-box:trim-both cap alphabetic}
+  .wh-tag span{margin-top:1.4cqw}
+}
+/* штанга от плашки до платформы кита */
+.wh-tag::after{content:"";position:absolute;left:50%;top:100%;width:2px;margin-left:-1px;height:var(--pole);background:linear-gradient(#7a7a7a,#2c2c2c)}
+.wh-tag:nth-child(1){--x:var(--c1);--pole:5cqw}
+.wh-tag:nth-child(2){--x:var(--c2);--pole:9.5cqw}
+.wh-tag:nth-child(3){--x:var(--c3);--pole:5cqw}
+.wh.js .wh-tag{opacity:.5}
+.wh.js .wh-tag.on{opacity:1;transform:translate(-50%,-1.2cqw);border-color:rgba(154,0,2,.95);
+  box-shadow:0 0 0 1px var(--red),0 22px 50px -18px rgba(154,0,2,.85)}
+
+/* пункты */
+.wh-list{list-style:none;margin-top:40px;border-top:1px solid rgba(255,255,255,.1)}
+.wh-it{display:grid;grid-template-columns:84px 1fr;gap:12px;align-items:start;padding:22px 0;border-bottom:1px solid rgba(255,255,255,.1);transition:opacity .45s}
+.wh-n{display:block;font:900 58px/.9 var(--cond);color:transparent;-webkit-text-stroke:1.5px rgba(246,238,230,.7);
+  transform:skewX(-10deg);transform-origin:left bottom;transition:color .45s,-webkit-text-stroke-color .45s}
+.wh-it p{padding-top:6px;font:400 18px/1.45 var(--text);color:rgba(246,238,230,.8)}
+.wh-it strong{color:#fff;font-weight:600}
+.wh.js .wh-it{opacity:.4}
+.wh.js .wh-it.on{opacity:1}
+.wh.js .wh-it.on .wh-n{color:var(--on-red);-webkit-text-stroke-color:transparent}
+.wh-btn{margin-top:40px}
+
+/* десктоп: вся сцена закреплена, пока прожектор проходит трёх китов (класс pin ставит whales.js, если сцена влезает в окно) */
+.wh.pin .wh-run{height:calc(var(--vhl,100vh)*2.5)}
+.wh.pin .wh-stage{position:sticky;top:0;height:var(--vhl,100svh);display:grid;align-items:center;padding-top:40px;padding-bottom:40px}
+
+@media (max-width:1180px){
+  .wh-sub{font-size:17px}
+  .wh-it{grid-template-columns:64px 1fr;padding:18px 0}
+  .wh-n{font-size:46px}
+  .wh-it p{font-size:16px;padding-top:4px}
+}
+
+/* телефон и вертикальный планшет: заголовок, закреплённая картинка, пункты под ней */
+@media (max-width:900px){
+  .wh-stage{padding:72px var(--m) 80px}
+  .wh-in{display:block}
+  .wh-h.h2{font-size:min(10.2vw,42px)}
+  .wh-sub{margin-top:16px;font-size:16px}
+  .wh-pic{position:sticky;top:0;z-index:3;margin:20px calc(-1*var(--m)) 0;background:#0e0d0d;--top:38cqw}
+  .wh-pic::after{content:"";position:absolute;left:0;right:0;top:100%;height:28px;background:linear-gradient(#0e0d0d,transparent);pointer-events:none}
+  .wh-tag{width:29cqw;--tp:2.3cqw}
+  .wh-tag:nth-child(1){--x:16%;--pole:6cqw}
+  .wh-tag:nth-child(2){--pole:13cqw}
+  .wh-tag:nth-child(3){--x:82%;--pole:6cqw}
+  .wh-tag b{font-size:3.2cqw}
+  .wh-tag span{font-size:2.8cqw}
+  .wh-list{margin-top:8px;border-top:0}
+  .wh-it{grid-template-columns:56px 1fr;padding:34px 0}
+  .wh-it:last-child{border-bottom:0}
+  .wh-n{font-size:42px}
+  .wh-btn{width:100%;margin-top:24px}
+}
+@media (max-width:420px){
+  .wh-btn{padding:0 16px;font-size:14px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .wh .wh-img::after{display:none}
+  .wh .wh-tag,.wh .wh-it{opacity:1}
+}

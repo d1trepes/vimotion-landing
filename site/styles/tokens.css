@@ -1,5 +1,5 @@
 /* ViMotion: дизайн-токены (палитра vi-motion.pro, утверждено в блоке 1) */
-@import url("https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,600;0,700;0,800;0,900;1,800&family=Inter:wght@400;500;600&family=Anton&display=swap");
+/* Inter Tight, Inter и Anton подключены в styles/fonts.css (файлы на сайте) */
 
 @font-face{
   font-family:"Fira XC";
@@ -40,7 +40,12 @@
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
 body{overflow-x:clip;-webkit-font-smoothing:antialiased}
-img{display:block;max-width:100%}
+img{display:block;max-width:100%;
+  /* картинки нельзя «зажать»: без меню по долгому нажатию (iOS, Telegram), без перетаскивания и выделения */
+  -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}
+a,button{-webkit-tap-highlight-color:transparent}
+/* бесконечные CSS-анимации (REC, пульс, бегущая строка) стоят на паузе, пока блок вне экрана (класс ставит perf.js) */
+.is-off,.is-off *,.is-off ::before,.is-off ::after{animation-play-state:paused!important}
 
 /* общие кнопки: красная заливка, тонкая стрелка */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:14px;height:64px;padding:0 34px;border-radius:0;text-decoration:none;
@@ -55,3 +60,6 @@ img{display:block;max-width:100%}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
+
+/* текст только для экранных читалок */
+.vh{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}

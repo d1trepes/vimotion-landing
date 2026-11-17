@@ -26,7 +26,8 @@
     }
   }
   function place(s){
-    var p=at(s);knob.style.left=(p[0]/W*100)+'%';knob.style.top=(p[1]/H*100)+'%';
+    var p=at(s),box=knob.parentNode,bw=box.clientWidth,bh=box.clientHeight;
+    knob.style.setProperty('--kx',(p[0]/W*bw).toFixed(1)+'px');knob.style.setProperty('--ky',(p[1]/H*bh).toFixed(1)+'px');
     lines.forEach(function(l){l.style.strokeDashoffset=TOTAL-s});
   }
 
@@ -66,5 +67,5 @@
   sec.classList.add('js');
   place(s);mark();
   addEventListener('scroll',kick,{passive:true});
-  addEventListener('resize',kick);
+  addEventListener('resize',function(){place(s);kick()});
 })();

@@ -7,6 +7,10 @@
    встроенные браузеры (Telegram, Instagram) меняют высоту при скролле, из-за этого первый экран «прыгал» и увеличивался */
 (function(){var r=document.documentElement,w=-1,c=matchMedia('(pointer:coarse)').matches;function s(){if(!c||innerWidth!==w){w=innerWidth;window.vmVH=innerHeight;r.style.setProperty('--vhl',innerHeight+'px')}}s();addEventListener('resize',s)})();</script>
 
+<script>/* Ссылка всегда открывается с первого экрана: браузер и Telegram не восстанавливают прошлую позицию прокрутки */
+(function(){if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)return;
+function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);addEventListener('pageshow',function(e){if(e.persisted)t()})})();</script>
+
 <title>ViMotion: из монтажёра в контент-креатора</title>
 <meta name="description" content="Менторская программа Валентина Сушнёва: из монтажёра в контент-креатора с доходом от $1 000 за 2 месяца">
 <meta name="theme-color" content="#EFE6DE">
@@ -19,12 +23,13 @@
     setTimeout(function(){document.documentElement.classList.remove('is-loading')},6000);
   }
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" href="fonts/fira-xc-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-tight-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="img/wordmark.webp" as="image" type="image/webp">
 <link rel="preload" href="img/valentin-poster.webp?v=20261117z3" as="image" type="image/webp">
-<link rel="stylesheet" href="styles/tokens.css?v=20261117z3">
+<link rel="stylesheet" href="styles/fonts.css?v=20261117z4">
+<link rel="stylesheet" href="styles/tokens.css?v=20261117z4">
 <link rel="stylesheet" href="styles/preloader.css?v=20261117z3">
 <link rel="stylesheet" href="styles/blocks/00-header.css?v=20261117z3">
 <link rel="stylesheet" href="styles/blocks/01-hero.css?v=20261117z3">
@@ -34,8 +39,11 @@
 <link rel="stylesheet" href="styles/blocks/05-nobloger.css?v=20261117z3">
 <link rel="stylesheet" href="styles/blocks/06-gears.css?v=20261117z3">
 <link rel="stylesheet" href="styles/blocks/07-vacancies.css?v=20261117z3">
+<link rel="stylesheet" href="styles/blocks/08-whales.css?v=20261117z4">
+<link rel="stylesheet" href="styles/blocks/09-route.css?v=20261117z4">
 <script src="scripts/live-photo.js?v=20261117z3" defer></script>
 <script src="scripts/nowidow.js?v=20261117z3" defer></script>
+<script src="scripts/perf.js?v=20261117z4" defer></script>
 <script src="scripts/hero-fit.js?v=20261117z3" defer></script>
 <script src="scripts/hero.js?v=20261117z3" defer></script>
 <script src="scripts/preloader.js?v=20261117z3" defer></script>
@@ -45,6 +53,8 @@
 <script src="scripts/nobloger.js?v=20261117z3" defer></script>
 <script src="scripts/gears.js?v=20261117z3" defer></script>
 <script src="scripts/vacancies.js?v=20261117z3" defer></script>
+<script src="scripts/whales.js?v=20261117z4" defer></script>
+<script src="scripts/route.js?v=20261117z4" defer></script>
 </head>
 <body>
 
@@ -114,8 +124,8 @@
 <!-- Блок 3. Видео + бегущая строка -->
 <section class="les" id="lesson" aria-labelledby="les-h">
   <div class="les-in">
-    <div class="les-frame"><div class="les-card" id="les-card" data-src="https://vi-motion.pro/assets/video/vsl.mp4">
-      <img class="les-cover" src="img/lesson/cover-1200.webp?v=20261117z3" srcset="img/lesson/cover-800.webp?v=20261117z3 800w, img/lesson/cover-1200.webp?v=20261117z3 1200w, img/lesson/cover-1672.webp?v=20261117z3 1672w" sizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), min(calc(100vw - 112px), 1400px)" alt="Видео-урок Валентина: контент-креатор, $1000 за 2 месяца" width="1672" height="941" loading="lazy" decoding="async">
+    <div class="les-frame"><div class="les-card" id="les-card" data-src="https://vi-motion.pro/assets/video/vsl.mp4" data-poster="img/lesson/cover-1200.webp?v=20261117z3">
+      <span class="vh">Видео-урок Валентина: контент-креатор, $1000 за 2 месяца</span>
       <button class="les-play" type="button" aria-label="Смотреть урок"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="9.4,7.95 16.4,12 9.4,16.05" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button>
     </div></div>
     <h2 class="h2 les-h" id="les-h">Мои <span class="hl">7 лет</span> в контенте в одном уроке</h2>
@@ -229,6 +239,64 @@
         </ul>
       </div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 8. Три кита ViMotion -->
+<section class="wh" id="how" aria-labelledby="wh-h">
+  <div class="wh-run">
+    <div class="wh-stage">
+      <div class="wh-in">
+        <div class="wh-text wh-top">
+          <h2 class="h2 wh-h" id="wh-h">Три кита <span class="hl">ViMotion</span></h2>
+          <p class="wh-sub">Дело не в таланте. Новички бросают, когда не знают, что делать, застревают или остаются одни. Мы закрыли все три причины</p>
+        </div>
+        <div class="wh-pic">
+          <ul class="wh-tags">
+            <li class="wh-tag"><b>Пошаговый план</b><span>что делать</span></li>
+            <li class="wh-tag"><b>Сопровождение</b><span>чтобы не застрять</span></li>
+            <li class="wh-tag"><b>Окружение</b><span>чтобы не бросить</span></li>
+          </ul>
+          <div class="wh-img"><img src="img/whales/whales-1100.webp?v=20261117z5" srcset="img/whales/whales-760.webp?v=20261117z5 760w, img/whales/whales-1100.webp?v=20261117z5 1100w" sizes="(max-width:900px) 100vw, 56vw" width="1100" height="585" alt="Три кита ViMotion в красных гоночных комбинезонах" loading="lazy" decoding="async"></div>
+        </div>
+        <div class="wh-text wh-bot">
+          <ol class="wh-list">
+            <li class="wh-it"><span class="wh-n" aria-hidden="true">01</span><p><strong>Пошаговый план:</strong> ты всегда знаешь следующий шаг, а каждое задание сразу идёт в портфолио</p></li>
+            <li class="wh-it"><span class="wh-n" aria-hidden="true">02</span><p><strong>Сопровождение:</strong> застрял, ментор разберёт. Пропал, он напишет первым</p></li>
+            <li class="wh-it"><span class="wh-n" aria-hidden="true">03</span><p><strong>Окружение:</strong> рядом поток людей на том же пути и эфиры с Валентином</p></li>
+          </ol>
+          <a class="btn wh-btn" href="https://vi-motion.pro/quiz/"><span class="bt">Обсудить свою точку старта</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 9. Маршрут заезда -->
+<section class="rt" id="route" aria-labelledby="rt-h">
+  <div class="rt-in">
+    <div class="rt-head">
+      <h2 class="h2 rt-h" id="rt-h">Маршрут <span class="hl">заезда</span></h2>
+      <p class="rt-sub">Не 7 лет, как у меня, а 8 недель. Каждый участок проходишь с ментором</p>
+    </div>
+    <div class="rt-trk">
+      <svg class="rt-road" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="rt-chk" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#EFE6DE"/><rect width="6" height="6" fill="#111"/><rect x="6" y="6" width="6" height="6" fill="#111"/></pattern>
+          <clipPath id="rt-clip"><rect class="rt-cr" x="-200" y="-200" width="9999" height="0"/></clipPath>
+        </defs>
+        <path class="rt-asph"/><path class="rt-skid"/><path class="rt-dash"/><path class="rt-done" clip-path="url(#rt-clip)"/>
+        <g class="rt-marks"></g><g class="rt-pins"></g>
+      </svg>
+      <div class="rt-fx" aria-hidden="true"></div>
+      <div class="rt-car" aria-hidden="true"><svg viewBox="0 0 44 92"><path d="M4 7h36v8H4z" fill="#141414"/><path d="M7 9h30v4H7z" fill="#9A0002"/><rect x="2" y="18" width="9" height="17" rx="3.5" fill="#0d0d0d"/><rect x="33" y="18" width="9" height="17" rx="3.5" fill="#0d0d0d"/><rect x="1" y="60" width="10" height="20" rx="3.5" fill="#0d0d0d"/><rect x="33" y="60" width="10" height="20" rx="3.5" fill="#0d0d0d"/><path d="M19 2h6l2.5 20 6 10v12l-2 6 2 6v14l-4 14H14.5l-4-14V56l2-6-2-6V32l6-10z" fill="#9A0002"/><path d="M20 4h4l2 18h-8z" fill="#b8191b"/><path d="M12 50l-5 2v14l5 2zM32 50l5 2v14l-5 2z" fill="#7d0002"/><ellipse cx="22" cy="43" rx="5" ry="7.5" fill="#111"/><circle cx="22" cy="42" r="3" fill="#EFE6DE"/><path d="M5 82h34v8H5z" fill="#141414"/><path d="M8 84h28v3H8z" fill="#9A0002"/></svg></div>
+      <ol class="rt-list">
+        <li class="rt-st"><p class="rt-wk">Старт</p><h3 class="rt-t">Подготовка</h3><div class="rt-card"><p>Знакомишься с ментором и потоком, настраиваешься на два месяца работы</p><p class="rt-res">План на весь заезд</p></div></li>
+        <li class="rt-st"><p class="rt-wk">Недели 1-4</p><h3 class="rt-t">Навык</h3><div class="rt-card"><p>Снимаешь и монтируешь на телефоне, пишешь сценарии, подключаешь ИИ</p><p class="rt-res">5 работ для реальных бизнесов</p></div></li>
+        <li class="rt-st"><p class="rt-wk">Недели 5-6</p><h3 class="rt-t">Клиенты</h3><div class="rt-card"><p>Выбираешь нишу, считаешь цену и пишешь бизнесам каждый день</p><p class="rt-res">Оффер, прайс и первые диалоги</p></div></li>
+        <li class="rt-st"><p class="rt-wk">Недели 7-8</p><h3 class="rt-t">Деньги</h3><div class="rt-card"><p>«Денежный спринт»: созвоны, договор, предоплата и выпускной «Аллея славы»</p><p class="rt-res">Первый платный клиент</p></div></li>
+      </ol>
     </div>
   </div>
 </section>

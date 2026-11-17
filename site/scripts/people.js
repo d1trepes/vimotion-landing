@@ -1,5 +1,5 @@
 /* Блок 2. Это сделали люди без опыта
-   1) Наезд на hero: пока блок едет поверх липкого hero, hero темнеет (--cover на <html>);
+   1) Наезд на hero: пока блок едет поверх липкого hero, hero темнеет (--cover на самом hero: на <html> он пересчитывал стили всей страницы каждый кадр);
       когда закрыт целиком, прячется и живое видео ставится на паузу.
    2) Вау-момент: рамка видоискателя с REC переезжает с человека на человека,
       тот, на ком рамка, цветной. Сама идёт по кругу, пока блок на экране;
@@ -17,7 +17,7 @@
     var top=sec.getBoundingClientRect().top,vh=window.vmVH||innerHeight||1;
     var p=Math.max(0,Math.min(1,1-top/vh));
     p=Math.round(p*100)/100;
-    if(p!==cov){cov=p;root.style.setProperty('--cover',p)}
+    if(p!==cov){cov=p;(hero||root).style.setProperty('--cover',p)}
     var h=top<=0;
     if(h!==hidden){
       hidden=h;root.classList.toggle('hero-covered',h);

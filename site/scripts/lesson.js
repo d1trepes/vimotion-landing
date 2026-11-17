@@ -15,13 +15,19 @@
     var v=document.createElement('video');
     v.src=card.getAttribute('data-src');
     v.controls=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';
-    v.poster=(card.querySelector('.les-cover')||{}).currentSrc||'';
+    v.poster=card.getAttribute('data-poster')||'';
     card.appendChild(v);card.classList.add('is-on');
     var p=v.play();if(p&&p.catch)p.catch(function(){});
     v.focus({preventScroll:true});
   }
   if(btn)btn.addEventListener('click',play);
-  card.addEventListener('click',function(e){if(e.target===card||e.target.classList.contains('les-cover'))play()});
+  card.addEventListener('click',function(e){if(e.target===card)play()});
+
+  /* ---------- обложка (фон карточки) подгружается, когда блок подъезжает к экрану ---------- */
+  if('IntersectionObserver' in window){
+    var bgIO=new IntersectionObserver(function(es){if(es[0].isIntersecting){card.classList.add('bg');bgIO.disconnect()}},{rootMargin:'100% 0px'});
+    bgIO.observe(card);
+  }else card.classList.add('bg');
 
   /* ---------- кнопка ровно как в hero: высота, отступы и кегль берутся у кнопки первого экрана ---------- */
   var heroBtn=document.querySelector('.hero .btn-red'),lesBtn=document.querySelector('.les-btn');

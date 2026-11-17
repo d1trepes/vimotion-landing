@@ -8,22 +8,21 @@
 
 /* обложка в стеклянной рамке: полупрозрачная, под ней размытая копия обложки, тонкий светлый кант, скругление.
    Рамка растёт целиком (вау-момент) */
-.les-frame{--p:1;position:relative;width:100%;max-width:1400px;padding:10px;border-radius:30px;isolation:isolate;overflow:hidden;
-  box-shadow:0 0 0 1px rgba(17,17,17,.06),0 10px 28px -14px rgba(40,10,5,.28);
+.les-frame{--p:1;position:relative;width:100%;max-width:1400px;padding:10px;border-radius:30px;
+  /* стекло и размытая обложка нарисованы фоном самой рамки (размытие вшито в frame-bg.webp).
+     Раньше это были ::before с filter:blur и ::after с backdrop-filter: в iOS и Telegram такие слои
+     не обрезаются по скруглению, и углы оставались острыми. Фон элемента скругляется всегда */
+  background:linear-gradient(160deg,rgba(255,255,255,.55),rgba(255,255,255,.22) 45%,rgba(255,255,255,.38)),
+    #b9a59a url(../../img/lesson/frame-bg.webp?v=20261117z4) center/cover no-repeat;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(17,17,17,.06),0 10px 28px -14px rgba(40,10,5,.28);
   transform:scale(calc(.88 + .12*var(--p)));transform-origin:50% 0}
-.les-frame::before{content:"";position:absolute;inset:-24px;z-index:-2;background:url(../../img/lesson/cover-blur.webp?v=20261117n) center/cover;filter:blur(18px) saturate(1.15)}
-.les-frame::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
-  background:linear-gradient(160deg,rgba(255,255,255,.55),rgba(255,255,255,.22) 45%,rgba(255,255,255,.38));
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 1px 0 rgba(255,255,255,.9)}
-@supports (backdrop-filter:blur(1px)){.les-frame::after{backdrop-filter:blur(6px)}}
-.les-card{position:relative;width:100%;aspect-ratio:16/9;background:#2a0705;overflow:hidden;border-radius:21px;isolation:isolate;
-  clip-path:inset(0 round 21px)}
-/* iOS и Telegram не обрезают ускоренные слои (обложка, видео, размытие) по overflow+border-radius:
-   скругление держит clip-path у рамки, карточки и у самих картинки и видео */
-.les-card>img,.les-card>video{border-radius:inherit;clip-path:inset(0 round 21px)}
-.les-card::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);pointer-events:none;z-index:2}
-.les-cover{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
-.les-card:not(.is-on):hover .les-cover{transform:scale(1.025)}
+/* обложка тоже фон карточки, а не <img>: ничего не надо обрезать, углы круглые в любом браузере.
+   Картинка подключается классом bg, когда блок подъезжает к экрану (lesson.js), чтобы не грузить её сразу */
+.les-card{position:relative;width:100%;aspect-ratio:16/9;border-radius:21px;cursor:pointer;
+  background:#2a0705 center/cover no-repeat;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.les-card.bg{background-image:url(../../img/lesson/cover-1200.webp?v=20261117z3)}
+@media (min-width:1181px) and (min-resolution:1.5dppx),(min-width:1500px){.les-card.bg{background-image:url(../../img/lesson/cover-1672.webp?v=20261117z3)}}
+.les-card video{border-radius:inherit}
 
 /* своя кнопка play: сплошной красный круг, треугольник геометрически по центру круга (рамка треугольника = центр svg),
    без обводки; один мягкий красный пульс раз в 2 с */
@@ -35,7 +34,8 @@
 .les-card:hover .les-play{transform:scale(1.05);background:var(--red-hover)}
 .les-play:focus-visible{outline:3px solid #fff;outline-offset:4px}
 .les-card video{position:absolute;inset:0;width:100%;height:100%;background:#000;object-fit:contain}
-.les-card.is-on .les-play,.les-card.is-on .les-cover{display:none}
+.les-card.is-on .les-play{display:none}
+.les-card.is-on{cursor:default}
 
 .les-h{margin-top:80px;max-width:15em}
 .les-sub{margin-top:24px;max-width:31em;font:400 21px/1.5 var(--text);color:var(--muted);text-wrap:balance}
@@ -55,7 +55,7 @@
   .les-sub{font-size:19px}
   .les-btn{height:58px;padding:0 28px;font-size:14px}
   .les-frame{padding:8px;border-radius:24px}
-  .les-card,.les-card>img,.les-card>video{border-radius:17px;clip-path:inset(0 round 17px)}
+  .les-card{border-radius:17px}
   .les-play{width:76px;height:76px;margin:-38px 0 0 -38px}
   .tape{margin-top:96px}
   .tape span{font-size:34px}
@@ -65,7 +65,7 @@
   .les-h{margin-top:40px}
   .les-sub{margin-top:16px;font-size:17px}
   .les-frame{padding:6px;border-radius:18px}
-  .les-card,.les-card>img,.les-card>video{border-radius:13px;clip-path:inset(0 round 13px)}
+  .les-card{border-radius:13px}
   .les-btn{margin-top:28px;width:100%;height:58px}
   .les-play{width:60px;height:60px;margin:-30px 0 0 -30px}
   .tape{margin-top:72px;padding:14px 0 12px;transform:rotate(-3deg)}

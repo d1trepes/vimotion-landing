@@ -52,23 +52,17 @@
       document.fonts.load('400 1em "Inter"')
     ]).catch(function(){}).then(function(){return document.fonts.ready});
   }
-  function videoReady(v){
-    return new Promise(function(res){
-      if(!v||v.readyState>=4)return res();
-      v.addEventListener('canplaythrough',function(){res()},{once:true});
-      v.addEventListener('error',function(){res()},{once:true});
-    });
-  }
   var tasks=[
     fontsReady(),
     imgReady(document.querySelector('.pt img')),
-    imgReady(document.querySelector('.wm img')),
-    videoReady(window.vmLive&&window.vmLive.video)
+    imgReady(document.querySelector('.wm img'))
+    /* видео не ждём: пока оно грузится, виден постер, живое фото включается само, когда готово.
+       Раньше ждали полной загрузки ролика, и в Telegram на мобильном интернете прелоадер висел до 4 с */
   ];
   var done=0,ready=false;
   tasks.forEach(function(p){p.then(function(){done++})});
   Promise.all(tasks).then(function(){ready=true});
-  setTimeout(function(){ready=true},4000);
+  setTimeout(function(){ready=true},2500);
 
   /* ---------- стрелка ---------- */
   var T=1700,t0=null,last=0,p=0,settled=null;

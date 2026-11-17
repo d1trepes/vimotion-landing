@@ -65,12 +65,12 @@
   var video=document.createElement('video');
   video.muted=true;video.defaultMuted=true;video.setAttribute('muted','');
   video.playsInline=true;video.setAttribute('playsinline','');
-  video.loop=true;video.preload='auto';
+  video.loop=true;video.preload='metadata'; /* ролик качается после прелоадера, не отбирая канал у шрифтов и постера */
 
   var mq=matchMedia('(max-width:720px)'),cur='';
   function setSrc(){
     /* версия в адресе: при замене файла браузер не возьмёт старое видео из кеша */
-    var s=(mq.matches?'media/valentin-live-m.mp4':'media/valentin-live.mp4')+'?v=20261117j';
+    var s=(mq.matches?'media/valentin-live-m.mp4':'media/valentin-live.mp4')+'?v=20261117v24';
     if(s===cur)return;
     cur=s;video.src=s;video.load();sync();
   }
@@ -119,7 +119,7 @@
   setSrc();
   window.vmLive={
     video:video,
-    start:function(){if(started)return;started=true;rectUntil=performance.now()+2500;sync()},
+    start:function(){if(started)return;started=true;video.preload='auto';rectUntil=performance.now()+2500;sync()},
     relayout:function(){rectDirty=true;if(video.paused)draw()},
     /* hero sticky: когда блок 2 закрыл его целиком, он всё ещё «на экране» для IntersectionObserver */
     cover:function(c){if(covered!==c){covered=c;sync()}}
