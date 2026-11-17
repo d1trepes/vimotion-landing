@@ -8,7 +8,7 @@
   var sec=document.getElementById('ladder');
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var run=sec.querySelector('.gb-run'),knob=sec.querySelector('.gb-knob'),
-      lines=[].slice.call(sec.querySelectorAll('.gb-trail .rv')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
+      lines=[].slice.call(sec.querySelectorAll('.gb-trail polyline')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
 
   var W=1672,H=941,X1=303.5,X3=828,X5=1351,T=234,N=461,B=684;

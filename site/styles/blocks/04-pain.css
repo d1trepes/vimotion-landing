@@ -1,8 +1,7 @@
 /* Блок 4. Боль + мысль Валентина
    Цитаты учеников в ряд, ниже альбом из трёх карточек на булавках (рамки из ChatGPT, фото вклеены в окно)
    и письмо Валентина. Выделена только фраза мамы.
-   Вау-момент: карточки сначала карандашные наброски, маркер проводит по фразе мамы,
-   потом фото по очереди проявляются в цвет и чуть «прижимаются» к булавке (классы ставит pain.js).
+   Вау-момент: маркер проводит по фразе мамы, фото (сразу цветные) по очереди чуть «прижимаются» к булавке (классы ставит pain.js).
    Без JS и при prefers-reduced-motion сразу финальное состояние. */
 
 @font-face{font-family:"Caveat";src:url(../../fonts/caveat-600-cyr.woff2) format("woff2");font-weight:600;font-display:swap;
@@ -11,10 +10,12 @@
   unicode-range:U+0000-00FF,U+2000-206F}
 
 .pain{padding:112px var(--m) 136px}
+/* заголовок разбит по смыслу: «Хочется большего,» отдельной строкой */
+.pain-h>span{display:block}
 
 /* цитаты: четыре колонки с тонкими разделителями */
-.pain-q{list-style:none;counter-reset:q;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:1328px;margin:72px auto 0;border-top:1px solid var(--line)}
-.pain-q li{padding:34px 28px 0 0;font:600 27px/1.25 var(--display);letter-spacing:-.01em;color:var(--ink)}
+.pain-q{list-style:none;counter-reset:q;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:1328px;margin:64px auto 0}
+.pain-q li{padding:4px 28px 4px 0;font:600 27px/1.25 var(--display);letter-spacing:-.01em;color:var(--ink)}
 .pain-q li+li{padding-left:28px;border-left:1px solid var(--line)}
 .pain-q li::before{counter-increment:q;content:"0" counter(q);display:block;margin-bottom:18px;font:900 22px/1 var(--cond);color:var(--red)}
 
@@ -25,7 +26,6 @@
 .pin{position:absolute;margin:0;transform:rotate(var(--r));
   filter:drop-shadow(0 14px 18px rgba(50,30,15,.16)) drop-shadow(0 4px 6px rgba(50,30,15,.1))}
 .pin img{display:block;width:100%;height:auto}
-.pin-sk{position:absolute;inset:0;opacity:0}
 .pin figcaption{position:absolute;left:0;right:0;top:var(--cy);transform:translateY(-50%);text-align:center;white-space:nowrap;
   font:600 var(--fs) / 1 "Caveat",cursive;color:#2a2622}
 .pin-1{left:0;top:14.46%;width:50%;--r:-3deg;--cy:86%;--fs:3.68cqw}
@@ -38,18 +38,15 @@
 .letter-s{margin-top:30px;font:600 15px/1 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 
 /* анимация: исходное состояние ставит pain.js (.is-sk), запуск при появлении (.is-on) */
-.pain.is-sk .pin-sk{opacity:1}
 .pain.is-sk .pin{translate:0 -10px}
 .pain.is-sk .mk{background-size:0 100%;color:var(--ink)}
-.pain.is-sk .pin-sk{transition:opacity 1.4s ease}
 .pain.is-sk .pin{transition:translate .9s var(--ease)}
 .pain.is-sk .mk{transition:background-size .9s var(--ease) .2s,color .35s ease .45s}
-.pain.is-on .pin-sk{opacity:0}
 .pain.is-on .pin{translate:0 0}
 .pain.is-on .mk{background-size:100% 100%;color:var(--on-red)}
-.pain.is-sk .pin-1,.pain.is-sk .pin-1 .pin-sk{transition-delay:1s}
-.pain.is-sk .pin-2,.pain.is-sk .pin-2 .pin-sk{transition-delay:1.7s}
-.pain.is-sk .pin-3,.pain.is-sk .pin-3 .pin-sk{transition-delay:2.4s}
+.pain.is-sk .pin-1{transition-delay:1s}
+.pain.is-sk .pin-2{transition-delay:1.7s}
+.pain.is-sk .pin-3{transition-delay:2.4s}
 
 @media (max-width:1180px){
   .pain{padding:96px var(--m) 112px}
@@ -79,7 +76,6 @@
   .pin-3{--fs:3.9cqw}
 }
 @media (prefers-reduced-motion:reduce){
-  .pain .pin-sk{opacity:0!important}
   .pain .pin{translate:none!important}
   .pain .mk{background-size:100% 100%!important;color:var(--on-red)!important}
 }

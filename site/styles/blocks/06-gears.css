@@ -23,9 +23,8 @@
   mask:linear-gradient(90deg,transparent,#000 4.5%,#000 95.5%,transparent),linear-gradient(transparent,#000 7%,#000 93%,transparent);
   mask-composite:intersect}
 .gb-trail{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.gb-trail polyline,.gb-trail path{fill:none;stroke-linecap:round;stroke-linejoin:round}
-/* неоновая подсветка пройденного пути, раскрывается маской .rv по пути ручки */
-.gb-trail .rv{stroke:#fff;stroke-width:44}
+.gb-trail polyline{fill:none;stroke-linecap:butt;stroke-linejoin:round}
+/* неоновая подсветка пройденного пути: та же ломаная, что у ручки, раскрывается через dashoffset (без хвостов на перекрёстках) */
 .gb-trail .gl{stroke:#ff2a1f;stroke-width:12;opacity:.6}
 .gb-trail .co{stroke:#ff5247;stroke-width:3.5}
 .gb-knob{position:absolute;left:80.8%;top:24.87%;width:8.4%;height:auto;transform:translate(-50%,-50%);
