@@ -23,14 +23,13 @@
 
 /* текст */
 .copy{position:relative;z-index:4;margin-left:var(--m);width:48%}
-.h1{font:900 min(calc(var(--W)*.0345),50px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink)}
+.h1{font:900 min(calc(var(--W)*.038),55px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink)}
 .h1 .ln{display:block}
 .h1 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0;border-radius:0}
 .nw{white-space:nowrap}
 /* абзац не заходит на плечо портрета (левый край портрета 33.3vw + ~8% его ширины) */
-.sub{margin-top:20px;font:400 18px/1.55 var(--text);color:#2a2522;max-width:min(470px,calc(37.2vw - var(--m) - 12px));text-wrap:pretty}
+.sub{margin-top:24px;font:400 20px/1.55 var(--text);color:#2a2522;max-width:min(520px,calc(37.2vw - var(--m) - 12px));text-wrap:pretty}
 .sub b{font-weight:600;color:var(--ink)}
-.cta-row{margin-top:28px}
 
 /* цифры в рамке-видоискателе */
 .stats{--c:var(--ink);--k:22px;list-style:none;position:absolute;z-index:5;right:var(--m);bottom:var(--pb);width:212px;padding:20px 22px;
@@ -70,15 +69,13 @@
 @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
 @keyframes fade{from{opacity:0}to{opacity:1}}
 
-/* ---------- планшет: текст и цифры в потоке, цифры строкой под кнопкой ---------- */
+/* ---------- планшет: текст и цифры в потоке, цифры строкой под текстом ---------- */
 @media (max-width:1180px){
   .hero{min-height:var(--vhl,100svh)}
   .hero-in{display:flow-root;width:100%;padding:0 0 8px}
   .copy{width:46vw;margin:calc(76px + (100vw - 2*var(--m))*471/1600 + 28px) 0 0 var(--m)}
-  .h1{font-size:min(3.5vw,40px)}
-  .sub{font-size:16px;max-width:none}
-  .cta-row{margin-top:24px}
-  .hero .btn{height:58px;padding:0 28px;font-size:14px}
+  .h1{font-size:min(3.85vw,44px)}
+  .sub{font-size:17px;max-width:none}
   .pt{left:48vw;width:52vw}
 
   .stats{--k:20px;position:relative;right:auto;bottom:auto;display:flex;width:46vw;margin:26px 0 0 var(--m);padding:18px 20px}
@@ -95,10 +92,8 @@
   .wm{top:66px}
   .pt{left:2vw;width:96vw;top:84px;bottom:auto}
   .copy{width:auto;margin:calc(84px + 96vw*690/744 + 16px) var(--m) 0}
-  .h1{font-size:min(9.4vw,37px)}
-  .sub{font-size:15px;margin-top:14px;line-height:1.5}
-  .cta-row{margin-top:20px}
-  .hero .btn-red{width:100%;height:58px}
+  .h1{font-size:min(9.8vw,39px)}
+  .sub{font-size:16px;margin-top:14px;line-height:1.5}
   .stats{width:auto;margin:20px var(--m) 0;padding:16px 14px}
   .stat,.stat:first-child,.stat:last-child{padding:0 10px}
   .stat:first-child{padding-left:0}
@@ -107,13 +102,12 @@
   .stats::before{top:8px;right:8px;width:6px;height:6px}
 }
 
-/* вертикальный планшет: кнопка по содержимому, текст чуть крупнее */
+/* вертикальный планшет: текст чуть крупнее */
 @media (min-width:721px) and (max-width:1180px) and (orientation:portrait){
   .wm{top:76px}
   .pt{top:94px}
   .copy{margin-top:calc(94px + 96vw*690/744 + 16px)}
-  .sub{font-size:17px}
-  .hero .btn-red{width:auto}
+  .sub{font-size:18px}
 }
 
 /* метка для hero-fit.js: скрипт двигает блоки, только если загружены эти стили */
@@ -129,8 +123,6 @@
 
 /* телефон в невысоком окне (браузер внутри Telegram и т. п.): плотнее колонка, место отдаётся портрету */
 .hero-compact .sub{margin-top:10px}
-.hero-compact .cta-row{margin-top:14px}
-.hero-compact .hero .btn-red{height:50px}
 .hero-compact .stats{padding:10px 12px}
 .hero-compact .stat-num{font-size:28px}
 .hero-compact .stat-lbl{margin-top:4px}

@@ -48,8 +48,8 @@
     var hh=hdr?hdr.offsetHeight:76;
     var cr=copy.getBoundingClientRect(),sr=stats.getBoundingClientRect();
     var Cw=cr.width,Ch=cr.height,Sw=sr.width,Sh=sr.height;
-    /* фактические рамки строк заголовка, абзаца и кнопки относительно колонки (без пустоты справа) */
-    var boxes=[];copy.querySelectorAll('.ln,.sub,.btn').forEach(function(e){
+    /* фактические рамки строк заголовка, абзаца относительно колонки (без пустоты справа) */
+    var boxes=[];copy.querySelectorAll('.ln,.sub').forEach(function(e){
       var r=e.getBoundingClientRect(),right=r.right;
       if(!e.classList.contains('btn')){var rg=document.createRange();rg.selectNodeContents(e);right=rg.getBoundingClientRect().right}
       boxes.push({t:r.top-cr.top,b:r.bottom-cr.top,r:right-cr.left})});

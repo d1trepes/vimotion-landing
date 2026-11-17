@@ -29,19 +29,6 @@
     bgIO.observe(card);
   }else card.classList.add('bg');
 
-  /* ---------- кнопка ровно как в hero: высота, отступы и кегль берутся у кнопки первого экрана ---------- */
-  var heroBtn=document.querySelector('.hero .btn-red'),lesBtn=document.querySelector('.les-btn');
-  function syncBtn(){
-    if(!heroBtn||!lesBtn)return;
-    var s=getComputedStyle(heroBtn);
-    lesBtn.style.height=s.height;lesBtn.style.paddingLeft=s.paddingLeft;lesBtn.style.paddingRight=s.paddingRight;
-    lesBtn.style.fontSize=s.fontSize;lesBtn.style.letterSpacing=s.letterSpacing;
-  }
-  if(heroBtn&&lesBtn){
-    syncBtn();addEventListener('resize',syncBtn);addEventListener('load',syncBtn);
-    if('ResizeObserver' in window)new ResizeObserver(syncBtn).observe(heroBtn);
-  }
-
   /* ---------- рост обложки ---------- */
   var frame=card.parentNode;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
