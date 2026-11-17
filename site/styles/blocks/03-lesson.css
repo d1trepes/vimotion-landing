@@ -11,11 +11,10 @@
 .les-frame{--p:1;position:relative;width:100%;max-width:1400px;padding:10px;border-radius:30px;isolation:isolate;overflow:hidden;
   box-shadow:0 0 0 1px rgba(17,17,17,.06),0 10px 28px -14px rgba(40,10,5,.28);
   transform:scale(calc(.88 + .12*var(--p)));transform-origin:50% 0;will-change:transform}
-.les-frame::before{content:"";position:absolute;inset:-24px;z-index:-2;background:url(../../img/lesson/cover-blur.webp?v=20261117j) center/cover;filter:blur(18px) saturate(1.15)}
+.les-frame::before{content:"";position:absolute;inset:-6px;z-index:-2;background:url(../../img/lesson/cover-800.webp?v=20261117m) center/100% 100% no-repeat;filter:blur(5px) saturate(1.1)}
 .les-frame::after{content:"";position:absolute;inset:0;z-index:-1;border-radius:inherit;
-  background:linear-gradient(160deg,rgba(255,255,255,.55),rgba(255,255,255,.22) 45%,rgba(255,255,255,.38));
-  box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 1px 0 rgba(255,255,255,.9)}
-@supports (backdrop-filter:blur(1px)){.les-frame::after{backdrop-filter:blur(6px)}}
+  background:linear-gradient(160deg,rgba(255,255,255,.34),rgba(255,255,255,.12) 45%,rgba(255,255,255,.24));
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.75),inset 0 1px 0 rgba(255,255,255,.95)}
 .les-card{position:relative;width:100%;aspect-ratio:16/9;background:#2a0705;overflow:hidden;border-radius:21px;isolation:isolate}
 .les-card::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);pointer-events:none;z-index:2}
 .les-cover{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
@@ -23,12 +22,12 @@
 
 /* своя кнопка play: обложка чистая, кнопка компактная */
 .les-play{position:absolute;isolation:isolate;left:50%;top:50%;width:92px;aspect-ratio:1;translate:-50% -50%;border:0;border-radius:50%;cursor:pointer;
-  background:var(--red);color:#fff;display:grid;place-items:center;box-shadow:0 10px 34px rgba(40,0,0,.5);transition:scale .5s var(--ease),background .25s}
-.les-play svg{width:36%;height:36%;fill:currentColor;margin-left:6%}
+  background:rgba(176,22,20,.86);color:#fff;display:grid;place-items:center;box-shadow:0 8px 28px rgba(40,0,0,.35);backdrop-filter:blur(2px);transition:scale .5s var(--ease),background .25s}
+.les-play svg{width:100%;height:100%;fill:currentColor}
 .les-play::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.7);animation:les-pulse 2.6s var(--ease) infinite;pointer-events:none}
-.les-play::after{content:"";position:absolute;inset:0;border-radius:50%;background:var(--red);z-index:-1;animation:les-pulse 2.6s var(--ease) 1.3s infinite;pointer-events:none}
+.les-play::after{content:"";position:absolute;inset:0;border-radius:50%;background:rgba(176,22,20,.6);z-index:-1;animation:les-pulse 2.6s var(--ease) 1.3s infinite;pointer-events:none}
 @keyframes les-pulse{0%{scale:1;opacity:.85}100%{scale:1.7;opacity:0}}
-.les-card:hover .les-play{scale:1.04;background:var(--red-hover)}
+.les-card:hover .les-play{scale:1.05;background:rgba(160,10,10,.95)}
 .les-play:focus-visible{outline:3px solid #fff;outline-offset:4px}
 .les-card video{position:absolute;inset:0;width:100%;height:100%;background:#000;object-fit:contain}
 .les-card.is-on .les-play,.les-card.is-on .les-cover{display:none}
