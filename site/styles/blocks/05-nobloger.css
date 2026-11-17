@@ -1,0 +1,67 @@
+/* Блок 5. Без блогерства
+   Чёрный блок с гоночной подачей: еле видный вордмарк VIMOTION на фоне, номера карточек как на болидах,
+   у финишной карточки 03 шашечный флаг в углу. Сумма целиком на красной плашке.
+   Вау-момент: заголовок стоит на месте, карточки при скролле заезжают снизу и ложатся стопкой (sticky),
+   предыдущие чуть уменьшаются (масштаб ставит nobloger.js).
+   При prefers-reduced-motion обычный список без стопки. */
+
+.hero~.nob{background:#0e0d0d;color:var(--on-red);overflow:clip;padding:128px var(--m) 136px;
+  --chk:repeating-conic-gradient(#f3ece4 0 25%,#111 0 50%);
+  --ch:430px;--st:120px;
+  --t0:max(48px,calc((100svh - var(--ch) - 2*var(--st))/2))}
+
+.nob-wm{position:absolute;left:var(--m);right:var(--m);bottom:-1.5%;opacity:.05;filter:grayscale(1) brightness(3);pointer-events:none}
+.nob-wm img{width:100%;height:auto}
+
+.nob-in{position:relative;max-width:1328px;margin:0 auto;display:grid;grid-template-columns:5fr 7fr;gap:80px;align-items:start}
+.nob-h.h2{position:sticky;top:var(--t0);text-align:left;color:var(--on-red);font-size:min(5vw,72px)}
+
+/* стопка */
+.nob-st{list-style:none;display:flex;flex-direction:column;gap:44vh}
+.nob-c{position:sticky;top:calc(var(--t0) + var(--i)*var(--st));height:var(--ch);padding:30px 44px 44px;
+  display:flex;flex-direction:column;overflow:hidden;background:var(--bg);
+  box-shadow:0 -14px 30px -16px rgba(0,0,0,.9);transform-origin:50% 0;will-change:transform}
+/* нижний край у всех карточек один, чтобы стопка уезжала целиком, а не 03 наползала на 01 и 02 */
+.nob-c{margin-bottom:calc(22vh + (2 - var(--i))*var(--st))}
+/* наклонная полоса, как ливрея */
+.nob-c::before{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 62%,rgba(255,255,255,.035) 62% 70%,transparent 70%);pointer-events:none}
+.nob-c:nth-child(1){--i:0;--bg:#191817}
+.nob-c:nth-child(2){--i:1;--bg:#201f1d}
+.nob-c:nth-child(3){--i:2;--bg:#262422}
+/* финишная карточка: шашечный флаг в углу */
+.nob-c:nth-child(3)::after{content:"";position:absolute;right:0;top:0;width:44%;height:100%;background:var(--chk);background-size:36px 36px;opacity:.11;pointer-events:none;
+  -webkit-mask:linear-gradient(225deg,#000 10%,transparent 60%);mask:linear-gradient(225deg,#000 10%,transparent 60%)}
+
+.nob-n{position:relative;align-self:flex-start;font:900 96px/1 var(--cond);color:transparent;-webkit-text-stroke:2px rgba(246,238,230,.85);transform:skewX(-10deg);transform-origin:left bottom}
+.nob-c:nth-child(3) .nob-n{color:var(--on-red);-webkit-text-stroke:0}
+.nob-t{position:relative;margin-top:auto;font:700 30px/1.15 var(--display);letter-spacing:-.01em;color:#fff}
+.nob-p{position:relative;margin-top:14px;font:400 19px/1.45 var(--text);color:rgba(246,238,230,.66);max-width:30em}
+.nob-p b{display:inline-block;background:var(--red);color:#fff;font-weight:600;padding:0 .3em;white-space:nowrap}
+
+@media (max-width:1180px){
+  .hero~.nob{--ch:400px;--st:104px}
+  .nob-in{gap:56px}
+  .nob-c{padding:26px 36px 38px}
+  .nob-n{font-size:84px}
+  .nob-t{font-size:26px}.nob-p{font-size:17px}
+}
+@media (max-width:860px){
+  .hero~.nob{padding:72px var(--m) 80px;--ch:330px;--st:84px}
+  .nob-in{grid-template-columns:1fr;gap:40px}
+  .nob-h.h2{position:static;font-size:min(10.2vw,42px)}
+  .nob-st{gap:36vh}
+  .nob-c{padding:18px 24px 28px}
+  .nob-n{font-size:64px;-webkit-text-stroke-width:1.5px}
+  .nob-t{font-size:23px}.nob-p{font-size:16px}
+  .nob-c:nth-child(3)::after{background-size:24px 24px}
+}
+@media (max-width:860px) and (min-width:600px){.hero~.nob{--ch:300px}}
+
+/* без анимации: обычный список карточек */
+@media (prefers-reduced-motion:reduce){
+  .nob-h.h2{position:static}
+  .nob-st{gap:16px}
+  .nob-c{position:relative;top:auto;height:auto;min-height:var(--ch);transform:none!important}
+  .nob-c{margin-bottom:0}
+  .nob-t{margin-top:56px}
+}
