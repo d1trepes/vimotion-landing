@@ -46,6 +46,7 @@
   .nob-t{font-size:26px}.nob-p{font-size:17px}
 }
 @media (max-width:860px){
+  .nob-in>*{min-width:0} /* длинное слово заголовка не раздвигает сетку и не сдвигает карточки вбок */
   .hero~.nob{padding:72px var(--m) 80px;--ch:330px;--st:84px}
   .nob-in{grid-template-columns:1fr;gap:40px}
   .nob-h.h2{position:static;font-size:min(10.2vw,42px)}

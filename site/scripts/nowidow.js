@@ -20,6 +20,15 @@
     return a.right<=R+1&&a.left>=L-1;
   }
   function bind(node,s){var old=node.nodeValue;node.nodeValue=s;return old}
+  /* прямой замер пары слов той же гарнитурой: склеиваем, только если пара целиком уже ширины блока.
+     Проверка по раскладке (fits) в Safari ошибалась, и «миллионы подписчиков» вылезали за экран */
+  function pairOK(el,pair){
+    if(innerWidth>900)return true; /* на компьютере как раньше (раскладка утверждена) */
+    var sp=document.createElement('span');sp.style.cssText='position:absolute;visibility:hidden;white-space:nowrap;left:0;top:0';
+    sp.textContent=pair;el.appendChild(sp);var w=sp.getBoundingClientRect().width;el.removeChild(sp);
+    var p=el.parentElement,cs=getComputedStyle(p),avail=Math.min(el.clientWidth||1e9,p.clientWidth-parseFloat(cs.paddingLeft)-parseFloat(cs.paddingRight));
+    return w<=avail*.96;
+  }
   function fix(el){
     var t=texts(el);
     for(var i=t.length-1;i>=0;i--){
@@ -28,7 +37,7 @@
       var k=trim.lastIndexOf(' ');
       if(k>0){
         var last=trim.slice(k+1),prev=trim.slice(0,k).split(' ').pop();
-        if((prev+last).length<=24){var o=bind(t[i],s.slice(0,k)+NB+s.slice(k+1));if(!fits(el)){t[i].nodeValue=o;skip.push(el)}}
+        if((prev+last).length<=24&&pairOK(el,prev+' '+last)){var o=bind(t[i],s.slice(0,k)+NB+s.slice(k+1));if(!fits(el)){t[i].nodeValue=o;skip.push(el)}}
         return;
       }
       /* последнее слово целиком в своём узле (например, в выделении): склеиваем с пробелом перед ним */
@@ -36,7 +45,7 @@
         var p=t[j].nodeValue;
         if(/ $/.test(p)){
           var pw=p.replace(/ $/,'').split(' ').pop();
-          if((pw+trim).length<=24){var o2=bind(t[j],p.replace(/ $/,NB));if(!fits(el)){t[j].nodeValue=o2;skip.push(el)}}
+          if((pw+trim).length<=24&&pairOK(el,pw+' '+trim)){var o2=bind(t[j],p.replace(/ $/,NB));if(!fits(el)){t[j].nodeValue=o2;skip.push(el)}}
           return;
         }
         if(p.trim())return;
