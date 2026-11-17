@@ -1,7 +1,7 @@
 /* Блок 9. Маршрут заезда
    Кремовый блок. Серпантин: дорога змейкой идёт через центр, этапы по очереди справа и слева в изгибах.
    Дорогу, отметки этапов и финиш рисует route.js по фактическим позициям этапов (на любой ширине изгибы встают к карточкам).
-   Вау-момент: болид едет по дороге вместе со скроллом, в поворотах уходит в занос с дымком,
+   Вау-момент: болид едет по дороге вместе со скроллом, в поворотах уходит в занос с лёгким дымком,
    пройденная разметка краснеет, отметки загораются, карточка этапа выезжает, когда болид до неё доезжает.
    Телефон: узкая змейка у левого края, этапы столбиком.
    Без JS и при prefers-reduced-motion: дорога и все этапы видны сразу, болид стоит на старте. */
@@ -13,7 +13,6 @@
 .rt-trk{position:relative;margin-top:72px;padding-bottom:190px;--rw:56px}
 .rt-road{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .rt-asph{fill:none;stroke:#1d1c1b;stroke-width:var(--rw);stroke-linecap:butt}
-.rt-skid{fill:none;stroke:rgba(0,0,0,.55);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
 .rt-dash{fill:none;stroke:#EFE6DE;stroke-width:3;stroke-dasharray:18 20;opacity:.7}
 /* без filter: свечение перерисовывалось бы каждый кадр по всей длине дороги */
 .rt-done{fill:none;stroke:var(--red);stroke-width:4;stroke-dasharray:18 20}
@@ -36,7 +35,7 @@
 .rt-car svg{display:block;width:100%;height:100%}
 .rt-fx{position:absolute;inset:0;z-index:2;pointer-events:none}
 .rt-puff{position:absolute;left:0;top:0;width:var(--s,30px);height:var(--s,30px);margin:calc(var(--s,30px)/-2) 0 0 calc(var(--s,30px)/-2);border-radius:50%;
-  background:radial-gradient(circle,rgba(120,110,104,.42),rgba(120,110,104,0) 70%);
+  background:radial-gradient(circle,rgba(120,110,104,.26),rgba(120,110,104,0) 70%);
   animation:rt-puff .95s ease-out forwards}
 @keyframes rt-puff{from{transform:translate(0,0) scale(.35);opacity:1}to{transform:translate(var(--dx),var(--dy)) scale(1.9);opacity:0}}
 
@@ -79,8 +78,7 @@
   .rt-trk{margin-top:40px;padding:0 0 96px 58px;--rw:24px}
   .rt-dash{stroke-width:2;stroke-dasharray:9 11}
   .rt-done{stroke-width:2.5;stroke-dasharray:9 11}
-  .rt-skid{stroke-width:2}
-  .rt-car{width:22px;height:46px}
+    .rt-car{width:22px;height:46px}
   .rt-st,.rt-st:nth-child(odd){width:auto;margin-left:0}
   .rt-st+.rt-st{margin-top:44px}
   .rt-st:nth-child(odd) .rt-wk,.rt-st:nth-child(odd) .rt-t{text-align:left}

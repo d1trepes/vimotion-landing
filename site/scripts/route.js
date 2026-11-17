@@ -3,7 +3,7 @@
       старт сверху по центру, финиш с шашечным флагом внизу. На телефоне узкая змейка у левого края.
    2) Болид держится на высоте ~55% окна: позиция на дороге = точка, где дорога пересекает эту линию.
       Едет с инерцией. В поворотах уходит в занос: угол кузова = направление дороги + снос,
-      снос растёт со скоростью и кривизной и догоняет с запаздыванием (зад «выносит»). При заносе дымок и следы шин.
+      снос растёт со скоростью и кривизной и догоняет с запаздыванием (зад «выносит»). При заносе лёгкий дымок.
    3) Пройденная разметка краснеет, отметка этапа загорается, карточка выезжает, когда болид доезжает до этапа.
    При prefers-reduced-motion дорога рисуется, болид стоит на старте, все этапы открыты. */
 (function(){
@@ -11,7 +11,7 @@
   var sec=document.getElementById('route');
   if(!sec)return;
   var trk=sec.querySelector('.rt-trk'),svg=sec.querySelector('.rt-road'),car=sec.querySelector('.rt-car'),fx=sec.querySelector('.rt-fx');
-  var asph=svg.querySelector('.rt-asph'),dash=svg.querySelector('.rt-dash'),done=svg.querySelector('.rt-done'),skid=svg.querySelector('.rt-skid');
+  var asph=svg.querySelector('.rt-asph'),dash=svg.querySelector('.rt-dash'),done=svg.querySelector('.rt-done');
   var cr=svg.querySelector('.rt-cr'),pinsG=svg.querySelector('.rt-pins'),marksG=svg.querySelector('.rt-marks');
   var st=[].slice.call(sec.querySelectorAll('.rt-st'));
   var NS='http://www.w3.org/2000/svg';
@@ -67,7 +67,6 @@
       pinsG.appendChild(g);pins.push(g);pinL.push(lenAtY(p[1]));
     });
     cw=car.offsetWidth;ch=car.offsetHeight;
-    skidD='';skidOn=false;skid.setAttribute('d','');
     return true;
   }
 
@@ -90,8 +89,8 @@
     return cl(lenAtY(h*.55+Math.max(0,h*.42-rem)-r.top),0,maxL());
   }
 
-  /* дым и следы */
-  var lastPuff=0,skidD='',skidOn=false,skidN=0;
+  /* дым */
+  var lastPuff=0;
   function puff(x,y,ang){
     if(fx.childElementCount>26)return;
     var s=document.createElement('span');s.className='rt-puff';
@@ -102,15 +101,6 @@
     s.addEventListener('animationend',function(){s.remove()});
     fx.appendChild(s);
   }
-  function mark(x1,y1,x2,y2){
-    if(!skidOn){skidD+=' M'+x1.toFixed(1)+' '+y1.toFixed(1)+' M'+x2.toFixed(1)+' '+y2.toFixed(1);skidOn=true;lastA=[x1,y1];lastB=[x2,y2];return}
-    skidD+=' M'+lastA[0].toFixed(1)+' '+lastA[1].toFixed(1)+' L'+x1.toFixed(1)+' '+y1.toFixed(1)+
-           ' M'+lastB[0].toFixed(1)+' '+lastB[1].toFixed(1)+' L'+x2.toFixed(1)+' '+y2.toFixed(1);
-    lastA=[x1,y1];lastB=[x2,y2];
-    if(++skidN>600){skidD=skidD.slice(skidD.length>>1);skidD=skidD.slice(skidD.indexOf(' M'));skidN=300}
-    skid.setAttribute('d',skidD);
-  }
-  var lastA,lastB;
 
   var clipY=-1e9,L=0,goal=0,slip=0,raf=0,last=0,stIdx=-1,pinIdx=-1,finished=false;
   function place(now,v){
@@ -125,12 +115,11 @@
     car.style.transform='translate('+(p.x-cw/2).toFixed(1)+'px,'+(p.y-ch/2).toFixed(1)+'px) rotate('+rot.toFixed(2)+'deg)';
     /* красная разметка: обновляем клип, только когда болид сдвинулся заметно (меньше перерисовок дороги) */
     if(Math.abs(p.y-clipY)>2.5||now===0){clipY=p.y;cr.setAttribute('height',(p.y+200).toFixed(1))}
-    /* дым и следы шин в заносе */
+    /* дымок в заносе */
     var sx=Math.sin(rr),sy=-Math.cos(rr),rx=p.x-sx*ch*.36,ry=p.y-sy*ch*.36,px=-sy*cw*.38,py=sx*cw*.38;
     if(!still&&Math.abs(slip)>9&&Math.abs(v)>.18){
       if(now-lastPuff>(mob?70:45)){lastPuff=now;puff(rx+(slip>0?-px:px),ry+(slip>0?-py:py),p.a)}
-      mark(rx+px,ry+py,rx-px,ry-py);
-    }else skidOn=false;
+    }
     /* этапы и отметки */
     var cy=p.y+ch*.4,n=-1;stY.forEach(function(y,i){if(cy>=y)n=i});
     if(still)n=st.length-1;

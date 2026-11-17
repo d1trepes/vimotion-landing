@@ -70,7 +70,7 @@
   var mq=matchMedia('(max-width:720px)'),cur='';
   function setSrc(){
     /* версия в адресе: при замене файла браузер не возьмёт старое видео из кеша */
-    var s=(mq.matches?'media/valentin-live-m.mp4':'media/valentin-live.mp4')+'?v=20261117v24';
+    var s=(mq.matches?'media/valentin-live-m.mp4':'media/valentin-live.mp4')+'?v=20261117j';
     if(s===cur)return;
     cur=s;video.src=s;video.load();sync();
   }
