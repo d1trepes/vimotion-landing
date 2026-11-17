@@ -45,7 +45,7 @@
     linear-gradient(var(--c),var(--c)) 0 100%/var(--l) var(--t),linear-gradient(var(--c),var(--c)) 0 100%/var(--t) var(--l),
     linear-gradient(var(--c),var(--c)) 100% 100%/var(--l) var(--t),linear-gradient(var(--c),var(--c)) 100% 100%/var(--t) var(--l);
   background-repeat:no-repeat}
-.vf::after{content:"";position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%;background:#d0141a;box-shadow:0 0 0 3px rgba(17,17,17,.22);animation:vf-rec 1.6s steps(1) infinite}
+.vf::after{content:"";position:absolute;top:10px;right:10px;width:8px;height:8px;border-radius:50%;background:var(--red);animation:vf-rec 1.6s steps(1) infinite}
 @keyframes vf-rec{50%{opacity:.15}}
 
 /* планшет: 4 колонки, двойная карточка в конце второго ряда */

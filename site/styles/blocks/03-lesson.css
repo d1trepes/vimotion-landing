@@ -1,0 +1,60 @@
+/* Блок 3. Видео + бегущая строка
+   Продолжает блок 2 на том же кремовом листе: обложка по ширине ряда фото, под ней заголовок, подзаголовок, кнопка.
+   Вау-момент: при прокрутке обложка «въезжает» и вырастает до полного размера (--p ставит lesson.js).
+   Внизу красная лента форматов с наклоном, она закрывает первые три блока. */
+
+.les{padding:0 0 120px;overflow:hidden}
+.les-in{padding:0 var(--m);display:flex;flex-direction:column;align-items:center;text-align:center}
+
+/* обложка: острые углы, как у карточек блока 2 */
+.les-card{--p:1;position:relative;width:100%;max-width:1400px;aspect-ratio:16/9;background:#2a0705;overflow:hidden;
+  transform:scale(calc(.88 + .12*var(--p)));transform-origin:50% 0;will-change:transform}
+.les-cover{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
+.les-card:not(.is-on):hover .les-cover{transform:scale(1.025)}
+
+/* своя кнопка play ровно поверх нарисованной на обложке (центр 50%/49,8%, диаметр 11,4% ширины) */
+.les-play{position:absolute;left:50%;top:49.8%;width:12.6%;aspect-ratio:1;translate:-50% -50%;border:0;border-radius:50%;cursor:pointer;
+  background:var(--red);color:#fff;display:grid;place-items:center;box-shadow:0 10px 40px rgba(40,0,0,.45);transition:scale .5s var(--ease),background .25s}
+.les-play svg{width:38%;height:38%;fill:currentColor;margin-left:7%}
+.les-play::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.75);animation:les-pulse 2.4s var(--ease) infinite;pointer-events:none}
+@keyframes les-pulse{0%{scale:1;opacity:.9}100%{scale:1.55;opacity:0}}
+.les-card:hover .les-play{scale:1.06;background:var(--red-hover)}
+.les-play:focus-visible{outline:3px solid #fff;outline-offset:4px}
+.les-card video{position:absolute;inset:0;width:100%;height:100%;background:#000;object-fit:contain}
+.les-card.is-on .les-play,.les-card.is-on .les-cover{display:none}
+
+.les-h{margin-top:72px;max-width:16em}
+.les-sub{margin-top:20px;max-width:34em;font:400 19px/1.5 var(--text);color:var(--muted);text-wrap:balance}
+.les-btn{margin-top:40px}
+
+/* лента форматов: красная, с волной, наклон −2°, разделители $ */
+.tape{margin:112px -4vw 0;transform:rotate(-2deg);background:var(--red) var(--wave);background-size:auto,28px 9px;overflow:hidden;padding:20px 0 18px}
+.tape-track{display:flex;width:max-content;animation:tape 48s linear infinite}
+.tape-run{display:flex}
+.tape span{display:flex;align-items:center;font:900 40px/1 var(--cond);color:var(--on-red);white-space:nowrap}
+.tape span::after{content:"$";margin:0 .95em;color:rgba(246,238,230,.42)}
+@keyframes tape{to{transform:translateX(-50%)}}
+
+@media (max-width:1180px){
+  .les{padding-bottom:104px}
+  .les-h{margin-top:56px}
+  .les-sub{font-size:18px}
+  .tape{margin-top:96px}
+  .tape span{font-size:34px}
+}
+@media (max-width:720px){
+  .les{padding-bottom:72px}
+  .les-h{margin-top:36px}
+  .les-sub{margin-top:14px;font-size:16px}
+  .les-btn{margin-top:28px;width:100%;height:58px}
+  .les-play{width:17%}
+  .les-play::before{border-width:1.5px}
+  .tape{margin-top:72px;padding:14px 0 12px;transform:rotate(-3deg)}
+  .tape span{font-size:26px}
+  .tape-track{animation-duration:36s}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .les-card{transform:none}
+  .tape-track{animation:none}
+}
