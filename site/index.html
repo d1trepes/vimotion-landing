@@ -3,9 +3,13 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script>/* Высота окна, зафиксированная при загрузке (--vhl). На телефонах обновляется только при смене ширины (поворот):
+<script>/* Высота окна, зафиксированная при загрузке (--vhl). На телефонах обновляется только при смене ширины (поворот) и в первые секунды после открытия:
    встроенные браузеры (Telegram, Instagram) меняют высоту при скролле, из-за этого первый экран «прыгал» и увеличивался */
-(function(){var r=document.documentElement,w=-1,c=matchMedia('(pointer:coarse)').matches;function s(){if(!c||innerWidth!==w){w=innerWidth;window.vmVH=innerHeight;r.style.setProperty('--vhl',innerHeight+'px')}}s();addEventListener('resize',s)})();</script>
+(function(){var r=document.documentElement,w=-1,h=-1,t0=Date.now(),c=matchMedia('(pointer:coarse)').matches,V=window.visualViewport;
+/* Telegram открывает страницу в шторке, которая ещё разворачивается: первые 4 с (пока виден прелоадер) высоту обновляем, дальше фиксируем */
+function H(){var v=innerHeight;if(V&&V.height>0&&V.height<v)v=Math.round(V.height);return v}
+function s(){var v=H(),early=Date.now()-t0<4000&&(window.scrollY||0)<5;if(!c||innerWidth!==w||(early&&v!==h)){w=innerWidth;h=v;window.vmVH=v;r.style.setProperty('--vhl',v+'px');if(window.vmFit&&early)window.vmFit()}}
+s();addEventListener('resize',s);if(V)V.addEventListener('resize',s);addEventListener('load',s);setTimeout(s,600);setTimeout(s,1500);setTimeout(s,3000)})();</script>
 
 <script>/* Ссылка всегда открывается с первого экрана: браузер и Telegram не восстанавливают прошлую позицию прокрутки */
 (function(){if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)return;
@@ -28,33 +32,33 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
 <link rel="preload" href="fonts/inter-tight-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="img/wordmark.webp" imagesrcset="img/wordmark-800.webp?v=20261117z6 800w, img/wordmark-1100.webp?v=20261117z6 1100w, img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
 <link rel="preload" as="image" type="image/webp" href="img/valentin-poster.webp?v=20261117z3" imagesrcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
-<link rel="stylesheet" href="styles/fonts.css?v=20261117z8">
-<link rel="stylesheet" href="styles/tokens.css?v=20261117z8">
-<link rel="stylesheet" href="styles/preloader.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/00-header.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/01-hero.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/02-people.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/03-lesson.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/04-pain.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/05-nobloger.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/06-gears.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/07-vacancies.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/08-whales.css?v=20261117z8">
-<link rel="stylesheet" href="styles/blocks/09-route.css?v=20261117z8">
-<script src="scripts/live-photo.js?v=20261117z8" defer></script>
-<script src="scripts/nowidow.js?v=20261117z8" defer></script>
-<script src="scripts/perf.js?v=20261117z8" defer></script>
-<script src="scripts/hero-fit.js?v=20261117z8" defer></script>
-<script src="scripts/hero.js?v=20261117z8" defer></script>
-<script src="scripts/preloader.js?v=20261117z8" defer></script>
-<script src="scripts/people.js?v=20261117z8" defer></script>
-<script src="scripts/lesson.js?v=20261117z8" defer></script>
-<script src="scripts/pain.js?v=20261117z8" defer></script>
-<script src="scripts/nobloger.js?v=20261117z8" defer></script>
-<script src="scripts/gears.js?v=20261117z8" defer></script>
-<script src="scripts/vacancies.js?v=20261117z8" defer></script>
-<script src="scripts/whales.js?v=20261117z8" defer></script>
-<script src="scripts/route.js?v=20261117z8" defer></script>
+<link rel="stylesheet" href="styles/fonts.css?v=20261117z9">
+<link rel="stylesheet" href="styles/tokens.css?v=20261117z9">
+<link rel="stylesheet" href="styles/preloader.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/00-header.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/01-hero.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/02-people.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/03-lesson.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/04-pain.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/05-nobloger.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/06-gears.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/07-vacancies.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/08-whales.css?v=20261117z9">
+<link rel="stylesheet" href="styles/blocks/09-route.css?v=20261117z9">
+<script src="scripts/live-photo.js?v=20261117z9" defer></script>
+<script src="scripts/nowidow.js?v=20261117z9" defer></script>
+<script src="scripts/perf.js?v=20261117z9" defer></script>
+<script src="scripts/hero-fit.js?v=20261117z9" defer></script>
+<script src="scripts/hero.js?v=20261117z9" defer></script>
+<script src="scripts/preloader.js?v=20261117z9" defer></script>
+<script src="scripts/people.js?v=20261117z9" defer></script>
+<script src="scripts/lesson.js?v=20261117z9" defer></script>
+<script src="scripts/pain.js?v=20261117z9" defer></script>
+<script src="scripts/nobloger.js?v=20261117z9" defer></script>
+<script src="scripts/gears.js?v=20261117z9" defer></script>
+<script src="scripts/vacancies.js?v=20261117z9" defer></script>
+<script src="scripts/whales.js?v=20261117z9" defer></script>
+<script src="scripts/route.js?v=20261117z9" defer></script>
 </head>
 <body>
 

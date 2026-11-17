@@ -52,12 +52,23 @@
       document.fonts.load('400 1em "Inter"')
     ]).catch(function(){}).then(function(){return document.fonts.ready});
   }
+  /* на компьютере ждём первый кадр живого фото (общий предел тот же, 2,5 с), чтобы человек выезжал уже живым */
+  function firstFrame(){
+    var v=window.vmLive&&window.vmLive.video;
+    if(!v||!matchMedia('(pointer:fine)').matches)return Promise.resolve();
+    return new Promise(function(res){
+      if(v.readyState>=2)return res();
+      v.addEventListener('loadeddata',function(){res()},{once:true});
+      v.addEventListener('error',function(){res()},{once:true});
+    });
+  }
   var tasks=[
     fontsReady(),
     imgReady(document.querySelector('.pt img')),
-    imgReady(document.querySelector('.wm img'))
-    /* видео не ждём: пока оно грузится, виден постер, живое фото включается само, когда готово.
-       Раньше ждали полной загрузки ролика, и в Telegram на мобильном интернете прелоадер висел до 4 с */
+    imgReady(document.querySelector('.wm img')),
+    firstFrame()
+    /* на телефоне видео не ждём: пока оно грузится, виден постер, живое фото включается само, когда готово
+       (раньше ждали полной загрузки ролика, и в Telegram на мобильном интернете прелоадер висел до 4 с) */
   ];
   var done=0,ready=false;
   tasks.forEach(function(p){p.then(function(){done++})});

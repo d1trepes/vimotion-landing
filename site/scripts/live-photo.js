@@ -65,7 +65,9 @@
   var video=document.createElement('video');
   video.muted=true;video.defaultMuted=true;video.setAttribute('muted','');
   video.playsInline=true;video.setAttribute('playsinline','');
-  video.loop=true;video.preload='metadata'; /* ролик качается после прелоадера, не отбирая канал у шрифтов и постера */
+  /* на компьютере ролик качается сразу, чтобы к концу прелоадера человек уже был живым (без «подмены» постера на видео);
+     на телефоне после прелоадера, чтобы не отбирать мобильный интернет у первого экрана */
+  video.loop=true;video.preload=matchMedia('(pointer:fine)').matches?'auto':'metadata';
 
   var mq=matchMedia('(max-width:720px)'),cur='';
   function setSrc(){

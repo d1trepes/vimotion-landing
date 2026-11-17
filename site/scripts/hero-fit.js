@@ -136,6 +136,7 @@
     lastW=W;lastH=H;cancelAnimationFrame(raf);raf=requestAnimationFrame(fit);
   }
   function force(){lastW=lastH=0;schedule()}
+  /* window.vmFit вызывается из <head>, когда в первые секунды меняется высота окна (шторка Telegram) */
   addEventListener('resize',schedule);
   addEventListener('load',force);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(force);
