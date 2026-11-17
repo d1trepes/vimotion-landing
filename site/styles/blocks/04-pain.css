@@ -1,0 +1,85 @@
+/* Блок 4. Боль + мысль Валентина
+   Цитаты учеников в ряд, ниже альбом из трёх карточек на булавках (рамки из ChatGPT, фото вклеены в окно)
+   и письмо Валентина. Выделена только фраза мамы.
+   Вау-момент: карточки сначала карандашные наброски, маркер проводит по фразе мамы,
+   потом фото по очереди проявляются в цвет и чуть «прижимаются» к булавке (классы ставит pain.js).
+   Без JS и при prefers-reduced-motion сразу финальное состояние. */
+
+@font-face{font-family:"Caveat";src:url(../../fonts/caveat-600-cyr.woff2) format("woff2");font-weight:600;font-display:swap;
+  unicode-range:U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Caveat";src:url(../../fonts/caveat-600-lat.woff2) format("woff2");font-weight:600;font-display:swap;
+  unicode-range:U+0000-00FF,U+2000-206F}
+
+.pain{padding:112px var(--m) 136px}
+
+/* цитаты: четыре колонки с тонкими разделителями */
+.pain-q{list-style:none;counter-reset:q;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));max-width:1328px;margin:72px auto 0;border-top:1px solid var(--line)}
+.pain-q li{padding:34px 28px 0 0;font:600 27px/1.25 var(--display);letter-spacing:-.01em;color:var(--ink)}
+.pain-q li+li{padding-left:28px;border-left:1px solid var(--line)}
+.pain-q li::before{counter-increment:q;content:"0" counter(q);display:block;margin-bottom:18px;font:900 22px/1 var(--cond);color:var(--red)}
+
+/* альбом слева, письмо справа */
+.story{display:grid;grid-template-columns:7fr 5fr;gap:64px;align-items:center;max-width:1328px;margin:120px auto 0}
+
+.board{position:relative;width:100%;max-width:760px;aspect-ratio:760/830;container-type:inline-size}
+.pin{position:absolute;margin:0;transform:rotate(var(--r));
+  filter:drop-shadow(0 14px 18px rgba(50,30,15,.16)) drop-shadow(0 4px 6px rgba(50,30,15,.1))}
+.pin img{display:block;width:100%;height:auto}
+.pin-sk{position:absolute;inset:0;opacity:0}
+.pin figcaption{position:absolute;left:0;right:0;top:var(--cy);transform:translateY(-50%);text-align:center;white-space:nowrap;
+  font:600 var(--fs) / 1 "Caveat",cursive;color:#2a2622}
+.pin-1{left:0;top:14.46%;width:50%;--r:-3deg;--cy:86%;--fs:3.68cqw}
+.pin-2{left:38%;top:0;width:61.8%;--r:2deg;--cy:85%;--fs:3.68cqw}
+.pin-3{left:43%;top:44.6%;width:56.6%;--r:-1.5deg;--cy:84%;--fs:3.29cqw;z-index:2}
+
+.letter-t{font:600 36px/1.24 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:620px}
+.mk{background:linear-gradient(var(--red),var(--red)) no-repeat 0 0/100% 100%;color:var(--on-red);padding:0 .1em;
+  -webkit-box-decoration-break:clone;box-decoration-break:clone}
+.letter-s{margin-top:30px;font:600 15px/1 var(--text);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+
+/* анимация: исходное состояние ставит pain.js (.is-sk), запуск при появлении (.is-on) */
+.pain.is-sk .pin-sk{opacity:1}
+.pain.is-sk .pin{translate:0 -10px}
+.pain.is-sk .mk{background-size:0 100%;color:var(--ink)}
+.pain.is-sk .pin-sk{transition:opacity 1.4s ease}
+.pain.is-sk .pin{transition:translate .9s var(--ease)}
+.pain.is-sk .mk{transition:background-size .9s var(--ease) .2s,color .35s ease .45s}
+.pain.is-on .pin-sk{opacity:0}
+.pain.is-on .pin{translate:0 0}
+.pain.is-on .mk{background-size:100% 100%;color:var(--on-red)}
+.pain.is-sk .pin-1,.pain.is-sk .pin-1 .pin-sk{transition-delay:1s}
+.pain.is-sk .pin-2,.pain.is-sk .pin-2 .pin-sk{transition-delay:1.7s}
+.pain.is-sk .pin-3,.pain.is-sk .pin-3 .pin-sk{transition-delay:2.4s}
+
+@media (max-width:1180px){
+  .pain{padding:96px var(--m) 112px}
+  .pain-q{margin-top:56px}
+  .pain-q li{font-size:22px;padding-right:22px}
+  .pain-q li+li{padding-left:22px}
+  .story{gap:48px;margin-top:96px}
+  .letter-t{font-size:28px}
+}
+@media (max-width:900px){
+  .pain-q{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pain-q li,.pain-q li+li{padding:26px 22px 26px 0;border-left:0;border-bottom:1px solid var(--line)}
+  .pain-q li:nth-child(even){padding-left:22px;border-left:1px solid var(--line)}
+  .story{grid-template-columns:1fr;gap:40px;margin-top:72px}
+  .board{max-width:620px;margin:0 auto}
+  .letter{max-width:620px;margin:0 auto}
+}
+@media (max-width:720px){
+  .pain{padding:72px var(--m) 88px}
+  .pain-q{grid-template-columns:1fr;margin-top:36px}
+  .pain-q li,.pain-q li+li,.pain-q li:nth-child(even){padding:22px 0 20px;border-left:0;font-size:20px}
+  .pain-q li::before{font-size:20px;margin-bottom:12px}
+  .story{margin-top:56px;gap:28px}
+  .letter-t{font-size:24px}
+  .letter-s{margin-top:24px;font-size:13px}
+  .pin-1,.pin-2{--fs:4.3cqw}
+  .pin-3{--fs:3.9cqw}
+}
+@media (prefers-reduced-motion:reduce){
+  .pain .pin-sk{opacity:0!important}
+  .pain .pin{translate:none!important}
+  .pain .mk{background-size:100% 100%!important;color:var(--on-red)!important}
+}
