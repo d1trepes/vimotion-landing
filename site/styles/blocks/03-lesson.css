@@ -6,25 +6,29 @@
 .les{padding:0 0 120px;overflow:hidden}
 .les-in{padding:0 var(--m);display:flex;flex-direction:column;align-items:center;text-align:center}
 
-/* обложка: острые углы, как у карточек блока 2 */
-.les-card{--p:1;position:relative;width:100%;max-width:1400px;aspect-ratio:16/9;background:#2a0705;overflow:hidden;
+/* обложка в светлой рамке со скруглением, как в референсе клиента; рамка растёт целиком */
+.les-frame{--p:1;width:100%;max-width:1400px;padding:8px;border-radius:30px;background:rgba(255,255,255,.5);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.8),0 0 0 1px rgba(17,17,17,.07),0 40px 90px -36px rgba(70,0,0,.5);
   transform:scale(calc(.88 + .12*var(--p)));transform-origin:50% 0;will-change:transform}
+.les-card{position:relative;width:100%;aspect-ratio:16/9;background:#2a0705;overflow:hidden;border-radius:22px;isolation:isolate}
+.les-card::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18);pointer-events:none;z-index:2}
 .les-cover{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
 .les-card:not(.is-on):hover .les-cover{transform:scale(1.025)}
 
 /* своя кнопка play ровно поверх нарисованной на обложке (центр 50%/49,8%, диаметр 11,4% ширины) */
-.les-play{position:absolute;left:50%;top:49.8%;width:12.6%;aspect-ratio:1;translate:-50% -50%;border:0;border-radius:50%;cursor:pointer;
+.les-play{position:absolute;left:50%;top:49.8%;width:11.9%;aspect-ratio:1;translate:-50% -50%;border:0;border-radius:50%;cursor:pointer;
   background:var(--red);color:#fff;display:grid;place-items:center;box-shadow:0 10px 40px rgba(40,0,0,.45);transition:scale .5s var(--ease),background .25s}
-.les-play svg{width:38%;height:38%;fill:currentColor;margin-left:7%}
-.les-play::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(255,255,255,.75);animation:les-pulse 2.4s var(--ease) infinite;pointer-events:none}
-@keyframes les-pulse{0%{scale:1;opacity:.9}100%{scale:1.55;opacity:0}}
-.les-card:hover .les-play{scale:1.06;background:var(--red-hover)}
+.les-play svg{width:34%;height:34%;fill:currentColor;margin-left:4%}
+.les-play::before{content:"";position:absolute;inset:0;border-radius:50%;border:1.5px solid rgba(255,255,255,.6);animation:les-pulse 2.6s var(--ease) infinite;pointer-events:none}
+@keyframes les-pulse{0%{scale:1;opacity:.8}100%{scale:1.35;opacity:0}}
+.les-card:hover .les-play{scale:1.04;background:var(--red-hover)}
 .les-play:focus-visible{outline:3px solid #fff;outline-offset:4px}
 .les-card video{position:absolute;inset:0;width:100%;height:100%;background:#000;object-fit:contain}
 .les-card.is-on .les-play,.les-card.is-on .les-cover{display:none}
 
-.les-h{margin-top:72px;max-width:16em}
-.les-sub{margin-top:20px;max-width:34em;font:400 19px/1.5 var(--text);color:var(--muted);text-wrap:balance}
+.les-h{margin-top:80px;max-width:15em;font-size:min(4.45vw,64px)}
+@media (min-width:1441px){.les-h{font-size:min(calc(64px + (100vw - 1440px)/40),76px)}}
+.les-sub{margin-top:24px;max-width:31em;font:400 21px/1.5 var(--text);color:var(--muted);text-wrap:balance}
 .les-btn{margin-top:40px}
 
 /* лента форматов: красная, с волной, наклон −2°, разделители $ */
@@ -37,17 +41,22 @@
 
 @media (max-width:1180px){
   .les{padding-bottom:104px}
-  .les-h{margin-top:56px}
-  .les-sub{font-size:18px}
+  .les-h{margin-top:64px;font-size:min(5.4vw,56px)}
+  .les-sub{font-size:19px}
+  .les-btn{height:58px;padding:0 28px;font-size:14px}
+  .les-frame{padding:6px;border-radius:24px}
+  .les-card{border-radius:18px}
   .tape{margin-top:96px}
   .tape span{font-size:34px}
 }
 @media (max-width:720px){
   .les{padding-bottom:72px}
-  .les-h{margin-top:36px}
-  .les-sub{margin-top:14px;font-size:16px}
+  .les-h{margin-top:40px;font-size:min(10.2vw,42px)}
+  .les-sub{margin-top:16px;font-size:17px}
+  .les-frame{padding:5px;border-radius:18px}
+  .les-card{border-radius:13px}
   .les-btn{margin-top:28px;width:100%;height:58px}
-  .les-play{width:17%}
+  .les-play{width:14%}
   .les-play::before{border-width:1.5px}
   .tape{margin-top:72px;padding:14px 0 12px;transform:rotate(-3deg)}
   .tape span{font-size:26px}
@@ -55,6 +64,6 @@
 }
 
 @media (prefers-reduced-motion:reduce){
-  .les-card{transform:none}
+  .les-frame{transform:none}
   .tape-track{animation:none}
 }
