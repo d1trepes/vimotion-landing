@@ -37,7 +37,9 @@
 .les-card.is-on .les-play{display:none}
 .les-card.is-on{cursor:default}
 
-.les-h{margin-top:80px;max-width:15em}
+/* заголовок и подзаголовок над видео, кнопка под видео (правка клиента 17.11) */
+.les-h{max-width:15em}
+.les-frame{margin-top:56px}
 .les-sub{margin-top:24px;max-width:31em;font:400 21px/1.5 var(--text);color:var(--muted);text-wrap:balance}
 .les-btn{margin-top:40px}
 
@@ -51,7 +53,7 @@
 
 @media (max-width:1180px){
   .les{padding-bottom:104px}
-  .les-h{margin-top:64px}
+  .les-frame{margin-top:44px}
   .les-sub{font-size:19px}
   .les-btn{height:58px;padding:0 28px;font-size:14px}
   .les-frame{padding:8px;border-radius:24px}
@@ -62,7 +64,7 @@
 }
 @media (max-width:720px){
   .les{padding-bottom:72px}
-  .les-h{margin-top:40px}
+  .les-frame{margin-top:28px}
   .les-sub{margin-top:16px;font-size:17px}
   .les-frame{padding:6px;border-radius:18px}
   .les-card{border-radius:13px}
