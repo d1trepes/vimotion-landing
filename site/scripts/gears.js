@@ -8,7 +8,7 @@
   var sec=document.getElementById('ladder');
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var run=sec.querySelector('.gb-run'),knob=sec.querySelector('.gb-knob'),
-      lines=[].slice.call(sec.querySelectorAll('.gb-trail polyline')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
+      lines=[].slice.call(sec.querySelectorAll('.gb-trail .rv')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
 
   var W=1672,H=941,X1=303.5,X3=828,X5=1351,T=234,N=461,B=684;
@@ -17,8 +17,7 @@
   var acc=[0];for(var i=1;i<P.length;i++)acc.push(acc[i-1]+Math.hypot(P[i][0]-P[i-1][0],P[i][1]-P[i-1][1]));
   var TOTAL=acc[acc.length-1];
   var GEAR=[0,acc[1],acc[4],acc[5],acc[8]];/* длина пути до передач 1..5 */
-  lines.forEach(function(l){l.setAttribute('points',P.map(function(p){return p.join(',')}).join(' '));
-    l.style.strokeDasharray=TOTAL;l.style.strokeDashoffset=TOTAL});
+  lines.forEach(function(l){l.style.strokeDasharray=TOTAL+' '+TOTAL;l.style.strokeDashoffset=TOTAL});
 
   function at(s){
     for(var i=1;i<acc.length;i++)if(s<=acc[i]||i===acc.length-1){
