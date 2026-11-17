@@ -4,6 +4,7 @@
    2) Вау-момент: рамка видоискателя с REC переезжает с человека на человека,
       тот, на ком рамка, цветной. Сама идёт по кругу, пока блок на экране;
       на наведение или фокус встаёт на выбранного человека.
+   На телефоне рамка встаёт на человека по касанию.
    Без JS и при prefers-reduced-motion все фото цветные, рамки нет. */
 (function(){
   'use strict';
@@ -77,6 +78,11 @@
     c.addEventListener('mouseenter',function(){if(!fine.matches)return;hover=true;clearTimeout(resume);stop();go(i)});
     c.addEventListener('focusin',function(){hover=true;clearTimeout(resume);stop();go(i)});
     c.addEventListener('focusout',function(){hover=false;resume=setTimeout(run,1200)});
+  });
+  /* телефон: по касанию рамка сразу встаёт на человека, автосмена ждёт 4 с */
+  cards.forEach(function(c,i){
+    function tap(e){if(e.pointerType==='mouse')return;clearTimeout(resume);stop();go(i);resume=setTimeout(run,4000)}
+    c.addEventListener('pointerdown',tap,{passive:true});
   });
   row.addEventListener('mouseleave',function(){if(!fine.matches)return;hover=false;clearTimeout(resume);resume=setTimeout(run,1200)});
 

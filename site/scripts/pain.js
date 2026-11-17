@@ -11,15 +11,15 @@
   function fit(){
     caps.forEach(function(c){
       c.style.fontSize='';
-      /* доля ширины PNG, которую занимает сама карточка (по краям прозрачные поля под тень): mom, pc, me */
-      var pin=c.parentNode,k=pin.classList.contains('pin-1')?.807:pin.classList.contains('pin-2')?.777:.748,avail=pin.offsetWidth*k*.88;
+      /* доля ширины картинки, которую занимает сама карточка (по краям поля с вшитой тенью): mom, pc, me */
+      var pin=c.parentNode,k=pin.classList.contains('pin-1')?.668:pin.classList.contains('pin-2')?.643:.619,avail=pin.offsetWidth*k*.88;
       var rg=document.createRange();rg.selectNodeContents(c);
       var w=rg.getBoundingClientRect().width; /* у повёрнутой карточки рамка чуть шире текста: запас в нашу пользу */
       if(w>avail&&w>0){var fs=parseFloat(getComputedStyle(c).fontSize);c.style.fontSize=(fs*avail/w).toFixed(2)+'px'}
     });
   }
   fit();
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+  if(document.fonts){if(document.fonts.ready)document.fonts.ready.then(fit);if(document.fonts.addEventListener)document.fonts.addEventListener('loadingdone',fit)}
   if(window.ResizeObserver){var b=document.querySelector('#pain .board');if(b)new ResizeObserver(fit).observe(b)}
   else addEventListener('resize',fit);
 })();

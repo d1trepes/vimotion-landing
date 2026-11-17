@@ -17,6 +17,7 @@
   function start(){
     var list=[].slice.call(document.querySelectorAll('img[loading="lazy"]'));
     var les=document.getElementById('les-card');if(les)les.classList.add('bg');
+    document.documentElement.classList.add('cav');
     var i=0,active=0;
     function next(){
       while(active<3&&i<list.length){

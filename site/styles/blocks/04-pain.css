@@ -23,14 +23,17 @@
 .story{display:grid;grid-template-columns:7fr 5fr;gap:64px;align-items:center;max-width:1328px;margin:120px auto 0}
 
 .board{position:relative;width:100%;max-width:760px;aspect-ratio:760/830;container-type:inline-size}
-.pin{position:absolute;margin:0;transform:rotate(var(--r));
-  filter:drop-shadow(0 14px 18px rgba(50,30,15,.16)) drop-shadow(0 4px 6px rgba(50,30,15,.1))}
+.pin{position:absolute;margin:0;transform:rotate(var(--r))}
+/* тень вшита в сами картинки (img/story/*-sh-*.webp, поля по 100 px под тень): CSS drop-shadow на анимированной карточке
+   iOS и Telegram обрезали по краю слоя, снизу появлялась линия. Позиции ниже пересчитаны под картинки с полями */
 .pin img{display:block;width:100%;height:auto}
 .pin figcaption{position:absolute;left:0;right:0;top:var(--cy);transform:translateY(-50%);text-align:center;white-space:nowrap;
-  font:600 var(--fs) / 1 "Caveat",cursive;color:#2a2622}
-.pin-1{left:0;top:14.46%;width:50%;--r:-3deg;--cy:86%;--fs:3.68cqw}
-.pin-2{left:38%;top:0;width:61.8%;--r:2deg;--cy:85%;--fs:3.68cqw}
-.pin-3{left:43%;top:44.6%;width:56.6%;--r:-1.5deg;--cy:84%;--fs:3.29cqw;z-index:2}
+  font:600 var(--fs) / 1 cursive;color:#2a2622}
+/* рукописный шрифт включается после загрузки первого экрана (класс cav ставит perf.js), чтобы не тормозить старт */
+.cav .pin figcaption{font-family:"Caveat",cursive}
+.pin-1{left:-5.208%;top:9.691%;width:60.417%;--r:-3deg;--cy:80.857%;--fs:3.68cqw}
+.pin-2{left:31.563%;top:-5.895%;width:74.675%;--r:2deg;--cy:77.391%;--fs:3.68cqw}
+.pin-3{left:37.104%;top:39.201%;width:68.392%;--r:-1.5deg;--cy:78.138%;--fs:3.29cqw;z-index:2}
 
 .letter-t{font:600 36px/1.24 var(--display);letter-spacing:-.015em;color:var(--ink);max-width:620px}
 .mk{background:linear-gradient(var(--red),var(--red)) no-repeat 0 0/100% 100%;color:var(--on-red);padding:0 .1em;
