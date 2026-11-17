@@ -1,7 +1,7 @@
 /* Блок 6. Коробка передач
-   Сцена закреплена (sticky), прогресс скролла по .gb-run выбирает передачу 1-5.
+   Сцена закреплена (sticky), прогресс скролла по .gb-run плавно ведёт ручку: пауза на каждой передаче, переход между ними.
    Ручка едет по прорезям кулисы по одной ломаной (координаты прорезей сняты с фото 1672×941),
-   красная подсветка раскрывается по той же ломаной. На каждой новой передаче лёгкий «щелчок».
+   неоновая подсветка раскрывается по той же ломаной. Ручка догоняет скролл с инерцией, в передаче лёгкий «щелчок».
    При prefers-reduced-motion скрипт не запускается: в разметке финальное состояние. */
 (function(){
   'use strict';
@@ -30,30 +30,41 @@
     lines.forEach(function(l){l.style.strokeDashoffset=TOTAL-s});
   }
 
-  var gear=0,s=0,anim=0;
-  function mark(g){items.forEach(function(it,i){it.classList.toggle('on',i<g);it.classList.toggle('cur',i===g-1)})}
-  function ease(t){return t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2}
-  function shift(g){
-    if(g===gear)return;gear=g;mark(g);
-    var from=s,to=GEAR[g-1],d=Math.abs(to-from),dur=Math.min(1100,320+d*.28),t0=performance.now();
-    cancelAnimationFrame(anim);
-    (function step(now){
-      var k=Math.min(1,(now-t0)/dur);s=from+(to-from)*ease(k);place(s);
-      if(k<1)anim=requestAnimationFrame(step);
-      else{knob.classList.remove('clunk');void knob.offsetWidth;knob.classList.add('clunk')}
-    })(t0);
-  }
-  function progress(){
+  /* скролл задаёт цель: на каждой передаче пауза, между ними плавный переход;
+     ручка догоняет цель с инерцией, поэтому резкий прокрут не дёргает её */
+  var DWELL=.4;
+  function smooth(t){return t*t*(3-2*t)}
+  function target(){
     var r=run.getBoundingClientRect(),len=r.height-innerHeight;
-    var p=len>0?Math.max(0,Math.min(1,-r.top/len)):1;
-    return 1+Math.min(4,Math.floor(p*5));
+    var p=len>0?Math.max(0,Math.min(1,-r.top/len)):1,u=p*4,i=Math.min(3,Math.floor(u)),f=u-i;
+    if(p>=1)return GEAR[4];
+    var k=Math.max(0,Math.min(1,(f-DWELL/2)/(1-DWELL)));
+    return GEAR[i]+(GEAR[i+1]-GEAR[i])*smooth(k);
   }
+  var s=target(),goal=s,cur=-1,raf=0,last=0;
+  function mark(){
+    var g=0,best=1e9;
+    for(var i=0;i<5;i++){var d=Math.abs(GEAR[i]-s);if(d<best){best=d;g=i}}
+    var reached=0;for(var j=0;j<5;j++)if(GEAR[j]<=s+40)reached=j;
+    items.forEach(function(it,i){it.classList.toggle('on',i<=reached);it.classList.toggle('cur',i===reached)});
+    /* щелчок, когда ручка встала в передачу */
+    if(best<6&&g!==cur){cur=g;knob.classList.remove('clunk');void knob.offsetWidth;knob.classList.add('clunk')}
+    else if(best>60)cur=-1;
+  }
+  function tick(now){
+    var dt=Math.min(64,now-(last||now));last=now;
+    var k=1-Math.pow(1-.085,dt/16.7);
+    /* инерция + предел скорости: даже при резком прокруте ручка едет ровно */
+    var step=(goal-s)*k,vmax=1500*dt/1000;
+    s+=Math.max(-vmax,Math.min(vmax,step));
+    if(Math.abs(goal-s)<.4)s=goal;
+    place(s);mark();
+    raf=s!==goal?requestAnimationFrame(tick):(last=0,0);
+  }
+  function kick(){goal=target();if(!raf){last=0;raf=requestAnimationFrame(tick)}}
 
   sec.classList.add('js');
-  /* старт: если блок уже прокручен, сразу ставим нужную передачу без анимации */
-  gear=progress();s=GEAR[gear-1];place(s);mark(gear);
-
-  var ticking=false;
-  addEventListener('scroll',function(){if(!ticking){ticking=true;requestAnimationFrame(function(){ticking=false;shift(progress())})}},{passive:true});
-  addEventListener('resize',function(){shift(progress())});
+  place(s);mark();
+  addEventListener('scroll',kick,{passive:true});
+  addEventListener('resize',kick);
 })();
