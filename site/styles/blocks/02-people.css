@@ -13,9 +13,9 @@
 .ppl{padding:112px var(--m) 128px;box-shadow:0 -28px 64px -12px rgba(17,17,17,.32)}
 
 /* H2 как H1: Fira XC 900, один размер и цвет, акцент только плашкой */
-.h2{font:900 min(3.4722vw,50px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink);text-align:center;text-wrap:balance}
+.h2{font:900 min(4.45vw,64px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink);text-align:center;text-wrap:balance}
 .h2 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0;border-radius:0}
-@media (min-width:1441px){.h2{font-size:min(calc(50px + (100vw - 1440px)/60),58px)}}
+@media (min-width:1441px){.h2{font-size:min(calc(64px + (100vw - 1440px)/40),76px)}}
 
 .ppl-row{position:relative;list-style:none;margin-top:56px;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:40px 16px}
 .pc-2{grid-column:span 2}
@@ -51,17 +51,17 @@
 /* планшет: 4 колонки, двойная карточка в конце второго ряда */
 @media (max-width:1180px){
   .ppl{padding:96px var(--m) 104px}
-  .h2{font-size:min(3.5vw,40px)}
+  .h2{font-size:min(5.4vw,56px)}
   .ppl-row{grid-template-columns:repeat(4,minmax(0,1fr));gap:40px 20px;margin-top:48px}
   .pc-2 .ph{gap:20px}
 }
 /* вертикальный планшет и телефон: 2 колонки, «Ангелина и Остап» на всю ширину */
 @media (max-width:720px), (max-width:1180px) and (orientation:portrait){
-  .h2{font-size:min(9.4vw,37px)}
+  .h2{font-size:min(10.2vw,42px)}
   .ppl-row{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 @media (max-width:1180px) and (min-width:721px) and (orientation:portrait){
-  .h2{font-size:min(5.6vw,50px)}
+  .h2{font-size:min(5.4vw,56px)}
   .ppl-row{grid-template-columns:repeat(3,minmax(0,1fr))}
   .pc-2{grid-column:span 3}
   .pc-2 .ph{grid-template-columns:repeat(3,1fr)}
