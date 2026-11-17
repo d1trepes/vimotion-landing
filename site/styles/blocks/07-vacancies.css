@@ -3,6 +3,7 @@
    Плотный круговой веер: крупная вакансия в центре, вокруг 12 карточек с наклоном, карточки заходят друг на друга.
    Объём: часть карточек с 3D-наклоном (--rx/--ry, своя perspective у каждой), часть плоская с поворотом (--r);
    порядок наложения через z-index (--z), карточки не режут друг друга. Многослойные тени.
+   Заголовок и веер в одной закреплённой сцене (один экран).
    Вау-момент (vacancies.js): сцена закреплена, по скроллу карточки раскрываются веером из колоды за центральной;
    доска чуть наклоняется за курсором, карточка под курсором приподнимается.
    Без JS и при prefers-reduced-motion: веер сразу раскрыт, без наклона.
@@ -10,14 +11,17 @@
 
 @property --h{syntax:"<number>";inherits:false;initial-value:0}
 
-.vc{padding:112px var(--m) 40px;overflow:clip}
+.vc{padding:0 var(--m);overflow:clip}
 .vc-h>span:first-child{display:block}
-.vc-sub{max-width:1000px;margin:24px auto 0;text-align:center;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:pretty}
+.vc-sub{max-width:1000px;margin:20px auto 0;text-align:center;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:pretty}
 
 /* сцена */
 .vc-run{position:relative;height:190vh}
-.vc-stage{position:sticky;top:0;height:100vh;height:100svh;display:grid;place-items:center;perspective:1700px}
-.vc-board{position:relative;container-type:inline-size;width:min(1328px,100%,calc((100svh - 64px)*2.075));aspect-ratio:1328/640;
+/* один экран: заголовок сверху, веер занимает всё оставшееся место (вписывается по ширине и высоте) */
+.vc-stage{position:sticky;top:0;height:var(--vhl,100svh);display:flex;flex-direction:column;padding:clamp(40px,7vh,72px) 0 clamp(20px,3.5vh,40px)}
+.vc-head{flex:none}
+.vc-area{flex:1;min-height:0;container-type:size;display:grid;place-items:center;perspective:1700px;margin-top:clamp(12px,2.5vh,28px)}
+.vc-board{position:relative;container-type:inline-size;width:min(1328px,100cqw,calc(100cqh*2.075));aspect-ratio:1328/640;
   transform-style:preserve-3d;transform:rotateX(var(--tx,0deg)) rotateY(var(--ty,0deg))}
 .vc-cards{list-style:none;position:absolute;inset:0}
 
@@ -38,15 +42,13 @@
   .vc-c:hover img{box-shadow:0 0 0 1px rgba(17,17,17,.05),0 .3cqw .8cqw rgba(40,20,10,.08),0 2cqw 4cqw rgba(70,40,25,.2),0 5cqw 9cqw rgba(70,40,25,.22)}
 }
 
-@media (max-width:1180px){
-  .vc{padding-top:96px}
-}
+
 
 @media (max-width:720px){
-  .vc{padding-top:72px}
-  .vc-sub{font-size:16px;margin-top:18px}
+  .vc-stage{padding:28px 0 16px}
+  .vc-sub{font-size:15px;margin-top:12px}
   .vc-run{height:170vh}
-  .vc-board{width:min(100%,calc((100svh - 40px)*.64));aspect-ratio:358/560}
+  .vc-board{width:min(100cqw,calc(100cqh*.64));aspect-ratio:358/560}
   .vc-c{display:none}
   .vc-c.vc-mob{display:block;left:calc(var(--mx)*1%);top:calc(var(--my)*1%);width:calc(var(--mw)*1%);--rr:var(--mr)}
   .vc-c img{border-radius:2.8cqw}
@@ -55,6 +57,8 @@
 
 @media (prefers-reduced-motion:reduce){
   .vc-run{height:auto}
-  .vc-stage{position:static;height:auto;padding:48px 0 72px}
+  .vc-stage{position:static;height:auto;padding:112px 0 72px}
+  .vc-area{container-type:inline-size;margin-top:40px}
+  .vc-board{width:min(1328px,100%)}
   .vc-board{transform:none}
 }

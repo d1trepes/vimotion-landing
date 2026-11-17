@@ -1,10 +1,10 @@
 /* Блок 1. Первый экран */
-.hero{position:relative;min-height:max(760px,100svh);overflow:hidden;background:var(--cream)}
+.hero{position:relative;min-height:max(760px,var(--vhl,100svh));overflow:hidden;background:var(--cream)}
 /* текст в потоке и прижат к низу, но никогда не выше низа вордмарка:
    на невысоких экранах hero становится выше окна, поля остаются 56px */
 .hero-in{position:relative;width:var(--W);max-width:100%;margin:0 auto;min-height:inherit;display:flex;flex-direction:column;justify-content:flex-end;
   /* нижний отступ 64px, на невысоких экранах сжимается до 32px */
-  --pb:clamp(32px,calc(100svh - 445px - (var(--W) - 2*var(--m))*471/1600),64px);
+  --pb:clamp(32px,calc(var(--vhl,100svh) - 445px - (var(--W) - 2*var(--m))*471/1600),64px);
   padding:calc(76px + (var(--W) - 2*var(--m))*471/1600 + 6px) 0 var(--pb)}
 /* зерно поверх всего первого экрана, включая шапку */
 .hero::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:30;opacity:.08;mix-blend-mode:multiply;
@@ -71,7 +71,7 @@
 
 /* ---------- планшет: текст и цифры в потоке, цифры строкой под кнопкой ---------- */
 @media (max-width:1180px){
-  .hero{min-height:100svh}
+  .hero{min-height:var(--vhl,100svh)}
   .hero-in{display:flow-root;width:100%;padding:0 0 8px}
   .copy{width:46vw;margin:calc(76px + (100vw - 2*var(--m))*471/1600 + 28px) 0 0 var(--m)}
   .h1{font-size:min(3.5vw,40px)}

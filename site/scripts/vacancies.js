@@ -47,7 +47,7 @@
   }
 
   function target(){
-    var r=run.getBoundingClientRect(),vh=innerHeight,a=vh*.6,len=a+r.height-vh;
+    var r=run.getBoundingClientRect(),vh=innerHeight,a=vh*.85,len=a+r.height-vh;
     return len>0?cl((a-r.top)/len/.8):1; /* веер раскрыт к 80% пути, дальше пауза */
   }
 

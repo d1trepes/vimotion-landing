@@ -18,9 +18,9 @@
   /* те же границы, что в 01-hero.css */
   var mqT=matchMedia('(max-width:1180px)'),mqP=matchMedia('(max-width:720px), (max-width:1180px) and (orientation:portrait)');
 
-  /* высота окна без панелей браузера (svh) */
+  /* высота окна без панелей браузера: --vhl из <head> (на телефонах фиксируется при загрузке), иначе svh */
   var probe=document.createElement('div');
-  probe.style.cssText='position:fixed;left:0;top:0;width:0;height:100svh;visibility:hidden;pointer-events:none';
+  probe.style.cssText='position:fixed;left:0;top:0;width:0;height:var(--vhl,100svh);visibility:hidden;pointer-events:none';
   document.body.appendChild(probe);
 
   function px(v){return Math.round(v*100)/100+'px'}
@@ -129,10 +129,10 @@
     }
   }
 
-  var raf=0,lastW=0,lastH=0;
+  var raf=0,lastW=0,lastH=0,coarse=matchMedia('(pointer:coarse)').matches;
   function schedule(){
     var W=inn.clientWidth,H=probe.getBoundingClientRect().height;
-    if(W===lastW&&H===lastH)return;
+    if(W===lastW&&(H===lastH||coarse))return; /* на телефоне смена одной высоты (панели браузера) не пересобирает экран */
     lastW=W;lastH=H;cancelAnimationFrame(raf);raf=requestAnimationFrame(fit);
   }
   function force(){lastW=lastH=0;schedule()}

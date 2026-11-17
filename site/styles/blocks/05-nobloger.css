@@ -8,7 +8,7 @@
 .hero~.nob{background:#0e0d0d;color:var(--on-red);overflow:clip;padding:128px var(--m) 136px;
   --chk:repeating-conic-gradient(#f3ece4 0 25%,#111 0 50%);
   --ch:430px;--st:120px;
-  --t0:max(48px,calc((100svh - var(--ch) - 2*var(--st))/2))}
+  --t0:max(48px,calc((var(--vhl,100svh) - var(--ch) - 2*var(--st))/2))}
 
 .nob-wm{position:absolute;left:var(--m);right:var(--m);bottom:-1.5%;opacity:.05;filter:grayscale(1) brightness(3);pointer-events:none}
 .nob-wm img{width:100%;height:auto}
@@ -49,7 +49,7 @@
   .hero~.nob{padding:72px var(--m) 80px;--ch:330px;--st:84px}
   .nob-in{grid-template-columns:1fr;gap:40px}
   .nob-h.h2{position:static;font-size:min(10.2vw,42px)}
-  .nob-st{gap:36vh}
+  .nob-st{gap:8vh} /* 02 и 03 едут сразу следом за 01, без паузы на пустом экране */
   .nob-c{padding:18px 24px 28px}
   .nob-n{font-size:64px;-webkit-text-stroke-width:1.5px}
   .nob-t{font-size:23px}.nob-p{font-size:16px}

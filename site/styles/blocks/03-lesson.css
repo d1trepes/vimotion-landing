@@ -16,7 +16,10 @@
   background:linear-gradient(160deg,rgba(255,255,255,.55),rgba(255,255,255,.22) 45%,rgba(255,255,255,.38));
   box-shadow:inset 0 0 0 1px rgba(255,255,255,.7),inset 0 1px 0 rgba(255,255,255,.9)}
 @supports (backdrop-filter:blur(1px)){.les-frame::after{backdrop-filter:blur(6px)}}
-.les-card{position:relative;width:100%;aspect-ratio:16/9;background:#2a0705;overflow:hidden;border-radius:21px;isolation:isolate}
+.les-card{position:relative;width:100%;aspect-ratio:16/9;background:#2a0705;overflow:hidden;border-radius:21px;isolation:isolate;
+  -webkit-mask-image:-webkit-radial-gradient(#fff,#000);mask-image:radial-gradient(#fff,#000);transform:translateZ(0)}
+/* iOS и Telegram не обрезают видео по скруглению внутри масштабируемой рамки: маска выше + скругление у самих слоёв */
+.les-card>img,.les-card>video{border-radius:inherit}
 .les-card::after{content:"";position:absolute;inset:0;border-radius:inherit;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);pointer-events:none;z-index:2}
 .les-cover{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease)}
 .les-card:not(.is-on):hover .les-cover{transform:scale(1.025)}
