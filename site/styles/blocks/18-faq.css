@@ -1,0 +1,65 @@
+/* Блок 18. Вопросы.
+   Кремовый фон. Слева прямая тёмная плашка: сверху из неё по пояс выходит Валентин в комбинезоне (вырезка с первого экрана),
+   ниже «Остались вопросы?» и кремовая кнопка «Написать в Telegram» (ведёт в Telegram, решение клиента 20.11).
+   Справа шесть вопросов косыми полосами (-10°, как в блоке 14): открытый вопрос заливается асфальтом слева направо.
+   Красный только на плашке заголовка.
+   Вау-момент (scripts/faq.js): Валентин поднимается из плашки, когда блок доезжает до экрана.
+   При prefers-reduced-motion Валентин стоит на месте, вопросы открываются без анимации. */
+
+.faq{--sk:-10deg;padding:144px var(--m) 152px}
+.faq-in{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:80px;align-items:start}
+
+/* плашка с Валентином */
+.faq-card{position:sticky;top:110px;max-width:470px}
+.faq-fig{position:relative;z-index:0;width:90%;margin:0 auto -7%;aspect-ratio:1104/1024;overflow:hidden}
+.faq-fig img{width:100%;height:100%;object-fit:contain;object-position:50% 100%;transition:translate 1.3s var(--ease)}
+.faq.is-pre .faq-fig img{translate:0 62%}
+.faq-pl{position:relative;z-index:1;padding:48px 44px 44px;text-align:center;color:var(--on-red);
+  background:#131313 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.1),0 40px 70px -40px rgba(40,20,10,.6)}
+.faq-h.h2{color:var(--on-red);font-size:min(4.4vw,62px)}
+.faq-pl .btn{width:100%;margin-top:32px;background:var(--on-red);color:var(--ink)}
+.faq-pl .btn:hover{background:#fff}
+
+/* вопросы: косые полосы */
+.faq-list{list-style:none;display:flex;flex-direction:column;gap:12px;padding:0 10px 0 34px}
+.faq-it{position:relative;transform:skewX(var(--sk));background:#F7F1EA;box-shadow:0 18px 40px -26px rgba(60,30,10,.35)}
+.faq-it::before{content:"";position:absolute;inset:0;background:#131313;transform:scaleX(0);transform-origin:0 50%;transition:transform .7s var(--ease)}
+.faq-it.is-open::before{transform:scaleX(1)}
+.faq-b{position:relative;display:flex;justify-content:space-between;align-items:center;gap:24px;width:100%;padding:28px 34px;border:0;background:none;
+  cursor:pointer;text-align:left;font:600 21px/1.3 var(--display);color:var(--ink);transform:skewX(calc(var(--sk)*-1));transition:color .45s;
+  -webkit-tap-highlight-color:transparent}
+.faq-b:focus-visible{outline:2px solid currentColor;outline-offset:-6px}
+.faq-it.is-open .faq-b{color:var(--on-red)}
+.faq-pl8{position:relative;flex:none;width:34px;height:34px;transition:transform .55s var(--ease)}
+.faq-pl8::before,.faq-pl8::after{content:"";position:absolute;left:50%;top:50%;width:16px;height:2px;margin:-1px 0 0 -8px;background:currentColor}
+.faq-pl8::after{transform:rotate(90deg)}
+.faq-it.is-open .faq-pl8{transform:rotate(135deg)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows .6s var(--ease)}
+.faq-it.is-open .faq-a{grid-template-rows:1fr}
+.faq-a>div{overflow:hidden;min-height:0}
+.faq-a p{position:relative;max-width:32em;padding:0 34px 30px 40px;transform:skewX(calc(var(--sk)*-1));font:400 18px/1.5 var(--text);color:rgba(246,238,230,.72)}
+
+@media (max-width:1180px){
+  .faq{padding:120px var(--m) 128px}
+  .faq-in{gap:48px}
+  .faq-pl{padding:40px 32px 36px}
+  .faq-b{font-size:19px;padding:24px 28px}
+  .faq-a p{font-size:17px;padding:0 28px 26px 34px}
+}
+@media (max-width:900px){
+  .faq-in{grid-template-columns:minmax(0,1fr);gap:56px}
+  .faq-card{position:static;margin:0 auto;width:100%}
+}
+@media (max-width:720px){
+  .faq{--sk:-6deg;padding:88px var(--m) 96px}
+  .faq-in{gap:44px}
+  .faq-fig{width:86%}
+  .faq-pl{padding:34px 22px 24px}
+  .faq-h.h2{font-size:min(10.2vw,42px)}
+  .faq-pl .btn{height:58px;padding:0 20px;margin-top:24px}
+  .faq-list{padding:0 4px 0 14px;gap:10px}
+  .faq-b{font-size:17px;padding:20px}
+  .faq-a p{font-size:16px;padding:0 20px 22px 24px}
+}
+@media (prefers-reduced-motion:reduce){.faq.is-pre .faq-fig img{translate:none}}
