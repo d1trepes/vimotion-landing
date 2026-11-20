@@ -153,9 +153,10 @@ html:not(.anim) .st-line{background-size:100% 3px}
 .cx-qe:not(.has-q) .cx-ev{display:block}
 .cx-qe:not(.has-q) .cx-z{width:min(100%,520px);transform:rotate(-2deg)} /* фото выпускного маленькое: не растягиваем на всю колонку */
 .cx-qe:not(.has-q) .cx-z img{width:100%;height:auto}
-.cx-z{display:block;padding:0;border:0;background:#fff;cursor:zoom-in;box-shadow:0 0 0 1px var(--line),0 18px 40px -22px rgba(60,30,10,.45);transition:translate .45s var(--ease),box-shadow .45s}
+.cx-z{display:block;padding:0;border:0;border-radius:0;background:none;cursor:zoom-in;box-shadow:0 18px 40px -22px rgba(60,30,10,.45);transition:translate .45s var(--ease),box-shadow .45s}
 .cx-z img{height:280px;width:auto}
-.cx-z:hover{translate:0 -6px;box-shadow:0 0 0 1px var(--line),0 26px 50px -22px rgba(60,30,10,.55)}
+.cx-z:hover{translate:0 -6px;box-shadow:0 26px 50px -22px rgba(60,30,10,.55)}
+.cx-z img{display:block;border-radius:0}
 .cx-z:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 
 /* ---------- кейс: следующий ---------- */
@@ -245,8 +246,10 @@ html:not(.anim) .st-line{background-size:100% 3px}
   .cx-z img{height:220px}
   .cx-qe{margin-top:40px}
   .cx-qe.has-q.has-ev{grid-template-columns:minmax(0,1fr)}
-  .cx-qe.has-q.has-ev .cx-ev{margin:-18px auto 0;justify-content:center}
-  .cx-qe.has-q.has-ev .cx-z img{width:190px}
+  /* 20.11: на телефоне скриншот под цитатой, ровно, без наклона и без наезда на плашку */
+  .cx-qe.has-q.has-ev .cx-ev{margin:28px 0 0;justify-content:center;transform:none}
+  .cx-qe.has-q.has-ev .cx-z img{width:min(64vw,250px)}
+  .cx-qe:not(.has-q) .cx-z{transform:none}
   .cx-next{padding:0 var(--m) 80px}
   .cx-next-card{grid-template-columns:minmax(0,108px) minmax(0,1fr);gap:22px;padding:20px 18px 20px 24px}
   .cx-next-nm{font-size:34px}

@@ -54,18 +54,15 @@
   .wh-stage{padding:72px var(--m) 80px}
   .wh-h.h2{font-size:min(10.2vw,42px)}
   .wh-sub{margin-top:14px;font-size:15.5px}
-  .wh-pic{margin:16px calc(-1*var(--m)) 0;width:calc(100% + 2*var(--m))}
   .wh-it{grid-template-columns:52px 1fr;gap:10px;padding:12px 0}
   .wh-n{font-size:40px}
   .wh-it p{font-size:15.5px}
   .wh.js .wh-list{min-height:112px}
-  .wh-btn{margin-top:20px}
-  /* закреплённая сцена на телефоне: компактнее, картинку при нехватке высоты уменьшает whales.js (--whk) */
+  .wh-btn{margin-top:16px}
+  /* картинка по сетке и по центру; в закреплённой сцене при нехватке высоты её уменьшает whales.js (--whk) */
+  .wh-pic{margin:16px auto 0;width:100%}
+  .wh.pin .wh-pic{width:calc(100% * var(--whk,1))}
   .wh.pin .wh-stage{padding-top:12px;padding-bottom:12px}
-  .wh.pin .wh-pic{width:calc((100% + 2*var(--m))*var(--whk,1));margin-left:calc((100% - (100% + 2*var(--m))*var(--whk,1))/2);margin-right:0}
-  /* кнопка после сцены (переносит whales.js) */
-  .wh-after{padding:4px var(--m) 72px}
-  .wh-after .wh-btn{margin-top:0}
 }
 
 @media (prefers-reduced-motion:reduce){

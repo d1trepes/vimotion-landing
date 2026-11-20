@@ -1135,28 +1135,20 @@ try{
   function sm(t){t=cl(t,0,1);return t*t*(3-2*t)}
   function vh(){return window.vmVH||innerHeight}
 
-  /* 20.11 мобильная: на телефоне кнопка стоит после закреплённой сцены (в сцене только заголовок, картинка и пункт),
-     а если сцена всё равно не влезает (низкое окно, встроенный браузер Telegram), картинка уменьшается до 62%.
-     Так киты на телефоне всегда листаются скроллом, автосмена остаётся только для очень низких окон */
-  var btn=sec.querySelector('.wh-btn'),win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic'),after=null;
+  /* 20.11 мобильная (вторая правка): кнопка остаётся в сцене сразу под пунктом. Если сцена не влезает в окно
+     (низкое окно, Telegram), картинка уменьшается, но не меньше чем до 50% ширины. Так киты на телефоне листаются
+     скроллом, автосмена остаётся только для совсем низких окон */
+  var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic');
   var mqM=matchMedia('(max-width:720px)');
-  function placeBtn(){
-    if(!btn)return;
-    if(mqM.matches){
-      if(!after){after=document.createElement('div');after.className='wh-after';run.parentNode.insertBefore(after,run.nextSibling)}
-      if(btn.parentNode!==after)after.appendChild(btn);
-    }else if(btn.parentNode!==win)win.appendChild(btn);
-  }
   var pin=false;
   function layout(){
-    placeBtn();
     sec.classList.remove('pin');pic.style.removeProperty('--whk');
     var hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
     var room=vh()-hb-(mqM.matches?24:64),h=win.offsetHeight;
     pin=h<=room;
     if(!pin&&mqM.matches){
       var ph=pic.offsetHeight,k=(ph-(h-room))/ph;
-      if(k>=.62){pin=true;pic.style.setProperty('--whk',k.toFixed(3))}
+      if(k>=.5){pin=true;pic.style.setProperty('--whk',k.toFixed(3))}
     }
     sec.classList.toggle('pin',pin);
   }
@@ -1435,69 +1427,57 @@ try{
 /* scripts/stories.js */
 try{
 /* Блок 14. Истории учеников: косой аккордеон.
-   21.11: каждая полоса — ссылка на кейс (cases.html#имя). На компьютере наведение раскрывает, клик открывает кейс;
-   на телефоне первое касание раскрывает полосу, второе по раскрытой открывает кейс; с клавиатуры фокус раскрывает, Enter открывает.
-   Наведение (с задержкой 170 мс, чтобы не дёргалось), клик, касание или клавиатура раскрывают человека. Пока посетитель ничего не трогал
-   и блок на экране, истории сменяются сами каждые 4,5 с. Ссылки #alena, #ivan и т. п. (из блока 2)
-   раскрывают нужного человека. При prefers-reduced-motion без въезда и автосмены. */
+   20.11 (правка клиента): полосы больше не ссылки, это просто раскрывающиеся карточки. По умолчанию ничего не раскрыто,
+   сами не листаются. На компьютере наведение раскрывает (с задержкой 170 мс, чтобы ряд не дёргался), курсор ушёл
+   с ряда — всё снова закрыто. На телефоне тап раскрывает, повторный тап закрывает, тап по другой полосе переключает.
+   С клавиатуры Enter/пробел раскрывают и закрывают. Ссылки #alena и т. п. раскрывают нужного человека.
+   Переход ко всем историям — кнопкой «Читать истории полностью». При prefers-reduced-motion без въезда. */
 (function(){
   'use strict';
   var sec=document.querySelector('.st');if(!sec)return;
+  var list=sec.querySelector('.st-list');
   var items=[].slice.call(sec.querySelectorAll('.st-it'));if(!items.length)return;
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
-  var cur=Math.max(0,items.findIndex(function(li){return li.classList.contains('is-on')}));
-  var touched=false,timer=null,inView=false;
-  /* 20.11: на телефоне по умолчанию ничего не раскрыто и само не листается, раскрывает только касание */
-  if(!fine&&matchMedia('(max-width:720px)').matches){items[cur].classList.remove('is-on');cur=-1;touched=true}
+  var cur=-1;
+  items.forEach(function(li){li.classList.remove('is-on')});
 
-  function open(i){
-    if(i===cur||i<0||i>=items.length)return;
-    if(cur>-1)items[cur].classList.remove('is-on');
+  function set(i){
+    if(i===cur)return;
+    if(cur>-1){items[cur].classList.remove('is-on');items[cur].querySelector('.st-b').setAttribute('aria-expanded','false')}
     cur=i;
-    items[cur].classList.add('is-on');
-  }
-  function stop(){touched=true;clearInterval(timer);timer=null}
-  function run(){
-    if(reduce||touched||timer||!inView)return;
-    timer=setInterval(function(){if(document.hidden)return;open((cur+1)%items.length)},4500);
+    if(cur>-1){items[cur].classList.add('is-on');items[cur].querySelector('.st-b').setAttribute('aria-expanded','true')}
   }
 
+  var t=null;
   items.forEach(function(li,i){
     var b=li.querySelector('.st-b');
-    b.addEventListener('click',function(e){
-      if(fine||i===cur){stop();return}  /* переход по ссылке на кейс */
-      e.preventDefault();stop();open(i);
+    b.addEventListener('click',function(){
+      if(fine&&cur===i&&li.matches(':hover'))return;   /* мышью: наведение уже раскрыло, клик ничего не делает */
+      set(cur===i?-1:i);
     });
-    b.addEventListener('focus',function(){if(b.matches(':focus-visible')){stop();open(i)}});
-    /* на компьютере раскрытие по наведению, но с небольшой задержкой: при проведении мышью через ряд полосы не дёргаются */
     if(fine){
-      var t=null;
-      li.addEventListener('mouseenter',function(){clearTimeout(t);t=setTimeout(function(){stop();open(i)},170)});
-      li.addEventListener('mouseleave',function(){clearTimeout(t)});
+      li.addEventListener('mouseenter',function(){clearTimeout(t);t=setTimeout(function(){set(i)},170)});
     }
   });
+  if(fine)list.addEventListener('mouseleave',function(){clearTimeout(t);t=setTimeout(function(){set(-1)},120)});
 
   function fromHash(){
     var id=location.hash.slice(1),i=items.findIndex(function(li){return li.id===id});
-    if(i>-1){stop();open(i)}
+    if(i>-1)set(i);
   }
   window.addEventListener('hashchange',fromHash);fromHash();
 
-  if(!('IntersectionObserver' in window))return;
-  var first=!reduce&&sec.getBoundingClientRect().top>innerHeight;
-  if(first)sec.classList.add('is-wait');
-  new IntersectionObserver(function(es){
-    es.forEach(function(e){
-      inView=e.isIntersecting;
-      if(inView&&first){
-        first=false;
-        sec.classList.add('is-in','is-fresh');sec.classList.remove('is-wait');
-        setTimeout(function(){sec.classList.remove('is-fresh')},900);
-      }
-      if(inView)run();else{clearInterval(timer);timer=null}
-    });
-  },{rootMargin:'0px 0px -25% 0px'}).observe(sec);
+  if(reduce||!('IntersectionObserver' in window))return;
+  var first=sec.getBoundingClientRect().top>innerHeight;
+  if(!first)return;
+  sec.classList.add('is-wait');
+  var io=new IntersectionObserver(function(es){
+    if(!es[0].isIntersecting)return;
+    io.disconnect();
+    sec.classList.add('is-in');sec.classList.remove('is-wait');
+  },{rootMargin:'0px 0px -25% 0px'});
+  io.observe(sec);
 })();
 
 }catch(e){window.console&&console.error("scripts/stories.js",e)}
@@ -1663,7 +1643,8 @@ try{
     if(!es[0].isIntersecting)return;
     io.disconnect();
     sec.classList.remove('is-pre');
-    var c=cards[1];if(!c)return;
+    /* 20.11: на телефоне подсказкой переворачивается первая карточка «Рынок забит», на компьютере вторая */
+    var c=cards[fine?1:0];if(!c)return;
     demo=setTimeout(function(){
       if(sec.querySelector('.fr-c[aria-pressed="true"]')||c.matches(':hover'))return;
       c.setAttribute('aria-pressed','true');

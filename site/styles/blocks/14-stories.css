@@ -101,3 +101,7 @@
   .st.is-wait .st-it{opacity:1;translate:none}
   .st.is-in .st-it{animation:none}
 }
+
+/* 20.11: полосы не ссылки. Мышью раскрываются наведением, поэтому курсор обычный; на телефоне тап раскрывает и закрывает */
+.st-b{-webkit-appearance:none;appearance:none;text-align:left}
+@media (hover:hover) and (pointer:fine){.st-b{cursor:default}}

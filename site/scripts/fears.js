@@ -26,7 +26,8 @@
     if(!es[0].isIntersecting)return;
     io.disconnect();
     sec.classList.remove('is-pre');
-    var c=cards[1];if(!c)return;
+    /* 20.11: на телефоне подсказкой переворачивается первая карточка «Рынок забит», на компьютере вторая */
+    var c=cards[fine?1:0];if(!c)return;
     demo=setTimeout(function(){
       if(sec.querySelector('.fr-c[aria-pressed="true"]')||c.matches(':hover'))return;
       c.setAttribute('aria-pressed','true');
