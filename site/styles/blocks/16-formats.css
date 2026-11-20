@@ -38,9 +38,11 @@
 .fm-v .fm-d{color:rgba(246,238,230,.66)}
 
 /* корешок: пунктир, выемки вырезаны маской на .fm-t */
-.fm-stub{position:relative;padding:30px 44px 40px;transition:transform .6s var(--ease);
-  background:linear-gradient(90deg,rgba(17,17,17,.22) 50%,transparent 0) var(--n) 0/14px 2px repeat-x}
-.fm-v .fm-stub{background-image:linear-gradient(90deg,rgba(246,238,230,.24) 50%,transparent 0)}
+.fm-stub{position:relative;padding:30px 44px 40px;transition:transform .6s var(--ease)}
+/* линия отрыва отдельным слоем (20.11: фоном корешка в Telegram/iOS она пропадала) */
+.fm-stub::before{content:"";position:absolute;left:calc(var(--n) + 6px);right:calc(var(--n) + 6px);top:-1px;height:2px;pointer-events:none;
+  background:linear-gradient(90deg,rgba(17,17,17,.24) 50%,transparent 0) 0 0/14px 2px repeat-x}
+.fm-v .fm-stub::before{background-image:linear-gradient(90deg,rgba(246,238,230,.28) 50%,transparent 0)}
 .fm-ch{font:400 19px/1.45 var(--text);color:var(--muted)}
 .fm-v .fm-ch{color:rgba(246,238,230,.66)}
 .fm-ch b{display:block;margin-top:6px;font:900 36px/1 var(--cond);color:var(--ink)}
@@ -80,6 +82,20 @@
   .fm-for{font-size:19px;margin-top:16px}
   .fm-d{font-size:15.5px}
   .fm-ch{font-size:16px}.fm-ch b{font-size:28px}
+}
+/* 20.11: на телефонах и планшетах без мыши облегчённые билеты. Маска с вырезами + drop-shadow + бегущий блик в режиме
+   наложения в встроенном браузере Telegram на iPhone при касании роняли страницу в чёрный экран.
+   Здесь выемки — кремовые полукруги поверх билета, тень обычная box-shadow, блик выключен */
+@media (hover:none),(max-width:720px){
+  .fm-it{filter:none}
+  .fm-t{box-shadow:0 22px 34px -24px rgba(40,10,0,.35)}
+  .fm-t.is-cut{-webkit-mask:none;mask:none}
+  .fm-t::after{content:"";position:absolute;left:calc(-1*var(--n));right:calc(-1*var(--n));top:calc(var(--cy,60%) - var(--n));height:calc(2*var(--n));
+    pointer-events:none;z-index:3;
+    background:radial-gradient(circle var(--n) at var(--n) 50%,var(--cream) calc(var(--n) - .5px),transparent var(--n)),
+               radial-gradient(circle var(--n) at calc(100% - var(--n)) 50%,var(--cream) calc(var(--n) - .5px),transparent var(--n))}
+  .fm-foil{display:none}
+  .fm-t,.fm-stub{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
 }
 @media (prefers-reduced-motion:reduce){
   .fm.is-pre .fm-it{opacity:1;transform:none}

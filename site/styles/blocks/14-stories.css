@@ -74,17 +74,22 @@
 @media (max-width:720px){
   /* 20.11 мобильная: отступ сверху как у трёх китов; полосы не выходят за сетку: ширина полосы уменьшена
      на величину наклона (высота × tg 5°), поэтому косые края ровно по полям страницы и в закрытом, и в раскрытом виде.
-     По умолчанию ничего не раскрыто и само не листается: первое касание раскрывает, второе ведёт на кейс.
+     По умолчанию ничего не раскрыто; тап раскрывает, повторный закрывает (scripts/stories.js).
      В закрытых полосах на уровне середины видны глаза (--ey: где глаза на фото, доля высоты) */
   .hero~.st,.st{--sk:-5deg;--tg:.0875;padding:64px var(--m) 72px}
   .st-sub{font-size:16px;margin-top:16px}
   .st-list{flex-direction:column;align-items:center;height:auto;margin:32px 0 0;gap:10px}
-  .st-it{--sh:66px;flex:none;height:var(--sh);width:calc(100% - var(--sh)*var(--tg));transition:height .7s var(--ease),width .7s var(--ease)}
+  /* 20.11 (третий круг, плавность): все полосы одной ширины (по раскрытой), анимируется только высота полосы и transform фото;
+     без маски-слоя и без анимации filter (ч/б → цвет переключается один раз посередине раскрытия) — так не лагает на iPhone */
+  .st-it{--sh:66px;flex:none;height:var(--sh);width:calc(100% - 440px*var(--tg));transition:height .55s cubic-bezier(.33,0,.15,1)}
   .st-it.is-on{flex:none;--sh:440px}
-  .st-sk img,.st-it.is-on .st-sk img{left:-8%;width:116%;height:auto;aspect-ratio:3/4;object-fit:cover;top:50%;
-    transform:translateY(calc(var(--ey,.38)*-100%)) skewX(5deg);
-    transition:filter .8s var(--ease),top .7s var(--ease),transform .7s var(--ease)}
-  .st-it.is-on .st-sk img{top:36%}
+  .st-b{-webkit-mask-image:none;mask-image:none;isolation:auto}
+  .st-sk img,.st-it.is-on .st-sk img{left:-8%;width:116%;height:auto;aspect-ratio:3/4;object-fit:cover;top:0;
+    transform:translateY(calc(33px - var(--ey,.38)*100%)) skewX(5deg);
+    filter:grayscale(1) brightness(.62) contrast(1.1);
+    transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .12s}
+  .st-it.is-on .st-sk img{transform:translateY(calc(158px - var(--ey,.38)*100%)) skewX(5deg);filter:none;transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .2s}
+  .st-sk::after{transition:opacity .4s}
   #alena{--ey:.33}#ivan{--ey:.445}#veronika{--ey:.375}#gaiduk{--ey:.425}#nariman{--ey:.39}#nastya{--ey:.32}
   .st-vn{writing-mode:horizontal-tb;rotate:0deg;left:22px;bottom:auto;top:50%;transform:translateY(-50%) skewX(5deg);font-size:22px;
     text-shadow:0 1px 12px rgba(0,0,0,.55)}

@@ -146,10 +146,20 @@ html:not(.anim) .st-line{background-size:100% 3px}
 /* цитата и скрин в одну строку: скрин как карточка-телефон справа, заходит на край плашки */
 .cx-qe{margin-top:56px}
 .cx-qe .cx-q,.cx-qe .cx-ev{margin-top:0}
-.cx-qe.has-q.has-ev{display:grid;grid-template-columns:minmax(0,1fr) 220px;align-items:center}
-.cx-qe.has-q.has-ev .cx-q{margin-right:0}
-.cx-qe.has-q.has-ev .cx-ev{position:relative;z-index:2;margin-left:-36px;transform:rotate(3deg)}
-.cx-qe.has-q.has-ev .cx-z img{height:auto;width:220px}
+/* 20.11 (правка клиента): цитата и скриншот — одна тёмная плашка-«табло» с шашечной кромкой сверху.
+   Слева цитата с красной полосой, справа скриншот встык до краёв плашки, острые углы, без наклона и наездов */
+.cx-qe.has-q.has-ev{position:relative;display:grid;grid-template-columns:minmax(0,1fr) 248px;align-items:stretch;background:#131313;color:var(--on-red)}
+.cx-qe.has-q.has-ev::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;z-index:2;
+  background:conic-gradient(#131313 25%,#F6EEE6 0 50%,#131313 0 75%,#F6EEE6 0) 0 0/10px 10px}
+.cx-qe.has-q.has-ev .cx-q{margin:0;padding:64px 48px 52px 60px;display:flex;flex-direction:column;justify-content:center}
+.cx-qe.has-q.has-ev .cx-q::before{display:none}
+.cx-qe.has-q.has-ev .cx-q::after{left:0;top:10px;width:6px;transform:none}
+.cx-qe.has-q.has-ev .cx-ev{display:block;margin:0;padding-top:10px}
+.cx-qe.has-q.has-ev .cx-ev li{height:100%}
+.cx-qe.has-q.has-ev .cx-z{width:100%;height:100%;box-shadow:none;translate:none}
+.cx-qe.has-q.has-ev .cx-z img{width:100%;height:100%;object-fit:cover;object-position:50% 0}
+.cx-qe.has-q.has-ev .cx-z:hover{translate:none;box-shadow:none}
+.cx-qe.has-q.has-ev .cx-z:hover img{opacity:.92}
 .cx-qe:not(.has-q) .cx-ev{display:block}
 .cx-qe:not(.has-q) .cx-z{width:min(100%,520px);transform:rotate(-2deg)} /* фото выпускного маленькое: не растягиваем на всю колонку */
 .cx-qe:not(.has-q) .cx-z img{width:100%;height:auto}
@@ -172,7 +182,10 @@ html:not(.anim) .st-line{background-size:100% 3px}
 .cx-next-tx{display:flex;flex-direction:column;align-items:flex-start}
 .cx-next-nm{font:900 min(6vw,72px)/.95 var(--cond)}
 .cx-next-dq{margin-top:14px;font:500 18px/1.4 var(--text);color:var(--muted)}
-.cx-next-acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+/* 20.11: кнопки делят колонку пополам и заполняют её до правого края карточки (без пустого места справа) */
+.cx-next-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:32px;align-self:stretch}
+.cx-next-acts .btn{min-width:0;width:100%;padding:0 18px}
+.cx-qe.has-q.has-ev .cx-q p{font-size:min(2.2vw,26px)}
 .cx-next-tx>.btn{margin-top:32px} /* страховка для страницы из кеша браузера (старая разметка без .cx-next-acts) */
 /* по просьбе клиента нажимаются только кнопки, сама карточка не ссылка */
 .cx-next-go:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
@@ -246,9 +259,15 @@ html:not(.anim) .st-line{background-size:100% 3px}
   .cx-z img{height:220px}
   .cx-qe{margin-top:40px}
   .cx-qe.has-q.has-ev{grid-template-columns:minmax(0,1fr)}
+  .cx-qe.has-q.has-ev::before{height:8px;background-size:8px 8px}
+  .cx-qe.has-q.has-ev .cx-q{padding:36px 22px 4px 30px}
+  .cx-qe.has-q.has-ev .cx-q p{font-size:19px}
+  .cx-qe.has-q.has-ev .cx-q::after{top:8px;bottom:auto;height:calc(100% - 8px)}
   /* 20.11: на телефоне скриншот под цитатой, ровно, без наклона и без наезда на плашку */
-  .cx-qe.has-q.has-ev .cx-ev{margin:28px 0 0;justify-content:center;transform:none}
-  .cx-qe.has-q.has-ev .cx-z img{width:min(64vw,250px)}
+  /* телефон: скриншот под цитатой внутри той же плашки, по центру */
+  .cx-qe.has-q.has-ev .cx-ev{padding:26px 30px 30px}
+  .cx-qe.has-q.has-ev .cx-z{width:min(100%,260px);margin:0 auto;height:auto}
+  .cx-qe.has-q.has-ev .cx-z img{height:auto}
   .cx-qe:not(.has-q) .cx-z{transform:none}
   .cx-next{padding:0 var(--m) 80px}
   .cx-next-card{grid-template-columns:minmax(0,108px) minmax(0,1fr);gap:22px;padding:20px 18px 20px 24px}
@@ -260,7 +279,7 @@ html:not(.anim) .st-line{background-size:100% 3px}
   .cx-next-tx{display:contents}
   .cx-next-nm{grid-column:2;grid-row:1;align-self:end}
   .cx-next-dq{grid-column:2;grid-row:2}
-  .cx-next-acts{grid-column:1/-1;grid-row:3;flex-direction:column-reverse;gap:10px;margin-top:22px}
+  .cx-next-acts{grid-column:1/-1;grid-row:3;display:flex;flex-direction:column-reverse;gap:10px;margin-top:22px}
   .cx-next-card{padding:20px 18px 18px 24px}
 }
 

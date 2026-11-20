@@ -32,7 +32,15 @@ try{
     t=0;var s=(window.scrollY||0)>8;if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     var y=hdr.offsetHeight+(bar?bar.offsetHeight:0)+1,d=false;
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
-    if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d)}
+    if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d);tone(d)}
+  }
+  /* 20.11: цвет панелей браузера (theme-color: Safari, Telegram) и фона при оттягивании страницы идёт за шапкой:
+     светлая шапка — кремовый, тёмная — чёрный. Иначе iPhone красил нижнюю панель в цвет того, что под ней (красные кнопки) */
+  var meta=document.querySelector('meta[name="theme-color"]'),rootEl=document.documentElement;
+  function tone(dark){
+    var c=dark?'#0e0e0e':'#EFE6DE';
+    if(meta)meta.setAttribute('content',c);
+    rootEl.style.backgroundColor=c;
   }
   addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
 
