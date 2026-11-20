@@ -14,7 +14,11 @@
 .hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0}
 .h2{font:900 min(4.45vw,64px)/1.02 var(--cond);letter-spacing:-.005em;color:var(--ink);text-align:center;text-wrap:balance}
 @media (max-width:720px){.h2{font-size:min(10.2vw,42px)}}
-.ph-k{position:relative;display:block;overflow:hidden;background:#d9cec5}
+.ph-k{position:relative;display:block;overflow:hidden;background:#d9cec5;
+  /* обрезка по косому краю в своём слое: без светлых «штрихов» по краям фото */
+  -webkit-mask-image:linear-gradient(#000,#000);backface-visibility:hidden}
+/* на тёмном первом экране подложка тёмная: при сглаживании косого края не просвечивает светлая полоска */
+.cx-hero .ph-k{background:#131313}
 .ph-k img{position:absolute;top:0;left:-16%;width:132%;max-width:none;height:100%;object-fit:cover;object-position:50% 22%;transform:skewX(10deg)}
 
 /* зачёркивание сомнения: красная линия проводится слева направо, когда родитель получает .is-in */
@@ -160,6 +164,9 @@ html:not(.anim) .st-line{background-size:100% 3px}
   background:#F7F1EA;color:var(--ink);text-decoration:none;box-shadow:0 18px 40px -28px rgba(60,30,10,.4);}
 .cx-next-ph{display:block;aspect-ratio:3/4;transform:skewX(var(--sk))}
 .cx-next-ph>.ph-k{height:100%}
+/* Ангелина и Остап: два фото рядом с зазором, как в карточке хаба, а не друг под другом */
+.cx-next-ph.cx-ph2{display:grid;grid-template-columns:1fr 1fr;gap:6px;box-shadow:none}
+.cx-next-ph.cx-ph2 .ph-k img{left:-34%;width:168%}
 .cx-next-ph img{filter:grayscale(1) contrast(.95);transition:filter .5s ease}
 .cx-next-tx{display:flex;flex-direction:column;align-items:flex-start}
 .cx-next-nm{font:900 min(6vw,72px)/.95 var(--cond)}
