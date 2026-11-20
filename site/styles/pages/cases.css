@@ -165,6 +165,7 @@ html:not(.anim) .st-line{background-size:100% 3px}
 .cx-next-nm{font:900 min(6vw,72px)/.95 var(--cond)}
 .cx-next-dq{margin-top:14px;font:500 18px/1.4 var(--text);color:var(--muted)}
 .cx-next-acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.cx-next-tx>.btn{margin-top:32px} /* страховка для страницы из кеша браузера (старая разметка без .cx-next-acts) */
 /* по просьбе клиента нажимаются только кнопки, сама карточка не ссылка */
 .cx-next-go:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 @media (hover:hover) and (pointer:fine){

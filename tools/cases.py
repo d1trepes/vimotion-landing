@@ -11,7 +11,7 @@ site/case-<slug>.html      — отдельная страница на кажд
 """
 import os, re
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'site')
-V = '20261121d'
+V = '20261121e'
 N = '&nbsp;'
 UP = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg>'
 RT = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5"/></svg>'
