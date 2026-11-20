@@ -1,6 +1,6 @@
 /* Подвал сайта. Чёрный, тексты из content/prototype.html.
    Слева вордмарк, описание, ИП и ИНН; справа ссылки в две колонки. Внизу огромный вордмарк VIMOTION,
-   чуть светлее фона (маска из wordmark-1100.webp), уходит под нижний край.
+   кремовым тоном сайта, сверху светлее и к низу затухает (маска из wordmark-1100.webp), уходит под нижний край.
    Вау-момент (scripts/final.js): вордмарк выезжает снизу, когда подвал показывается. Ссылки при наведении
    подсвечиваются косой плашкой. При prefers-reduced-motion вордмарк стоит на месте. */
 
@@ -15,7 +15,8 @@
 .ft-nav a:hover::after,.ft-nav a:focus-visible::after{transform:skewX(-10deg) scaleX(1)}
 .ft-nav a:focus-visible{outline:none}
 
-.ft-wm{max-width:1240px;margin:80px auto -5.5%;aspect-ratio:1100/324;background:#1a1a1a;
+.ft-wm{max-width:1240px;margin:80px auto -5.5%;aspect-ratio:1100/324;
+  background:linear-gradient(180deg,rgba(246,238,230,.17),rgba(246,238,230,.07) 85%);
   -webkit-mask:url(../../img/wordmark-1100.webp?v=20261117z6) center/contain no-repeat;mask:url(../../img/wordmark-1100.webp?v=20261117z6) center/contain no-repeat;
   transition:translate 1.4s var(--ease)}
 .ft.is-pre .ft-wm{translate:0 35%}

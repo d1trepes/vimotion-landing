@@ -1,4 +1,4 @@
-/* Блок 15. Колода сторис: автосмена каждые 5 с (пока блок на экране и курсор не держит карточку),
+/* Блок 15. Колода сторис: автосмена каждые 4 с (пока блок на экране и курсор не держит карточку),
    тап по левой трети назад, по остальному вперёд, свайп, стрелки-кнопки и клавиши ←/→.
    На компьютере колода наклоняется за курсором и по ней бежит блик. prefers-reduced-motion: без автосмены и наклона. */
 (function(){
@@ -10,7 +10,7 @@
   var n=cards.length,cur=0,busy=false,timer=null,inView=false,hold=false;
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var fine=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
-  var DUR=5000;
+  var DUR=4000;
 
   function place(){
     cards.forEach(function(c,i){c.setAttribute('data-pos',(i-cur+n)%n)});

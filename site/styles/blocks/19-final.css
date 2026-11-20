@@ -1,8 +1,8 @@
 /* Блок 19. Финал: продолжение косых полос блока 14.
    Тёмный «асфальт», шесть ч/б полос-портретов с наклоном -10°, седьмая полоса кремовая с «?»: место следующего ученика.
    Красный только на плашке заголовка и главной кнопке.
-   Вау-момент (scripts/final.js): полосы въезжают справа по очереди, по лицам проходит волна цвета, и она упирается в «?»,
-   по которому дальше бежит блик. На компьютере полоса при наведении расширяется и становится цветной.
+   Вау-момент (scripts/final.js): полосы въезжают справа по очереди, по лицам проходит волна цвета (повторяется каждые 5 с), и она упирается в «?»,
+   по которому дальше бежит блик. На компьютере полоса при наведении плавно чуть расширяется и становится цветной.
    При prefers-reduced-motion всё стоит на месте, без въезда, волны и блика. */
 
 .hero~.fn,.fn{--sk:-10deg;position:relative;overflow:hidden;color:var(--on-red);padding:144px var(--m) 152px;text-align:center;
@@ -11,17 +11,19 @@
 .fn-h.h2{color:var(--on-red);max-width:13em;margin:0 auto}
 
 .fn-row{list-style:none;display:flex;gap:14px;height:420px;margin:72px 40px 0}
-.fn-it{--i:0;position:relative;flex:1 1 0;min-width:0;overflow:hidden;background:#222;transform:skewX(var(--sk));
-  transition:flex-grow .7s var(--ease),opacity .7s,translate .9s var(--ease);transition-delay:0s,calc(var(--i)*.08s),calc(var(--i)*.08s)}
+.fn-it{--i:0;--iw:340px;position:relative;flex:1 1 0;min-width:0;overflow:hidden;background:#222;transform:skewX(var(--sk));contain:paint;
+  transition:flex-grow 1.1s cubic-bezier(.33,0,.15,1),opacity .7s,translate .9s var(--ease);transition-delay:0s,calc(var(--i)*.08s),calc(var(--i)*.08s)}
 .fn.is-pre .fn-it{opacity:0;translate:120px 0}
-.fn-it img{position:absolute;top:0;left:-40%;width:180%;max-width:none;height:100%;object-fit:cover;object-position:50% 30%;
-  transform:skewX(10deg);filter:grayscale(1) brightness(.7) contrast(1.1);transition:filter .6s}
-/* волна цвета по лицам один раз после въезда */
-.fn.is-run .fn-it img{animation:fnwave 1.1s ease-in-out both;animation-delay:calc(.9s + var(--i)*.16s)}
-@keyframes fnwave{0%,100%{filter:grayscale(1) brightness(.7) contrast(1.1)}45%{filter:none}}
+/* фото фиксированной ширины по центру полосы: при расширении полосы картинка не пересчитывается, только открывается шире */
+.fn-it img{position:absolute;top:0;left:50%;width:var(--iw);max-width:none;height:100%;object-fit:cover;object-position:50% 30%;
+  transform:translateX(-50%) skewX(10deg);filter:grayscale(1) brightness(.7) contrast(1.1);transition:filter .9s ease}
+/* волна цвета по лицам: проходит слева направо и повторяется каждые 5 с */
+.fn.is-run .fn-it img{animation:fnwave 5s ease-in-out infinite;animation-delay:calc(.9s + var(--i)*.16s)}
+@keyframes fnwave{0%,26%,100%{filter:grayscale(1) brightness(.7) contrast(1.1)}11%{filter:grayscale(0) brightness(1) contrast(1)}}
 @media (hover:hover){
-  .fn-it:hover{flex-grow:1.5}
-  .fn-it:hover img{filter:none}
+  .fn-it:hover{flex-grow:1.22}
+  .fn-qi:hover{flex-grow:1.5}
+  .fn.is-run .fn-it:hover img,.fn-it:hover img{animation:none;filter:grayscale(0) brightness(1) contrast(1)}
 }
 
 .fn-qi{flex-grow:1.35;background:var(--on-red)}
@@ -40,6 +42,7 @@
 @media (max-width:1180px){
   .hero~.fn,.fn{padding:120px var(--m) 128px}
   .fn-row{height:340px;margin:56px 20px 0;gap:10px}
+  .fn-it{--iw:280px}
   .fn-q span{font-size:110px}
   .fn-sub{margin-top:52px}
 }
@@ -47,7 +50,8 @@
   .hero~.fn,.fn{--sk:-6deg;padding:88px var(--m) 96px}
   .fn-h.h2{font-size:min(10.2vw,42px)}
   .fn-row{height:300px;margin:40px 9px 0;gap:6px}
-  .fn-it img{transform:skewX(6deg)}
+  .fn-it{--iw:170px}
+  .fn-it img{transform:translateX(-50%) skewX(6deg)}
   .fn-q span{transform:skewX(6deg);font-size:64px}
   .fn.is-pre .fn-it{translate:60px 0}
   .fn-sub{font-size:16px;margin-top:40px}

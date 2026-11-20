@@ -4,6 +4,11 @@
 (function(){
   'use strict';
   var sec=document.getElementById('formats');if(!sec)return;
+  // выемки: высота пунктира внутри билета для маски (--cy), пересчёт при изменении размеров
+  var tickets=[].slice.call(sec.querySelectorAll('.fm-t'));
+  function cut(){tickets.forEach(function(t){var st=t.querySelector('.fm-stub');if(st){t.style.setProperty('--cy',st.offsetTop+'px');t.classList.add('is-cut')}})}
+  cut();
+  if('ResizeObserver' in window){var ro=new ResizeObserver(cut);tickets.forEach(function(t){ro.observe(t)})}else{addEventListener('resize',cut)}
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   if('IntersectionObserver' in window){
     sec.classList.add('is-pre');
