@@ -1,0 +1,82 @@
+/* Блок 14. Истории учеников.
+   Тёмный «асфальт», наклонные полосы-портреты (наклон -10°, как у логотипа). Активная полоса широкая и цветная,
+   внизу тёмная плашка: имя и цитата слева, сумма справа. Остальные ч/б с именем по вертикали.
+   Красный только на плашке заголовка и главной кнопке.
+   Вау-момент (scripts/stories.js): полосы въезжают справа по очереди, активная загорается цветом;
+   наведение или касание раскрывает человека; пока никто не трогал, истории сменяются сами.
+   Без JS и при prefers-reduced-motion всё стоит на месте, раскрыта Вероника. */
+
+.hero~.st,.st{--sk:-10deg;position:relative;overflow:hidden;color:var(--on-red);padding:144px var(--m) 136px;
+  background:#131313 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.st-in{max-width:1240px;margin:0 auto;text-align:center}
+.st-h.h2{color:var(--on-red);max-width:13em;margin:0 auto}
+.st-sub{max-width:34em;margin:24px auto 0;font:400 19px/1.5 var(--text);color:rgba(246,238,230,.6);text-wrap:pretty}
+
+.st-list{list-style:none;margin:72px 40px 0;display:flex;gap:14px;height:580px;text-align:left}
+.st-it{position:relative;flex:1 1 0;min-width:0;transform:skewX(var(--sk));transition:flex-grow .75s var(--ease)}
+.st-it.is-on{flex-grow:4.8}
+.st-b{position:absolute;inset:0;display:block;width:100%;padding:0;border:0;background:#222;cursor:pointer;overflow:hidden;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
+.st-it.is-on .st-b{cursor:default}
+.st-b:focus-visible{outline:2px solid var(--on-red);outline-offset:3px}
+.st-sk{position:absolute;inset:0;overflow:hidden}
+.st-sk img{position:absolute;top:0;left:-40%;width:180%;max-width:none;height:100%;object-fit:cover;object-position:50% 30%;transform:skewX(10deg);
+  filter:grayscale(1) brightness(.62) contrast(1.1);transition:filter .8s var(--ease),left .75s var(--ease),width .75s var(--ease)}
+.st-it.is-on .st-sk img{left:-14%;width:128%;filter:none}
+.st-sk::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(8,8,8,.75));opacity:0;transition:opacity .6s}
+.st-it.is-on .st-sk::after{opacity:1}
+.st-vn{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) skewX(10deg);writing-mode:vertical-rl;rotate:180deg;
+  font:900 24px/1 var(--cond);color:rgba(246,238,230,.85);white-space:nowrap;transition:opacity .3s}
+.st-it.is-on .st-vn{opacity:0}
+
+/* плашка с именем, цитатой и суммой */
+.st-pl{position:absolute;left:44px;right:30px;bottom:26px;padding:20px 26px 20px 30px;background:rgba(14,14,14,.66);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);opacity:0;visibility:hidden;transform:translateY(12px);
+  transition:opacity .45s,transform .6s var(--ease),visibility 0s .45s;pointer-events:none}
+.st-it.is-on .st-pl{opacity:1;visibility:visible;transform:none;transition:opacity .5s .35s,transform .7s .35s var(--ease),visibility 0s}
+.st-pl-in{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;transform:skewX(10deg)}
+.st-nm{font:900 28px/1 var(--cond);color:var(--on-red)}
+.st-q{margin-top:8px;font:400 15px/1.35 var(--text);color:rgba(246,238,230,.66)}
+.st-r{flex:none;text-align:right}
+.st-sum{font:900 44px/.95 var(--cond);letter-spacing:-.01em;color:var(--on-red);white-space:nowrap}
+.st-t{display:block;margin-top:4px;font:400 13px/1.2 var(--text);color:rgba(246,238,230,.6)}
+
+.st-acts{margin-top:64px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.st-btn-o{background:transparent;color:var(--on-red);box-shadow:inset 0 0 0 1.5px rgba(246,238,230,.55)}
+.st-btn-o:hover{background:var(--on-red);color:#111}
+
+/* въезд полос */
+.st.is-wait .st-it{opacity:0;translate:140px 0}
+.st.is-in .st-it{animation:st-in 1s var(--ease) both;animation-delay:calc(var(--i) * 80ms)}
+@keyframes st-in{from{opacity:0;translate:140px 0}to{opacity:1;translate:0 0}}
+.st.is-wait .st-it.is-on .st-sk img,.st.is-in.is-fresh .st-it.is-on .st-sk img{filter:grayscale(1) brightness(.62) contrast(1.1)}
+
+@media (max-width:1180px){
+  .st{padding:120px var(--m)}
+  .st-list{height:500px;margin:64px 24px 0;gap:10px}
+  .st-pl{left:36px;right:22px;bottom:20px;padding:16px 20px 16px 24px}
+  .st-nm{font-size:24px}.st-q{font-size:14px}.st-sum{font-size:36px}
+  .st-vn{font-size:21px}
+}
+@media (max-width:720px){
+  .st{--sk:-5deg;padding:80px var(--m)}
+  .st-sub{font-size:16px;margin-top:16px}
+  .st-list{flex-direction:column;height:auto;margin:44px 14px 0;gap:10px}
+  .st-it{flex:none;height:66px;transition:height .7s var(--ease)}
+  .st-it.is-on{flex:none;height:440px}
+  .st-sk img{left:-10%;width:120%;object-position:50% 25%;transform:skewX(5deg)}
+  .st-it.is-on .st-sk img{left:-8%;width:116%}
+  .st-vn{writing-mode:horizontal-tb;rotate:0deg;left:22px;bottom:auto;top:50%;transform:translateY(-50%) skewX(5deg);font-size:22px}
+  .st-pl{left:20px;right:12px;bottom:14px;padding:14px 16px}
+  .st-pl-in{gap:12px;transform:skewX(5deg)}
+  .st-nm{font-size:22px}.st-q{font-size:12px}.st-sum{font-size:30px}.st-t{font-size:11px}
+  .st-acts{margin-top:40px;flex-direction:column}
+  .st-acts .btn{width:100%;height:58px;padding:0 20px}
+  .st.is-wait .st-it{translate:0 40px}
+  @keyframes st-in{from{opacity:0;translate:0 40px}to{opacity:1;translate:0 0}}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .st-it,.st-sk img,.st-pl,.st-sk::after{transition:none!important}
+  .st.is-wait .st-it{opacity:1;translate:none}
+  .st.is-in .st-it{animation:none}
+}

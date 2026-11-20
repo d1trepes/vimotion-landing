@@ -4,7 +4,7 @@
    Анимация (scripts/results.js): перчатки «ложатся» на плашку с лёгким поворотом, пункты проявляются по очереди.
    Без JS и при prefers-reduced-motion всё видно сразу. */
 
-.rc{padding:184px var(--m) 140px}
+.rc{padding:184px var(--m) 140px;overflow:hidden}
 .rc-in{max-width:1328px;margin:0 auto}
 .rc-card{position:relative;background:var(--red) var(--wave);background-size:28px 9px;color:var(--on-red);padding:88px 80px 76px}
 
