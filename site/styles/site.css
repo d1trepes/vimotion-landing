@@ -47,9 +47,7 @@
 html{scroll-padding-top:var(--hb)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
-html{background:#0e0e0e}
-.vm-tint{position:fixed;left:0;right:0;bottom:0;height:6px;z-index:110;pointer-events:none;background:var(--cream);transition:background-color .35s}
-@media (hover:hover) and (pointer:fine){.vm-tint{display:none}}
+main{background:var(--cream)}
 body{overflow-x:clip;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%;
   -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}

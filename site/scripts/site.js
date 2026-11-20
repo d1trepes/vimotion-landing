@@ -33,15 +33,20 @@ try{
     var y=hdr.offsetHeight+(bar?bar.offsetHeight:0)+1,d=false;
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
     if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d);tone(d)}
+    bottom();
   }
-  /* 20.11: цвет панелей браузера (theme-color: Safari, Telegram) и фона при оттягивании страницы идёт за шапкой:
-     светлая шапка — кремовый, тёмная — чёрный. Иначе iPhone красил нижнюю панель в цвет того, что под ней (красные кнопки) */
-  var meta=document.querySelector('meta[name="theme-color"]'),tint=document.createElement('div');
-  tint.className='vm-tint';tint.setAttribute('aria-hidden','true');document.body.appendChild(tint);
-  function tone(dark){
-    var c=dark?'#0e0e0e':'#EFE6DE';
-    if(meta)meta.setAttribute('content',c);
-    tint.style.backgroundColor=c;
+  /* 20.11: панели браузера.
+     theme-color (по нему красит панели Telegram и старый Safari) идёт за шапкой.
+     Safari на iPhone (iOS 26) красит нижнюю панель в цвет фона body: ставим body и html цвет блока у нижнего края окна,
+     тёмный или кремовый. Так панель тёмная над тёмными блоками, светлая над светлыми и никогда не красная */
+  var meta=document.querySelector('meta[name="theme-color"]'),bd=null,html=document.documentElement;
+  function tone(dark){if(meta)meta.setAttribute('content',dark?'#0e0e0e':'#EFE6DE')}
+  function bottom(){
+    var y=(window.innerHeight||html.clientHeight)-3,d=false;
+    for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
+    /* за подвалом (оттягивание в самом конце) тоже тёмное */
+    if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
+    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
   }
   addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
 
