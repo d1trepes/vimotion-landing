@@ -619,5 +619,9 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
   <div class="ft-wm" aria-hidden="true"></div>
 </footer>
 
+<script>/* Только для демо на GitHub Pages: кнопки ведут на новую анкету из этой же папки (quiz/), а не на боевую vi-motion.pro/quiz/.
+   На боевом сайте условие не срабатывает, ссылки остаются как есть. UTM из адреса страницы передаются дальше. */
+(function(){if(!/\.github\.io$/.test(location.hostname))return;
+var q=location.search;[].forEach.call(document.querySelectorAll('a[href^="https://vi-motion.pro/quiz/"]'),function(a){a.href='quiz/'+q})})();</script>
 </body>
 </html>
