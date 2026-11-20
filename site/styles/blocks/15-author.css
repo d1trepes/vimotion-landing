@@ -2,7 +2,7 @@
    Слева заголовок и подзаголовок, справа стопка карточек 9:16, как сторис: первая карточка Валентин, дальше 4 факта
    (фото, крупный факт, подпись). На первой карточке внизу большой белый вордмарк VIMOTION. Сверху полоски прогресса, карточки листаются сами каждые 5 с.
    Вау-момент (scripts/author.js): верхняя карточка улетает в сторону и уходит в конец стопки, колода наклоняется
-   за курсором, по карточке бежит блик. Тап по левой трети назад, по остальному вперёд, свайп, стрелки, клавиатура.
+   за курсором. Тап по левой трети назад, по остальному вперёд, свайп, стрелки, клавиатура.
    Без JS видна первая карточка; при prefers-reduced-motion без автосмены, наклона и полёта. */
 
 .au{--sk:-10deg;padding:152px var(--m) 152px;overflow:hidden}
@@ -49,8 +49,6 @@
 .au-deck.is-paused .au-bars i.is-now b{animation-play-state:paused}
 @keyframes au-bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 
-.au-holo{position:absolute;inset:0;z-index:7;border-radius:0;pointer-events:none;mix-blend-mode:overlay;opacity:.7;
-  background:linear-gradient(115deg,transparent calc(var(--hx,40%) - 22%),rgba(255,255,255,.5) var(--hx,40%),rgba(255,130,120,.28) calc(var(--hx,40%) + 8%),transparent calc(var(--hx,40%) + 22%))}
 
 
 @media (max-width:1180px){
@@ -73,5 +71,4 @@
 }
 @media (prefers-reduced-motion:reduce){
   .au-tilt,.au-card,.au-cap{transition:none!important}
-  .au-holo{display:none}
-}
+  }

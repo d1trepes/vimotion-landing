@@ -1,6 +1,6 @@
 /* Блок 15. Колода сторис: автосмена каждые 4 с (пока блок на экране и курсор не держит карточку),
    тап по левой трети назад, по остальному вперёд, свайп и клавиши ←/→ (кнопки-стрелки убраны 20.11).
-   На компьютере колода наклоняется за курсором и по ней бежит блик. prefers-reduced-motion: без автосмены и наклона. */
+   На компьютере колода наклоняется за курсором (блик убран 20.11 по просьбе клиента). prefers-reduced-motion: без автосмены и наклона. */
 (function(){
   'use strict';
   var deck=document.querySelector('.au-deck');if(!deck)return;
@@ -57,7 +57,7 @@
   tilt.addEventListener('pointercancel',function(){sx=null;hold=false;deck.classList.remove('is-paused');restart()});
   deck.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){go(1)}else if(e.key==='ArrowLeft'){go(-1)}});
 
-  // наклон за курсором и блик
+  // наклон за курсором
   if(fine&&!reduce){
     var raf=0;
     deck.addEventListener('pointermove',function(e){
@@ -65,11 +65,10 @@
       cancelAnimationFrame(raf);raf=requestAnimationFrame(function(){
         tilt.style.setProperty('--ry',(x*22-4).toFixed(2)+'deg');
         tilt.style.setProperty('--rx',(-y*14+2).toFixed(2)+'deg');
-        tilt.style.setProperty('--hx',(50+x*80).toFixed(1)+'%');
       });
     });
     deck.addEventListener('pointerleave',function(){
-      tilt.style.removeProperty('--ry');tilt.style.removeProperty('--rx');tilt.style.removeProperty('--hx');
+      tilt.style.removeProperty('--ry');tilt.style.removeProperty('--rx');
     });
   }
 

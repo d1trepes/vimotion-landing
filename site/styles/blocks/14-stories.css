@@ -22,7 +22,8 @@
 .st-sk img{position:absolute;top:0;left:-40%;width:180%;max-width:none;height:100%;object-fit:cover;object-position:50% 30%;transform:skewX(10deg);
   filter:grayscale(1) brightness(.62) contrast(1.1);transition:filter .8s var(--ease),left .75s var(--ease),width .75s var(--ease)}
 .st-it.is-on .st-sk img{left:-14%;width:128%;filter:none}
-.st-sk::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(8,8,8,.75));opacity:0;transition:opacity .6s}
+.st-sk::after{content:"";position:absolute;inset:-3px;  /* с запасом: иначе по нижней кромке фото оставалась светлая полоска без затемнения */
+  background:linear-gradient(180deg,transparent 45%,rgba(8,8,8,.75));opacity:0;transition:opacity .6s}
 .st-it.is-on .st-sk::after{opacity:1}
 .st-vn{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) skewX(10deg);writing-mode:vertical-rl;rotate:180deg;
   font:900 24px/1 var(--cond);color:rgba(246,238,230,.85);white-space:nowrap;transition:opacity .3s}
