@@ -1,75 +1,84 @@
-/* Блок 12. Ментор (с 18.11 в нём строка из убранного блока 13 «Сопровождение»).
-   Слева заголовок, абзац про Артёма с обещанием в конце и три цифры, справа пропуск ViMotion на красной ленте с фото Артёма.
-   Вау-момент (scripts/mentor.js): пропуск падает сверху на ленте и покачивается, пока не остановится.
-   Без JS и при prefers-reduced-motion пропуск висит на месте. */
+/* Блок 12. Ментор: «Трасса с табло» (20.11, вместо пропуска на ленте).
+   По центру заголовок и абзац. Ниже трасса от $1 000 до $3 000 с шашечным флагом: пройденная часть сплошная,
+   оставшаяся пунктиром, на границе круглое фото Артёма в красном кольце. Под трассой чёрное табло с шашечной кромкой
+   и тремя цифрами через тонкие разделители; на телефоне цифры идут строками.
+   Вау-момент (scripts/mentor.js): Артём едет по трассе от старта, за ним прорисовывается сплошная линия,
+   затем табло поднимается и цифры зажигаются по очереди. Без JS и при prefers-reduced-motion всё стоит на месте. */
 
-.mn{padding:0 var(--m) 152px}
-.mn-in{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 380px;gap:96px;align-items:start}
-
-.mn-txt{padding-top:236px}
-.mn-h.h2{text-align:left;font-size:min(4.6vw,66px);max-width:10em}
+.mn{--at:62%;padding:144px var(--m) 152px}
+.mn-in{max-width:1180px;margin:0 auto}
+.mn-h.h2{max-width:15em;margin:0 auto;font-size:min(4.6vw,66px)}
 .mn-nw{white-space:nowrap}
-.mn-lead{margin-top:32px;max-width:31em;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:pretty}
-.mn-lead b{font-weight:500;color:var(--ink)}
+.mn-lead{max-width:34em;margin:30px auto 0;text-align:center;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:pretty}
 
-.mn-fx{list-style:none;margin-top:64px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:40px;max-width:600px}
-.mn-fx b{display:block;font:900 56px/.95 var(--cond);letter-spacing:-.01em;color:var(--ink)}
-.mn-fx span{display:block;margin-top:12px;font:400 15px/1.4 var(--text);color:var(--muted);max-width:11em}
+/* трасса */
+.mn-track{position:relative;height:170px;margin-top:88px}
+.mn-line{position:absolute;left:11px;right:17px;top:84px;height:2px;
+  background:repeating-linear-gradient(90deg,rgba(17,17,17,.35) 0 14px,transparent 14px 26px)}
+.mn-line i{position:absolute;left:0;top:0;bottom:0;width:var(--at);background:#8b8682;transform-origin:0 50%}
+.mn-pt{position:absolute;top:84px;translate:0 -50%;display:grid}
+.mn-pt b{position:absolute;bottom:32px;font:900 44px/1 var(--cond);white-space:nowrap;color:var(--ink)}
+.mn-p1{left:0}.mn-p1 b{left:0}
+.mn-p3{right:0}.mn-p3 b{right:0}
+.mn-dot{width:22px;height:22px;border-radius:50%;background:var(--cream);border:2px solid #111}
+.mn-flag{width:34px;height:22px;background:conic-gradient(#111 25%,#fff 0 50%,#111 0 75%,#fff 0) 0 0/11px 11px}
+.mn-car{position:absolute;top:84px;left:calc(11px + (100% - 28px)*.62);translate:-50% -50%;width:112px;height:112px;border-radius:50%;overflow:hidden;
+  background:#d9cec5;box-shadow:0 0 0 6px var(--cream),0 0 0 8px var(--red),0 20px 30px -10px rgba(40,10,0,.4)}
+.mn-car img{width:100%;height:100%;object-fit:cover}
 
-/* пропуск на ленте: вся связка качается от верхнего края секции */
-.mn-hang{display:flex;flex-direction:column;align-items:center;transform-origin:50% 0}
-.mn-strap{width:44px;height:200px;background:var(--red) var(--wave);background-size:28px 9px}
-.mn-clip{position:relative;z-index:2;width:34px;height:42px;margin-top:-6px;border-radius:6px 6px 10px 10px;
-  background:linear-gradient(180deg,#d7d7d7,#8d8d8d 60%,#bdbdbd);box-shadow:0 3px 6px rgba(0,0,0,.25)}
-.mn-pass{width:380px;margin-top:-14px;padding:18px;border-radius:22px;background:#fbf7f2;transform:rotate(-4deg);transform-origin:50% 0;
-  box-shadow:0 40px 60px -20px rgba(40,10,0,.35),0 8px 18px rgba(40,10,0,.14),inset 0 0 0 1px rgba(0,0,0,.05)}
-.mn-top{display:flex;align-items:center;justify-content:space-between;height:44px;padding:0 6px}
-.mn-logo{font:400 26px/1 var(--logo);color:var(--red)}
-.mn-slot{width:56px;height:10px;border-radius:6px;background:#e3dbd2;box-shadow:inset 0 1px 2px rgba(0,0,0,.18)}
-.mn-ph{margin-top:10px;aspect-ratio:3/3.4;overflow:hidden;border-radius:12px;background:#d9cec5}
-.mn-ph img{width:100%;height:100%;object-fit:cover}
-.mn-chk{margin-top:14px;height:28px;border-radius:4px;background:conic-gradient(#111 25%,#fbf7f2 0 50%,#111 0 75%,#fbf7f2 0) 0 0/28px 28px}
+/* табло */
+.mn-fx{position:relative;overflow:hidden;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  margin-top:64px;padding:44px 0;border-radius:20px;background:#121212;color:var(--on-red)}
+.mn-fx::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;opacity:.9;
+  background:conic-gradient(#121212 25%,#F6EEE6 0 50%,#121212 0 75%,#F6EEE6 0) 0 0/10px 10px}
+.mn-fx li{padding:6px 48px;border-left:1px solid rgba(246,238,230,.14)}
+.mn-fx li:first-child{border-left:0}
+.mn-fx b{display:block;font:900 64px/.95 var(--cond);letter-spacing:-.01em}
+.mn-fx span{display:block;margin-top:12px;max-width:14em;font:400 15px/1.4 var(--text);color:rgba(246,238,230,.6)}
 
-/* появление: пропуск падает и затухающе качается */
-.mn.is-wait .mn-hang{transform:translateY(-55%);opacity:0}
-.mn.is-in .mn-hang{animation:mn-drop 2.1s cubic-bezier(.3,.7,.4,1) both}
-@keyframes mn-drop{
-  0%{transform:translateY(-55%) rotate(7deg);opacity:0}
-  12%{opacity:1}
-  30%{transform:translateY(0) rotate(-5deg)}
-  48%{transform:translateY(0) rotate(3.2deg)}
-  64%{transform:translateY(0) rotate(-1.8deg)}
-  80%{transform:translateY(0) rotate(.9deg)}
-  100%{transform:translateY(0) rotate(0);opacity:1}
-}
+/* анимация: классы ставит scripts/mentor.js */
+.mn.is-wait .mn-car{left:11px}
+.mn.is-wait .mn-line i{transform:scaleX(0)}
+.mn.is-wait .mn-fx{opacity:0;transform:translateY(40px)}
+.mn.is-wait .mn-fx li{opacity:0}
+.mn.is-go .mn-car{transition:left 1.8s cubic-bezier(.45,0,.2,1)}
+.mn.is-go .mn-line i{transition:transform 1.8s cubic-bezier(.45,0,.2,1)}
+.mn.is-go .mn-fx{transition:opacity .8s 1.3s,transform 1s 1.3s var(--ease)}
+.mn.is-go .mn-fx li{transition:opacity .6s}
+.mn.is-go .mn-fx li:nth-child(1){transition-delay:1.8s}
+.mn.is-go .mn-fx li:nth-child(2){transition-delay:2s}
+.mn.is-go .mn-fx li:nth-child(3){transition-delay:2.2s}
 
 @media (max-width:1180px){
-  .mn-in{grid-template-columns:minmax(0,1fr) 320px;gap:56px}
-  .mn-pass{width:320px;padding:15px}
-  .mn-txt{padding-top:200px}
+  .mn{padding:120px var(--m) 128px}
   .mn-lead{font-size:18px}
-  .mn-fx{gap:28px}
-  .mn-fx b{font-size:48px}
+  .mn-track{margin-top:72px}
+  .mn-pt b{font-size:38px}
+  .mn-fx{margin-top:52px;padding:36px 0}
+  .mn-fx li{padding:6px 32px}
+  .mn-fx b{font-size:52px}
 }
 @media (max-width:720px){
-  .mn{padding:0 var(--m) 80px}
-  .mn-in{grid-template-columns:1fr;gap:0}
-  .mn-hang{order:-1}
-  .mn-strap{width:32px;height:72px}
-  .mn-clip{width:28px;height:34px}
-  .mn-pass{width:260px;padding:12px;border-radius:16px}
-  .mn-top{height:32px}
-  .mn-logo{font-size:20px}
-  .mn-chk{height:22px;background-size:22px 22px}
-  .mn-txt{padding-top:44px}
-  .mn-h.h2{font-size:min(9.4vw,38px);max-width:none}
-  .mn-lead{margin-top:20px;font-size:17px}
-  .mn-fx{margin-top:40px;gap:14px}
-  .mn-fx b{font-size:38px}
-  .mn-fx span{font-size:13px}
+  .mn{padding:88px var(--m) 96px}
+  .mn-h.h2{font-size:min(10.2vw,42px)}
+  .mn-lead{margin-top:20px;font-size:16.5px}
+  .mn-track{height:132px;margin-top:48px}
+  .mn-line{left:8px;right:12px;top:72px}
+  .mn-pt{top:72px}
+  .mn-pt b{bottom:26px;font-size:28px}
+  .mn-dot{width:16px;height:16px}
+  .mn-flag{width:24px;height:16px;background-size:8px 8px}
+  .mn-car{top:72px;left:calc(8px + (100% - 20px)*.62);width:76px;height:76px;box-shadow:0 0 0 4px var(--cream),0 0 0 6px var(--red),0 14px 20px -8px rgba(40,10,0,.4)}
+  .mn.is-wait .mn-car{left:8px}
+  .mn-fx{grid-template-columns:1fr;margin-top:28px;padding:22px 22px 8px;border-radius:16px}
+  .mn-fx::before{height:8px;background-size:8px 8px}
+  .mn-fx li{display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:16px;padding:16px 0;border-left:0;border-top:1px solid rgba(246,238,230,.14)}
+  .mn-fx li:first-child{border-top:0}
+  .mn-fx b{font-size:40px}
+  .mn-fx span{margin-top:0;font-size:14px}
 }
-
 @media (prefers-reduced-motion:reduce){
-  .mn.is-wait .mn-hang{transform:none;opacity:1}
-  .mn.is-in .mn-hang{animation:none}
+  .mn.is-wait .mn-car{left:calc(11px + (100% - 28px)*.62)}
+  .mn.is-wait .mn-line i{transform:none}
+  .mn.is-wait .mn-fx,.mn.is-wait .mn-fx li{opacity:1;transform:none}
 }
