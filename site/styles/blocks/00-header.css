@@ -5,6 +5,13 @@
    Без backdrop-filter и transform: иначе мобильная шторка (position:fixed внутри) привязалась бы к шапке */
 .hdr.is-stuck{background:var(--cream);box-shadow:0 1px 0 rgba(17,17,17,.08),0 10px 30px -18px rgba(17,17,17,.35)}
 .nav a.is-cur::after{transform:scaleX(1)}
+/* над тёмными блоками шапка тёмная (класс ставит menu.js по data-hdr="dark"), логотип и пункты кремовые */
+.logo,.nav a,.burger,.burger i{transition:color .35s,background-color .35s,border-color .35s,box-shadow .35s}
+.hdr.is-dark{background:#0e0e0e;box-shadow:0 1px 0 rgba(246,238,230,.08)}
+.hdr.is-dark .logo{color:var(--on-red)}
+.hdr.is-dark .burger{border-color:var(--on-red)}
+.hdr.is-dark:not(.is-menu) .burger i{background:var(--on-red);box-shadow:0 -5px 0 var(--on-red),0 5px 0 var(--on-red)}
+@media (min-width:1001px){.hdr.is-dark .nav a{color:var(--on-red)}}
 .logo{font:400 30px/1 var(--logo);color:var(--red);transform:skewX(-11deg);text-decoration:none;display:inline-block;letter-spacing:.01em}
 .nav{display:flex;gap:34px}
 .nav a{font:500 15px var(--text);color:var(--ink);text-decoration:none;position:relative}

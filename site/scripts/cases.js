@@ -1,73 +1,67 @@
-/* Страница кейсов.
-   1) Полосы с лицами въезжают по очереди; каждый кейс при появлении проявляет фото в цвет и зажигает цифры табло.
-   2) Закреплённая полоса с именами подсвечивает кейс, который сейчас на экране, и подкручивает его имя в видимую часть (телефон).
-   3) Переход по имени или лицу плавный; при открытии страницы со ссылкой cases.html#имя сразу встаём на нужный кейс.
-   4) Скрины-доказательства открываются на весь экран (Esc, клик или крестик закрывают).
-   При prefers-reduced-motion без въездов и плавной прокрутки. */
+/* Кейсы (21.11, вторая версия).
+   Хаб: полосы с лицами въезжают по очереди, карточки кейсов проявляются при прокрутке, сомнение в карточке зачёркивается.
+   Страница человека: первый экран (фото выезжает, сомнение зачёркивается, результат считается от нуля),
+   переключатель людей сразу показывает текущего (на телефоне подкручен к нему без анимации),
+   скрины-доказательства открываются на весь экран.
+   При prefers-reduced-motion всё в финальном виде (класс anim на <html> не ставится). */
 (function(){
   'use strict';
-  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var cases=[].slice.call(document.querySelectorAll('.cs-case'));
-  var bar=document.querySelector('.cs-bar-in'),links=bar?[].slice.call(bar.querySelectorAll('a')):[];
+  var root=document.documentElement,anim=root.classList.contains('anim');
+
+  /* переключатель людей: текущий в видимой части, сразу */
+  var bar=document.querySelector('.cx-bar-in'),cur=bar&&bar.querySelector('.is-cur');
+  if(bar&&cur&&bar.scrollWidth>bar.clientWidth)bar.scrollLeft=cur.offsetLeft-bar.clientWidth/2+cur.offsetWidth/2;
+
+  /* хаб: лица */
   var top=document.querySelector('.cs-top');
+  if(top)requestAnimationFrame(function(){top.classList.add('is-in')});
 
-  /* ссылка с якорем: браузер может не доскроллить, пока грузятся картинки, поэтому встаём на кейс ещё раз после загрузки */
-  if(location.hash){
-    var tgt=document.getElementById(location.hash.slice(1));
-    if(tgt&&tgt.classList.contains('cs-case')){
-      tgt.classList.remove('is-pre');
-      var fix=function(){tgt.scrollIntoView({block:'start'})};
-      requestAnimationFrame(fix);addEventListener('load',fix);
-    }
-  }
-
-  /* въезды */
-  if(!reduce&&'IntersectionObserver' in window){
-    if(top){
-      requestAnimationFrame(function(){top.classList.add('is-in')});
-    }
+  /* появление при прокрутке: карточки хаба */
+  var cards=[].slice.call(document.querySelectorAll('.cc'));
+  if(anim&&'IntersectionObserver' in window){
     var io=new IntersectionObserver(function(es){
-      es.forEach(function(e){if(e.isIntersecting){e.target.classList.remove('is-pre');io.unobserve(e.target)}});
-    },{rootMargin:'0px 0px -20% 0px'});
-    cases.forEach(function(c){
-      if(c.getBoundingClientRect().top>innerHeight*.8&&!(location.hash&&c.id===location.hash.slice(1))){c.classList.add('is-pre');io.observe(c)}
-    });
-  }
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('is-in');io.unobserve(e.target)}});
+    },{rootMargin:'0px 0px -12% 0px'});
+    cards.forEach(function(c){io.observe(c)});
+  }else cards.forEach(function(c){c.classList.add('is-in')});
 
-  if(top&&!reduce)setTimeout(function(){top.classList.add('is-in')},60);
-
-  /* текущий кейс в полосе имён */
-  if(links.length&&'IntersectionObserver' in window){
-    var cur=null;
-    var spy=new IntersectionObserver(function(es){
-      es.forEach(function(e){if(e.isIntersecting)cur=e.target.id});
-      links.forEach(function(a){
-        var on=a.getAttribute('href')==='#'+cur;
-        if(on&&!a.classList.contains('is-cur')){
-          var l=a.offsetLeft-bar.clientWidth/2+a.offsetWidth/2;
-          bar.scrollTo({left:l,behavior:reduce?'auto':'smooth'});
-        }
-        a.classList.toggle('is-cur',on);
-        if(on)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current');
-      });
-    },{rootMargin:'-40% 0px -55% 0px'});
-    cases.forEach(function(c){spy.observe(c)});
+  /* первый экран кейса: счётчик результата */
+  var hero=document.querySelector('.cx-hero');
+  if(hero){
+    var b=hero.querySelector('[data-count]');
+    var go=function(){
+      hero.classList.add('is-in');
+      if(!anim||!b)return;
+      var txt=b.textContent,m=txt.match(/\d[\d\s ]*/);
+      if(!m)return;
+      var to=parseInt(m[0].replace(/[\s ]/g,''),10),pre=txt.slice(0,m.index),post=txt.slice(m.index+m[0].replace(/[\s ]+$/,'').length);
+      if(!to)return;
+      var t0=performance.now()+900,dur=1300;
+      var fmt=function(v){var s=String(v);return to>=1000?s.replace(/\B(?=(\d{3})+(?!\d))/g,' '):s};
+      b.style.minWidth=b.offsetWidth+'px';
+      (function step(now){
+        var k=Math.max(0,Math.min(1,(now-t0)/dur)),e=1-Math.pow(1-k,4);
+        b.textContent=pre+fmt(Math.round(to*e))+post;
+        if(k<1)requestAnimationFrame(step);else{b.textContent=txt;b.style.minWidth=''}
+      })(performance.now());
+    };
+    if(anim)requestAnimationFrame(function(){requestAnimationFrame(go)});else hero.classList.add('is-in');
   }
 
   /* просмотр доказательств */
   var lb=document.getElementById('cs-lb');
   if(lb){
     var big=lb.querySelector('img'),from=null;
-    function close(){
-      lb.classList.remove('is-on');document.documentElement.style.overflow='';
-      setTimeout(function(){lb.hidden=true;big.removeAttribute('src')},reduce?0:300);
+    var close=function(){
+      lb.classList.remove('is-on');root.style.overflow='';
+      setTimeout(function(){lb.hidden=true;big.removeAttribute('src')},anim?300:0);
       if(from)from.focus();
-    }
-    [].forEach.call(document.querySelectorAll('.cs-z'),function(b){
-      b.addEventListener('click',function(){
-        var im=b.querySelector('img');from=b;
+    };
+    [].forEach.call(document.querySelectorAll('.cx-z'),function(z){
+      z.addEventListener('click',function(){
+        var im=z.querySelector('img');from=z;
         big.src=im.currentSrc||im.src;big.alt=im.alt;
-        lb.hidden=false;document.documentElement.style.overflow='hidden';
+        lb.hidden=false;root.style.overflow='hidden';
         requestAnimationFrame(function(){lb.classList.add('is-on')});
         lb.querySelector('.cs-lb-x').focus();
       });

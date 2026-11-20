@@ -23,9 +23,9 @@
   mask:linear-gradient(90deg,transparent,#000 4.5%,#000 95.5%,transparent),linear-gradient(transparent,#000 7%,#000 93%,transparent);
   mask-composite:intersect}
 .gb-trail{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
-.gb-trail path{fill:none;stroke-linecap:round;stroke-linejoin:round}
+.gb-trail path{fill:none;stroke-linecap:butt;stroke-linejoin:miter}
 /* неоновая подсветка пройденного пути: тот же путь со скруглениями, что у ручки, раскрывается через dashoffset.
-   Свечение без SVG-размытия (оно перерисовывалось на каждом кадре и ручка подтормаживала): широкая полупрозрачная линия */
+   Путь прямыми отрезками с острыми углами (21.11). Свечение без SVG-размытия (оно перерисовывалось на каждом кадре и ручка подтормаживала): широкая полупрозрачная линия */
 .gb-trail .gl{stroke:#ff2a1f;stroke-width:16;opacity:.22}
 .gb-trail .co{stroke:#ff5247;stroke-width:3.5}
 .gb-knob{position:absolute;left:80.8%;top:24.87%;width:8.4%;height:auto;transform:translate(-50%,-50%);

@@ -53,12 +53,6 @@
 .st-r{flex:none;text-align:right}
 .st-sum{font:900 44px/.95 var(--cond);letter-spacing:-.01em;color:var(--on-red);white-space:nowrap}
 .st-t{display:block;margin-top:4px;font:400 13px/1.2 var(--text);color:rgba(246,238,230,.6)}
-/* стрелка «открыть кейс» в плашке; при наведении на раскрытую полосу заливается кремовым */
-.st-go{flex:none;align-self:center;display:grid;place-items:center;width:44px;height:44px;margin-left:4px;border:1.5px solid rgba(246,238,230,.5);color:var(--on-red);
-  transition:background .35s,color .35s,border-color .35s}
-.st-go svg{width:14px;height:14px;transition:transform .45s var(--ease)}
-.st-it.is-on .st-b:hover~.st-pl .st-go,.st-it.is-on .st-b:focus-visible~.st-pl .st-go{background:var(--on-red);color:#111;border-color:var(--on-red)}
-.st-it.is-on .st-b:hover~.st-pl .st-go svg{transform:translate(2px,-2px)}
 
 .st-acts{margin-top:64px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .st-btn-o{background:transparent;color:var(--on-red);box-shadow:inset 0 0 0 1.5px rgba(246,238,230,.55)}
@@ -89,7 +83,6 @@
   .st-pl{left:20px;right:12px;bottom:14px;padding:14px 16px}
   .st-pl-in{gap:12px;transform:skewX(5deg)}
   .st-nm{font-size:22px}.st-q{font-size:12px}.st-sum{font-size:30px}.st-t{font-size:11px}
-  .st-go{width:36px;height:36px}
   .st-acts{margin-top:40px;flex-direction:column}
   .st-acts .btn{width:100%;height:58px;padding:0 20px}
   .st.is-wait .st-it{translate:0 40px}

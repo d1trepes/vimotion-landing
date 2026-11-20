@@ -106,8 +106,21 @@ h1{font:900 clamp(44px,7vw,80px)/.94 var(--cond);letter-spacing:-.005em;margin-b
 .cta:hover:not(:disabled){background:var(--cola-hover)}
 .cta:disabled{opacity:.32;cursor:not-allowed}
 .cta:focus-visible{outline:2px solid var(--cola);outline-offset:4px}
-/* стрелки в кнопках убраны по просьбе клиента: знак остаётся в разметке (его меняет скрипт), но не показывается */
-.cta-arrow{display:none}
+/* стрелки в кнопках (21.11, клиент вернул): знак из разметки скрыт, вместо него та же тонкая стрелка, что на лендинге */
+.cta-arrow{display:block;flex:none;width:16px;height:16px;font-size:0;line-height:0;color:transparent;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 12.5l9-9M5.5 3.5h7v7'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3.5 12.5l9-9M5.5 3.5h7v7'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .35s var(--ease)}
+.cta{color:#fff}
+.cta-arrow{background:#fff}
+.cta:hover:not(:disabled) .cta-arrow{transform:translate(3px,-3px)}
+.back{gap:12px}
+.back::before,.home::before{content:"";display:block;flex:none;width:16px;height:16px;background:currentColor;
+  -webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.5 8h-11M7 3.5 2.5 8 7 12.5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M13.5 8h-11M7 3.5 2.5 8 7 12.5'/%3E%3C/svg%3E") center/contain no-repeat;transition:transform .35s var(--ease)}
+.back:hover::before,.home:hover::before{transform:translateX(-3px)}
+/* «Вернуться на главную» (ставит quiz-track.js в верхнюю строку) */
+.home{display:inline-flex;align-items:center;gap:10px;height:46px;padding:0 18px;border:1.5px solid var(--ink);color:var(--ink);text-decoration:none;
+  font:700 13px/1 var(--display);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;transition:background .25s,color .25s}
+.home:hover{background:var(--ink);color:var(--on-dark)}
+.home:focus-visible{outline:2px solid var(--cola);outline-offset:4px}
 
 /* поля */
 .form{display:grid;gap:18px}
@@ -160,6 +173,8 @@ h1{font:900 clamp(44px,7vw,80px)/.94 var(--cond);letter-spacing:-.005em;margin-b
   .nav{margin-top:28px;gap:10px}
   .back{height:58px;padding:0 18px;font-size:14px}
   .cta{flex:1;height:58px;padding:0 20px}
+  .home{height:40px;padding:0 12px;font-size:11px;gap:8px}
+  .home::before{width:14px;height:14px}
   #contactView .cta{width:100%}
 }
 

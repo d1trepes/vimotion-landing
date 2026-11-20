@@ -21,9 +21,16 @@
 (function(){
   'use strict';
   var hdr=document.querySelector('.hdr');if(!hdr)return;
-  var on=null,t=0;
-  function upd(){t=0;var s=(window.scrollY||0)>8;if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}}
-  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});upd();
+  var on=null,dk=null,t=0,darks=[].slice.call(document.querySelectorAll('[data-hdr="dark"]')),bar=document.querySelector('.cx-bar');
+  /* над тёмными блоками (асфальт, подвал) шапка тоже тёмная: смотрим, какой блок начинается сразу под шапкой
+     (на страницах кейсов под шапкой ещё полоса с именами, она меняет цвет вместе с шапкой) */
+  function upd(){
+    t=0;var s=(window.scrollY||0)>8;if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
+    var y=hdr.offsetHeight+(bar?bar.offsetHeight:0)+1,d=false;
+    for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
+    if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d)}
+  }
+  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));
   if(!links.length||!('IntersectionObserver' in window))return;

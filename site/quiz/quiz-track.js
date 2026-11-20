@@ -118,3 +118,15 @@
   sync();
   if (window.MutationObserver) new MutationObserver(sync).observe(label, { childList: true, characterData: true, subtree: true });
 })();
+
+/* Кнопка «Вернуться на главную» в верхней строке анкеты (21.11). Ставится скриптом, чтобы не трогать разметку разработчика */
+(function () {
+  "use strict";
+  var top = document.querySelector(".top");
+  if (!top || top.querySelector(".home")) return;
+  var a = document.createElement("a");
+  a.className = "home";
+  a.href = "../";
+  a.textContent = "Вернуться на главную";
+  top.appendChild(a);
+})();
