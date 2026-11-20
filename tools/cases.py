@@ -192,6 +192,8 @@ for i, c in enumerate(C):
             f'<li><button class="cx-z" type="button" aria-label="Увеличить: {alt}"><img src="img/{f}?v={V}" width="{w}" height="{h}" alt="{alt}" loading="lazy" decoding="async"></button></li>'
             for f, w, h, alt in c['ev']) + '</ul>'
     lab = f'<span>{c["res"][1]}</span>' if c['res'][1] else ''
+    # цитата и скрин рядом: скрин карточкой справа, чуть наклонён и заходит на плашку; без цитаты скрин на всю колонку
+    qe = (f'<div class="cx-qe{" has-q" if q else ""}{" has-ev" if ev else ""}">{q}{ev}</div>') if (q or ev) else ''
     page = head(f'{c["name"]}: кейс ученика ViMotion', c['h']) + f'''<body class="pg-cases pg-case">
 
 {hdr}
@@ -219,8 +221,7 @@ for i, c in enumerate(C):
     <h2 class="cx-h" id="cx-h">{c['h']}</h2>
     <ul class="cx-nums">{nums}</ul>
     <div class="cx-body">{paras}</div>
-    {q}
-    {ev}
+    {qe}
   </div>
 </article>
 
