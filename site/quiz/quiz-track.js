@@ -2,6 +2,7 @@
    Скрипт ничего не меняет в логике анкеты: он рисует слева тёмную панель с картой трассы на 10 отметок
    и следит за текстом #stepLabel («Шаг N из 10»), который обновляет основной скрипт анкеты.
    При смене шага болид едет по трассе к отметке N, за ним прорисовывается красная линия, номер шага в углу.
+   В поворотах болид слегка заносит (нос доворачивает внутрь), к остановке он выравнивается.
    На телефоне панель скрыта стилями (там прогресс показывает прямая дорожка). При prefers-reduced-motion болид переставляется без езды. */
 (function () {
   "use strict";
@@ -73,9 +74,17 @@
   var car = el("image", { href: CAR, width: 26, height: 54, x: -13, y: -27 }, svg);
 
   var cur = lenFor(1, steps), raf = 0;
-  function place(L) {
-    var p = road.getPointAtLength(L), q = road.getPointAtLength(Math.min(total, L + 1.5));
-    var ang = Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI + 90;
+  function heading(L) {
+    var p = road.getPointAtLength(Math.max(0, Math.min(total, L))), q = road.getPointAtLength(Math.min(total, L + 1.5));
+    return Math.atan2(q.y - p.y, q.x - p.x) * 180 / Math.PI;
+  }
+  function wrap(a) { while (a > 180) a -= 360; while (a < -180) a += 360; return a; }
+  /* занос: в повороте нос болида доворачивает внутрь, хвост уходит наружу; сила зависит от скорости (drift 0..1) */
+  function place(L, drift) {
+    var p = road.getPointAtLength(L);
+    var h = heading(L), turn = wrap(heading(L + 22) - h);
+    var slip = Math.max(-40, Math.min(40, turn * 1.8)) * (drift || 0);
+    var ang = h + 90 + slip;
     car.setAttribute("transform", "translate(" + p.x.toFixed(2) + " " + p.y.toFixed(2) + ") rotate(" + ang.toFixed(1) + ")");
     trail.style.strokeDashoffset = (total - L).toFixed(1);
   }
@@ -88,7 +97,7 @@
       if (!t0) t0 = now;
       var k = Math.min(1, (now - t0) / dur);
       cur = from + (to - from) * ease(k);
-      place(cur);
+      place(cur, Math.sin(Math.PI * k));  /* занос сильнее на скорости в середине пути, к остановке выравнивается */
       if (k < 1) raf = requestAnimationFrame(tick);
     }
     raf = requestAnimationFrame(tick);
