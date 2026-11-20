@@ -13,7 +13,7 @@
 .st-sub{max-width:34em;margin:24px auto 0;font:400 19px/1.5 var(--text);color:rgba(246,238,230,.6);text-wrap:pretty}
 
 .st-list{list-style:none;margin:72px 40px 0;display:flex;gap:14px;height:580px;text-align:left}
-.st-it{position:relative;flex:1 1 0;min-width:0;transform:skewX(var(--sk));transition:flex-grow .75s var(--ease)}
+.st-it{position:relative;flex:1 1 0;min-width:0;transform:skewX(var(--sk));transition:flex-grow 1.15s cubic-bezier(.33,0,.15,1)}
 .st-it.is-on{flex-grow:4.8}
 .st-b{position:absolute;inset:0;display:block;width:100%;padding:0;border:0;background:#222;cursor:pointer;overflow:hidden;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
 .st-it.is-on .st-b{cursor:default}
@@ -27,8 +27,15 @@
 .st-vn{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) skewX(10deg);writing-mode:vertical-rl;rotate:180deg;
   font:900 24px/1 var(--cond);color:rgba(246,238,230,.85);white-space:nowrap;transition:opacity .3s}
 .st-it.is-on .st-vn{opacity:0}
-/* на компьютере полоса открывается кликом; при наведении закрытая полоса только подсвечивается */
-@media (hover:hover) and (pointer:fine){.st-it:not(.is-on) .st-b:hover .st-sk img{filter:grayscale(.4) brightness(.85) contrast(1.05);transition-duration:.4s}}
+/* компьютер: фото фиксированного размера по центру полосы; при раскрытии меняется только масштаб (transform),
+   картинка не пересчитывается, полоса просто открывает её шире; раскрытие медленное и мягкое (scripts/stories.js открывает с задержкой наведения) */
+@media (min-width:721px){
+  .st-sk img{left:50%;top:0;width:var(--sw,660px);height:auto;aspect-ratio:3/4;transform-origin:50% 35%;
+    transform:translate(-50%,var(--sy,-90px)) skewX(10deg) scale(.76);
+    transition:transform 1.15s cubic-bezier(.33,0,.15,1),filter 1s var(--ease)}
+  .st-it.is-on .st-sk img{left:50%;width:var(--sw,660px);transform:translate(-50%,var(--sy,-90px)) skewX(10deg) scale(1)}
+}
+@media (min-width:721px) and (max-width:1180px){.st-list{--sw:560px;--sy:-74px}}
 
 /* плашка с именем, цитатой и суммой */
 .st-pl{position:absolute;left:44px;right:30px;bottom:26px;padding:20px 26px 20px 30px;background:rgba(14,14,14,.66);

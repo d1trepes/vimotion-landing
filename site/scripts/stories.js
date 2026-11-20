@@ -1,5 +1,5 @@
 /* Блок 14. Истории учеников: косой аккордеон.
-   Клик, касание или клавиатура раскрывают человека (наведение только подсвечивает полосу). Пока посетитель ничего не трогал
+   Наведение (с задержкой 170 мс, чтобы не дёргалось), клик, касание или клавиатура раскрывают человека. Пока посетитель ничего не трогал
    и блок на экране, истории сменяются сами каждые 4,5 с. Ссылки #alena, #ivan и т. п. (из блока 2)
    раскрывают нужного человека. При prefers-reduced-motion без въезда и автосмены. */
 (function(){
@@ -7,6 +7,7 @@
   var sec=document.querySelector('.st');if(!sec)return;
   var items=[].slice.call(sec.querySelectorAll('.st-it'));if(!items.length)return;
   var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
   var cur=Math.max(0,items.findIndex(function(li){return li.classList.contains('is-on')}));
   var touched=false,timer=null,inView=false;
 
@@ -25,6 +26,12 @@
   items.forEach(function(li,i){
     var b=li.querySelector('.st-b');
     b.addEventListener('click',function(){stop();open(i)});
+    /* на компьютере раскрытие по наведению, но с небольшой задержкой: при проведении мышью через ряд полосы не дёргаются */
+    if(fine){
+      var t=null;
+      li.addEventListener('mouseenter',function(){clearTimeout(t);t=setTimeout(function(){stop();open(i)},170)});
+      li.addEventListener('mouseleave',function(){clearTimeout(t)});
+    }
   });
 
   function fromHash(){

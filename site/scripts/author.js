@@ -26,12 +26,12 @@
     if(dir>0&&!reduce){
       busy=true;leaving.classList.add('is-out');
       cur=(cur+1)%n;
-      setTimeout(function(){leaving.classList.remove('is-out');place();busy=false},430);
+      setTimeout(function(){leaving.classList.remove('is-out');place();busy=false},820);
       place();
     }else if(dir<0&&!reduce){
       busy=true;cur=(cur-1+n)%n;var back=cards[cur];
       back.classList.add('is-back');void back.offsetWidth;back.classList.remove('is-back');
-      place();setTimeout(function(){busy=false},450);
+      place();setTimeout(function(){busy=false},900);
     }else{cur=(cur+dir+n)%n;place()}
     restart();
   }

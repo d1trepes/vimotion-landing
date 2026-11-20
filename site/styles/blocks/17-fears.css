@@ -18,7 +18,7 @@
 .fr-c{display:block;width:100%;height:290px;padding:0;border:0;background:none;cursor:pointer;perspective:1200px;
   text-align:left;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
 .fr-c:focus-visible{outline:2px solid var(--on-red);outline-offset:4px;border-radius:0}
-.fr-in3{position:relative;display:block;height:100%;transform-style:preserve-3d;transition:transform .8s var(--ease)}
+.fr-in3{position:relative;display:block;height:100%;transform-style:preserve-3d;transition:transform 1.15s cubic-bezier(.45,.05,.2,1)}
 .fr-c[aria-pressed="true"] .fr-in3{transform:rotateY(180deg)}
 @media (hover:hover) and (pointer:fine){.fr-c:hover .fr-in3{transform:rotateY(180deg)}}
 /* переворачивается внутренний слой, а кнопка стоит на месте: наведение не дёргается на ребре карточки */

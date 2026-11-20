@@ -2,6 +2,8 @@
    Сцена закреплена (sticky), прогресс скролла по .gb-run плавно ведёт ручку: пауза на каждой передаче, переход между ними.
    Ручка едет по прорезям кулисы по одной ломаной (координаты прорезей сняты с фото 1672×941),
    неоновая подсветка раскрывается по той же ломаной. Ручка догоняет скролл с инерцией и мягко встаёт в передачу (без «щелчка»).
+   Ручку можно перетащить по прорезям: отпущенная встаёт в ближайшую передачу, и страница плавно докручивается
+   до места этой передачи (скролл и ручка всегда синхронны). Подписи передач кликаются так же.
    При prefers-reduced-motion скрипт не запускается: в разметке финальное состояние. */
 (function(){
   'use strict';
@@ -60,42 +62,66 @@
     place(s);mark();
     raf=s!==goal?requestAnimationFrame(tick):(last=0,0);
   }
-  /* ручное управление: ручку можно взять и перетащить по прорезям, отпущенная встаёт в ближайшую передачу.
-     Подписи передач тоже кликаются. Пока посетитель сам держит передачу, скролл её не перебивает;
-     управление возвращается скроллу, когда он ушёл от точки, где отпустили ручку, на заметное расстояние */
-  var manual=false,anchor=0,drag=false;
+  /* ручное управление. Источник правды один: прокрутка страницы.
+     Пока ручку держат, она идёт за пальцем/курсором по прорезям без инерции.
+     Отпустили: страница плавно докручивается до места, где по скроллу стоит ближайшая передача,
+     и дальше ручка снова едет от скролла. Поэтому после 5-й передачи страница сразу листается дальше,
+     а скролл и ручка никогда не спорят. Клик по подписи передачи делает то же самое */
+  var drag=false,lock=null,lockY=0,lockT=0;
   function go(v){goal=v;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  /* пока страница сама докручивается к выбранной передаче, ручка стоит на ней и не бегает по промежуточным */
+  function unlock(){lock=null}
   function kick(){
     if(drag)return;
-    var t=target();
-    if(manual){if(Math.abs(t-anchor)<260)return;manual=false}
-    go(t);
+    if(lock!==null){
+      if(Math.abs(scrollY-lockY)>2&&performance.now()-lockT<1600)return;
+      lock=null;
+    }
+    go(target());
   }
+  addEventListener('wheel',unlock,{passive:true});addEventListener('touchstart',function(e){if(e.target!==knob)unlock()},{passive:true});
+  addEventListener('keydown',unlock);
   function project(cx,cy){
     var r=knob.parentNode.getBoundingClientRect(),x=(cx-r.left)/r.width*W,y=(cy-r.top)/r.height*H,best=null;
     for(var i=1;i<P.length;i++){
       var ax=P[i-1][0],ay=P[i-1][1],dx=P[i][0]-ax,dy=P[i][1]-ay,L=dx*dx+dy*dy||1;
       var k=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/L)),px=ax+dx*k,py=ay+dy*k;
       var d=Math.hypot(x-px,y-py),v=acc[i-1]+k*(acc[i]-acc[i-1]);
-      /* участки трассы, пройденные дважды, дают двух кандидатов: берём ближайший к текущему положению ручки */
       if(!best||d<best.d-1||(Math.abs(d-best.d)<=1&&Math.abs(v-s)<Math.abs(best.v-s)))best={d:d,v:v};
     }
     return best.v;
   }
-  function nearest(v){var b=0;for(var j=1;j<5;j++)if(Math.abs(GEAR[j]-v)<Math.abs(GEAR[b]-v))b=j;return GEAR[b]}
+  function nearestGear(v){var b=0;for(var j=1;j<5;j++)if(Math.abs(GEAR[j]-v)<Math.abs(GEAR[b]-v))b=j;return b}
+  /* позиция прокрутки, на которой передача g стоит в середине своей паузы */
+  function scrollFor(g){
+    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight);
+    return Math.round(scrollY+r.top+Math.max(0,len)*(g/4));
+  }
+  function shift(g){
+    go(GEAR[g]);
+    var y=scrollFor(g);
+    if(Math.abs(y-scrollY)>2){lock=g;lockY=y;lockT=performance.now();window.scrollTo({top:y,behavior:'smooth'})}
+  }
+  var pid=null;
   knob.addEventListener('pointerdown',function(e){
-    e.preventDefault();drag=true;manual=true;sec.classList.add('is-grab');
-    try{knob.setPointerCapture(e.pointerId)}catch(_){}
-    go(project(e.clientX,e.clientY));
+    if(e.button>0)return;
+    e.preventDefault();drag=true;pid=e.pointerId;sec.classList.add('is-grab');
+    try{knob.setPointerCapture(pid)}catch(_){}
   });
-  knob.addEventListener('pointermove',function(e){if(drag)go(project(e.clientX,e.clientY))});
-  function release(){if(!drag)return;drag=false;sec.classList.remove('is-grab');anchor=target();go(nearest(goal))}
+  knob.addEventListener('pointermove',function(e){
+    if(!drag||e.pointerId!==pid)return;
+    /* за пальцем без инерции и без предела скорости: ставим сразу */
+    s=goal=project(e.clientX,e.clientY);place(s);mark();
+  });
+  function release(e){
+    if(!drag||(e&&e.pointerId!==pid))return;
+    drag=false;pid=null;sec.classList.remove('is-grab');
+    shift(nearestGear(s));
+  }
   knob.addEventListener('pointerup',release);knob.addEventListener('pointercancel',release);
+  knob.addEventListener('lostpointercapture',release);
   knob.addEventListener('dragstart',function(e){e.preventDefault()});
-  items.forEach(function(it,i){
-    var g=[0,1,2,3,4][i];
-    it.addEventListener('click',function(){manual=true;anchor=target();go(GEAR[g])});
-  });
+  items.forEach(function(it,i){it.addEventListener('click',function(){shift(i)})});
 
   sec.classList.add('js');
   place(s);mark();
