@@ -8,7 +8,7 @@
   (разметка, вопросы, проверка полей, отправка в `../api/send-quiz.php`, `../assets/js/utm.js`,
   `../assets/js/track.js`, `vmTrack("quiz_open")`, Meta Pixel, vm-analytics) совпадает с прежней версией символ в символ.
 - `quiz/quiz.css`: новые стили.
-- `quiz/assets/fonts/*.woff2`, `quiz/assets/wordmark-800.webp`: шрифты и вордмарк для стилей.
+- `quiz/assets/fonts/*.woff2`: шрифты для стилей.
 
 ## Как выложить
 1. Заменить на сервере `quiz/index.html` новой версией.
