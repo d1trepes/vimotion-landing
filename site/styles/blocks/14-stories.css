@@ -84,11 +84,12 @@
   .st-it{--sh:66px;flex:none;height:var(--sh);width:calc(100% - 440px*var(--tg));transition:height .55s cubic-bezier(.33,0,.15,1)}
   .st-it.is-on{flex:none;--sh:440px}
   .st-b{-webkit-mask-image:none;mask-image:none;isolation:auto}
-  .st-sk img,.st-it.is-on .st-sk img{left:-8%;width:116%;height:auto;aspect-ratio:3/4;object-fit:cover;top:0;
+  .st-sk img,.st-it.is-on .st-sk img{left:-10%;width:120%;height:auto;aspect-ratio:3/4;object-fit:cover;top:0;
     transform:translateY(calc(33px - var(--ey,.38)*100%)) skewX(5deg);
     filter:grayscale(1) brightness(.62) contrast(1.1);
     transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .12s}
-  .st-it.is-on .st-sk img{transform:translateY(calc(158px - var(--ey,.38)*100%)) skewX(5deg);filter:none;transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .2s}
+  /* фото всегда закрывает раскрытую полосу целиком: сдвиг ограничен так, чтобы низ фото не поднимался выше низа полосы (440px) */
+  .st-it.is-on .st-sk img{transform:translateY(min(0px,max(calc(440px - 100%),calc(158px - var(--ey,.38)*100%)))) skewX(5deg);filter:none;transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .2s}
   .st-sk::after{transition:opacity .4s}
   #alena{--ey:.33}#ivan{--ey:.445}#veronika{--ey:.375}#gaiduk{--ey:.425}#nariman{--ey:.39}#nastya{--ey:.32}
   .st-vn{writing-mode:horizontal-tb;rotate:0deg;left:22px;bottom:auto;top:50%;transform:translateY(-50%) skewX(5deg);font-size:22px;

@@ -44,6 +44,13 @@ html{scroll-padding-top:var(--hb)}
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
+/* 20.11: фон под страницей тёмный — при оттягивании в конце страницы (после тёмного подвала) не видно белого;
+   сама страница кремовая за счёт body */
+html{background:#0e0e0e}
+/* полоска у нижнего края окна для подкраски нижней панели Safari/Telegram (цвет ставит menu.js вместе с шапкой).
+   iPhone красит панель в цвет закреплённого элемента у нижнего края, без неё брал цвет того, что под панелью (красные плашки) */
+.vm-tint{position:fixed;left:0;right:0;bottom:0;height:6px;z-index:110;pointer-events:none;background:var(--cream);transition:background-color .35s}
+@media (hover:hover) and (pointer:fine){.vm-tint{display:none}}
 body{overflow-x:clip;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%;
   /* картинки нельзя «зажать»: без меню по долгому нажатию (iOS, Telegram), без перетаскивания и выделения */
