@@ -12,10 +12,12 @@
   var fine=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
   var cur=Math.max(0,items.findIndex(function(li){return li.classList.contains('is-on')}));
   var touched=false,timer=null,inView=false;
+  /* 20.11: на телефоне по умолчанию ничего не раскрыто и само не листается, раскрывает только касание */
+  if(!fine&&matchMedia('(max-width:720px)').matches){items[cur].classList.remove('is-on');cur=-1;touched=true}
 
   function open(i){
     if(i===cur||i<0||i>=items.length)return;
-    items[cur].classList.remove('is-on');
+    if(cur>-1)items[cur].classList.remove('is-on');
     cur=i;
     items[cur].classList.add('is-on');
   }
@@ -31,7 +33,7 @@
       if(fine||i===cur){stop();return}  /* переход по ссылке на кейс */
       e.preventDefault();stop();open(i);
     });
-    b.addEventListener('focus',function(){if(!fine||b.matches(':focus-visible')){stop();open(i)}});
+    b.addEventListener('focus',function(){if(b.matches(':focus-visible')){stop();open(i)}});
     /* на компьютере раскрытие по наведению, но с небольшой задержкой: при проведении мышью через ряд полосы не дёргаются */
     if(fine){
       var t=null;

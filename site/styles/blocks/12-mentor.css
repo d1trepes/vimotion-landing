@@ -68,7 +68,7 @@
   .mn-pt b{bottom:26px;font-size:28px}
   .mn-dot{width:16px;height:16px}
   .mn-flag{width:24px;height:16px;background-size:8px 8px}
-  .mn-car{top:72px;left:calc(8px + (100% - 20px)*.62);width:76px;height:76px;box-shadow:0 0 0 4px var(--cream),0 0 0 6px var(--red),0 14px 20px -8px rgba(40,10,0,.4)}
+  .mn-car{top:72px;left:calc(8px + (100% - 20px)*.62);width:58px;height:58px;box-shadow:0 0 0 3px var(--cream),0 0 0 5px var(--red),0 12px 18px -8px rgba(40,10,0,.4)}
   .mn.is-wait .mn-car{left:8px}
   .mn-fx{grid-template-columns:1fr;margin-top:28px;padding:22px 22px 8px;border-radius:0}
   .mn-fx::before{height:8px;background-size:8px 8px}

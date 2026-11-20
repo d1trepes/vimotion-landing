@@ -37,7 +37,10 @@
       var side=mob?(i%2?1:-1):(i%2?1:-1);
       pts.push([cx+side*amp,top+h*(mob?.5:.7)]);
     });
-    var endY=H-pad*.3;
+    var fs=mob?12:18;
+    /* 20.11: на телефоне трасса кончается вровень с последней карточкой: низ финишного флага = низ «Недели 7-8» */
+    var lr=st[st.length-1].getBoundingClientRect();
+    var endY=mob?lr.bottom-tr.top-fs*2:H-pad*.3;
     /* последний поворот возвращает на центр, дальше прямая к финишу */
     var lastY=pts[pts.length-1][1],midY=lastY+(endY-lastY)*.6;
     pts.push([cx,midY]);pts.push([cx,endY]);
@@ -56,7 +59,6 @@
     var rw=mob?24:56;
     pinsG.textContent='';marksG.textContent='';pins=[];pinL=[];
     marksG.appendChild(el('rect',{x:cx-rw/2,y:-3,width:rw,height:mob?6:8,fill:'url(#rt-chk)'}));
-    var fs=mob?12:18;
     var fin=el('rect',{'class':'rt-fin',x:cx-rw*.7,y:endY,width:rw*1.4,height:fs*2,fill:'url(#rt-chk)'});
     marksG.appendChild(fin);
     pts.slice(1,-2).forEach(function(p){

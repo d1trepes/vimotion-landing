@@ -59,7 +59,13 @@
   .wh-n{font-size:40px}
   .wh-it p{font-size:15.5px}
   .wh.js .wh-list{min-height:112px}
-  .wh-btn{width:100%;margin-top:20px;padding:0 16px;font-size:14px}
+  .wh-btn{margin-top:20px}
+  /* закреплённая сцена на телефоне: компактнее, картинку при нехватке высоты уменьшает whales.js (--whk) */
+  .wh.pin .wh-stage{padding-top:12px;padding-bottom:12px}
+  .wh.pin .wh-pic{width:calc((100% + 2*var(--m))*var(--whk,1));margin-left:calc((100% - (100% + 2*var(--m))*var(--whk,1))/2);margin-right:0}
+  /* кнопка после сцены (переносит whales.js) */
+  .wh-after{padding:4px var(--m) 72px}
+  .wh-after .wh-btn{margin-top:0}
 }
 
 @media (prefers-reduced-motion:reduce){

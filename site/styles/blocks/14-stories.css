@@ -65,26 +65,33 @@
 .st.is-wait .st-it.is-on .st-sk img,.st.is-in.is-fresh .st-it.is-on .st-sk img{filter:grayscale(1) brightness(.62) contrast(1.1)}
 
 @media (max-width:1180px){
-  .st{padding:120px var(--m)}
+  .hero~.st,.st{padding:120px var(--m)}
   .st-list{height:500px;margin:64px 24px 0;gap:10px}
   .st-pl{left:36px;right:22px;bottom:20px;padding:16px 20px 16px 24px}
   .st-nm{font-size:24px}.st-q{font-size:14px}.st-sum{font-size:36px}
   .st-vn{font-size:21px}
 }
 @media (max-width:720px){
-  .st{--sk:-5deg;padding:80px var(--m)}
+  /* 20.11 мобильная: отступ сверху как у трёх китов; полосы не выходят за сетку: ширина полосы уменьшена
+     на величину наклона (высота × tg 5°), поэтому косые края ровно по полям страницы и в закрытом, и в раскрытом виде.
+     По умолчанию ничего не раскрыто и само не листается: первое касание раскрывает, второе ведёт на кейс.
+     В закрытых полосах на уровне середины видны глаза (--ey: где глаза на фото, доля высоты) */
+  .hero~.st,.st{--sk:-5deg;--tg:.0875;padding:64px var(--m) 72px}
   .st-sub{font-size:16px;margin-top:16px}
-  .st-list{flex-direction:column;height:auto;margin:44px 14px 0;gap:10px}
-  .st-it{flex:none;height:66px;transition:height .7s var(--ease)}
-  .st-it.is-on{flex:none;height:440px}
-  .st-sk img{left:-10%;width:120%;object-position:50% 25%;transform:skewX(5deg)}
-  .st-it.is-on .st-sk img{left:-8%;width:116%}
-  .st-vn{writing-mode:horizontal-tb;rotate:0deg;left:22px;bottom:auto;top:50%;transform:translateY(-50%) skewX(5deg);font-size:22px}
-  .st-pl{left:20px;right:12px;bottom:14px;padding:14px 16px}
+  .st-list{flex-direction:column;align-items:center;height:auto;margin:32px 0 0;gap:10px}
+  .st-it{--sh:66px;flex:none;height:var(--sh);width:calc(100% - var(--sh)*var(--tg));transition:height .7s var(--ease),width .7s var(--ease)}
+  .st-it.is-on{flex:none;--sh:440px}
+  .st-sk img,.st-it.is-on .st-sk img{left:-8%;width:116%;height:auto;aspect-ratio:3/4;object-fit:cover;top:50%;
+    transform:translateY(calc(var(--ey,.38)*-100%)) skewX(5deg);
+    transition:filter .8s var(--ease),top .7s var(--ease),transform .7s var(--ease)}
+  .st-it.is-on .st-sk img{top:36%}
+  #alena{--ey:.33}#ivan{--ey:.445}#veronika{--ey:.375}#gaiduk{--ey:.425}#nariman{--ey:.39}#nastya{--ey:.32}
+  .st-vn{writing-mode:horizontal-tb;rotate:0deg;left:22px;bottom:auto;top:50%;transform:translateY(-50%) skewX(5deg);font-size:22px;
+    text-shadow:0 1px 12px rgba(0,0,0,.55)}
+  .st-pl{left:18px;right:18px;bottom:14px;padding:14px 16px}
   .st-pl-in{gap:12px;transform:skewX(5deg)}
   .st-nm{font-size:22px}.st-q{font-size:12px}.st-sum{font-size:30px}.st-t{font-size:11px}
   .st-acts{margin-top:40px;flex-direction:column-reverse}
-  .st-acts .btn{width:100%;height:58px;padding:0 20px}
   .st.is-wait .st-it{translate:0 40px}
   @keyframes st-in{from{opacity:0;translate:0 40px}to{opacity:1;translate:0 0}}
 }

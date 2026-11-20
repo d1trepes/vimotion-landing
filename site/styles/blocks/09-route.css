@@ -94,7 +94,7 @@
   .rt{padding:72px var(--m) 72px}
   .rt-head .h2{font-size:min(10.2vw,42px)}
   .rt-sub{margin-top:16px;font-size:16px}
-  .rt-trk{margin-top:40px;padding:0 0 96px 58px;--rw:24px}
+  .rt-trk{margin-top:40px;padding:0 0 0 58px;--rw:24px}
   .rt-dash{stroke-width:2;stroke-dasharray:9 11}
   .rt-done{stroke-width:2.5;stroke-dasharray:9 11}
     .rt-car{width:22px;height:46px}

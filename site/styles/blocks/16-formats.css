@@ -67,7 +67,6 @@
   .fm-main{padding:32px 32px 28px}.fm-stub{padding:26px 32px 32px}
   .fm-n{font-size:88px}.fm-for{font-size:20px}.fm-d{font-size:16px}
   .fm-ch{font-size:17px}.fm-ch b{font-size:32px}
-  .fm-stub .btn{font-size:13px;padding:0 18px}
 }
 @media (max-width:720px){
   .fm{padding:88px var(--m) 96px}
@@ -81,7 +80,6 @@
   .fm-for{font-size:19px;margin-top:16px}
   .fm-d{font-size:15.5px}
   .fm-ch{font-size:16px}.fm-ch b{font-size:28px}
-  .fm-stub .btn{height:58px;font-size:13px;padding:0 16px}
 }
 @media (prefers-reduced-motion:reduce){
   .fm.is-pre .fm-it{opacity:1;transform:none}

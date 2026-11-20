@@ -17,11 +17,29 @@
   function sm(t){t=cl(t,0,1);return t*t*(3-2*t)}
   function vh(){return window.vmVH||innerHeight}
 
+  /* 20.11 мобильная: на телефоне кнопка стоит после закреплённой сцены (в сцене только заголовок, картинка и пункт),
+     а если сцена всё равно не влезает (низкое окно, встроенный браузер Telegram), картинка уменьшается до 62%.
+     Так киты на телефоне всегда листаются скроллом, автосмена остаётся только для очень низких окон */
+  var btn=sec.querySelector('.wh-btn'),win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic'),after=null;
+  var mqM=matchMedia('(max-width:720px)');
+  function placeBtn(){
+    if(!btn)return;
+    if(mqM.matches){
+      if(!after){after=document.createElement('div');after.className='wh-after';run.parentNode.insertBefore(after,run.nextSibling)}
+      if(btn.parentNode!==after)after.appendChild(btn);
+    }else if(btn.parentNode!==win)win.appendChild(btn);
+  }
   var pin=false;
   function layout(){
-    sec.classList.remove('pin');
+    placeBtn();
+    sec.classList.remove('pin');pic.style.removeProperty('--whk');
     var hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
-    pin=sec.querySelector('.wh-in').offsetHeight+64<=vh()-hb;
+    var room=vh()-hb-(mqM.matches?24:64),h=win.offsetHeight;
+    pin=h<=room;
+    if(!pin&&mqM.matches){
+      var ph=pic.offsetHeight,k=(ph-(h-room))/ph;
+      if(k>=.62){pin=true;pic.style.setProperty('--whk',k.toFixed(3))}
+    }
     sec.classList.toggle('pin',pin);
   }
   function scrollTarget(){

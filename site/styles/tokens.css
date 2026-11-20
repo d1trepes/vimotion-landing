@@ -68,10 +68,14 @@ a,button{-webkit-tap-highlight-color:transparent}
 .btn-o.is-dark{color:var(--on-red);box-shadow:inset 0 0 0 1.5px rgba(246,238,230,.55)}
 .btn-o.is-dark:hover{background:var(--on-red);color:#111}
 .acts{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin-top:56px}
+/* 20.11: все кнопки одного размера. На компьютере одна ширина (--btn-w) и высота 64, кнопки внутри карточек
+   (форматы, вопросы) тянутся на ширину карточки. На телефоне любая кнопка на всю ширину сетки, высота 58 */
+:root{--btn-w:400px}
+.btn:not(.btn-line){min-width:var(--btn-w)}
 @media (max-width:720px){
   /* на телефоне основная кнопка сверху: в разметке она вторая (справа на компьютере) */
-  .acts{flex-direction:column-reverse;align-items:stretch;gap:12px;margin-top:36px}
-  .acts .btn{width:100%;height:58px;padding:0 20px;font-size:14px}
+  .acts{flex-direction:column-reverse;align-items:stretch;align-self:stretch;width:100%;gap:12px;margin-top:36px}
+  .btn:not(.btn-line){width:100%;min-width:0;height:58px;padding:0 16px;font-size:14px;letter-spacing:.06em}
 }
 
 @media (prefers-reduced-motion:reduce){

@@ -15,6 +15,8 @@ try{
   }
   btn.addEventListener('click',function(){set(!hdr.classList.contains('is-menu'))});
   nav.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+  /* тап по затемнению (псевдоэлемент шапки) закрывает меню */
+  hdr.addEventListener('click',function(e){if(e.target===hdr&&hdr.classList.contains('is-menu'))set(false)});
   addEventListener('keydown',function(e){if(e.key==='Escape'&&hdr.classList.contains('is-menu')){set(false);btn.focus()}});
   matchMedia('(min-width:1001px)').addEventListener('change',function(m){if(m.matches)set(false)});
 })();
@@ -1133,11 +1135,29 @@ try{
   function sm(t){t=cl(t,0,1);return t*t*(3-2*t)}
   function vh(){return window.vmVH||innerHeight}
 
+  /* 20.11 мобильная: на телефоне кнопка стоит после закреплённой сцены (в сцене только заголовок, картинка и пункт),
+     а если сцена всё равно не влезает (низкое окно, встроенный браузер Telegram), картинка уменьшается до 62%.
+     Так киты на телефоне всегда листаются скроллом, автосмена остаётся только для очень низких окон */
+  var btn=sec.querySelector('.wh-btn'),win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic'),after=null;
+  var mqM=matchMedia('(max-width:720px)');
+  function placeBtn(){
+    if(!btn)return;
+    if(mqM.matches){
+      if(!after){after=document.createElement('div');after.className='wh-after';run.parentNode.insertBefore(after,run.nextSibling)}
+      if(btn.parentNode!==after)after.appendChild(btn);
+    }else if(btn.parentNode!==win)win.appendChild(btn);
+  }
   var pin=false;
   function layout(){
-    sec.classList.remove('pin');
+    placeBtn();
+    sec.classList.remove('pin');pic.style.removeProperty('--whk');
     var hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
-    pin=sec.querySelector('.wh-in').offsetHeight+64<=vh()-hb;
+    var room=vh()-hb-(mqM.matches?24:64),h=win.offsetHeight;
+    pin=h<=room;
+    if(!pin&&mqM.matches){
+      var ph=pic.offsetHeight,k=(ph-(h-room))/ph;
+      if(k>=.62){pin=true;pic.style.setProperty('--whk',k.toFixed(3))}
+    }
     sec.classList.toggle('pin',pin);
   }
   function scrollTarget(){
@@ -1238,7 +1258,10 @@ try{
       var side=mob?(i%2?1:-1):(i%2?1:-1);
       pts.push([cx+side*amp,top+h*(mob?.5:.7)]);
     });
-    var endY=H-pad*.3;
+    var fs=mob?12:18;
+    /* 20.11: на телефоне трасса кончается вровень с последней карточкой: низ финишного флага = низ «Недели 7-8» */
+    var lr=st[st.length-1].getBoundingClientRect();
+    var endY=mob?lr.bottom-tr.top-fs*2:H-pad*.3;
     /* последний поворот возвращает на центр, дальше прямая к финишу */
     var lastY=pts[pts.length-1][1],midY=lastY+(endY-lastY)*.6;
     pts.push([cx,midY]);pts.push([cx,endY]);
@@ -1257,7 +1280,6 @@ try{
     var rw=mob?24:56;
     pinsG.textContent='';marksG.textContent='';pins=[];pinL=[];
     marksG.appendChild(el('rect',{x:cx-rw/2,y:-3,width:rw,height:mob?6:8,fill:'url(#rt-chk)'}));
-    var fs=mob?12:18;
     var fin=el('rect',{'class':'rt-fin',x:cx-rw*.7,y:endY,width:rw*1.4,height:fs*2,fill:'url(#rt-chk)'});
     marksG.appendChild(fin);
     pts.slice(1,-2).forEach(function(p){
@@ -1426,10 +1448,12 @@ try{
   var fine=window.matchMedia&&matchMedia('(hover:hover) and (pointer:fine)').matches;
   var cur=Math.max(0,items.findIndex(function(li){return li.classList.contains('is-on')}));
   var touched=false,timer=null,inView=false;
+  /* 20.11: на телефоне по умолчанию ничего не раскрыто и само не листается, раскрывает только касание */
+  if(!fine&&matchMedia('(max-width:720px)').matches){items[cur].classList.remove('is-on');cur=-1;touched=true}
 
   function open(i){
     if(i===cur||i<0||i>=items.length)return;
-    items[cur].classList.remove('is-on');
+    if(cur>-1)items[cur].classList.remove('is-on');
     cur=i;
     items[cur].classList.add('is-on');
   }
@@ -1445,7 +1469,7 @@ try{
       if(fine||i===cur){stop();return}  /* переход по ссылке на кейс */
       e.preventDefault();stop();open(i);
     });
-    b.addEventListener('focus',function(){if(!fine||b.matches(':focus-visible')){stop();open(i)}});
+    b.addEventListener('focus',function(){if(b.matches(':focus-visible')){stop();open(i)}});
     /* на компьютере раскрытие по наведению, но с небольшой задержкой: при проведении мышью через ряд полосы не дёргаются */
     if(fine){
       var t=null;
@@ -1535,7 +1559,13 @@ try{
     else{place();restart()}
   }
   tilt.addEventListener('pointerup',up);
-  tilt.addEventListener('pointercancel',function(){sx=null;hold=false;deck.classList.remove('is-paused');restart()});
+  /* 20.11: удержание (пауза) снимается при любой прокрутке и при отпускании пальца. Во встроенном браузере Telegram
+     касание, с которого начинается прокрутка, иногда не присылает ни pointerup, ни pointercancel, и колода
+     оставалась на паузе, пока по ней не тапнут */
+  function release(){if(sx===null&&!hold)return;sx=null;hold=false;deck.classList.remove('is-paused');restart()}
+  tilt.addEventListener('pointercancel',release);
+  tilt.addEventListener('touchend',function(){setTimeout(function(){if(sx!==null||hold)release()},60)},{passive:true});
+  tilt.addEventListener('touchcancel',release,{passive:true});
   deck.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){go(1)}else if(e.key==='ArrowLeft'){go(-1)}});
 
   // наклон за курсором
@@ -1554,11 +1584,16 @@ try{
   }
 
   place();
-  if('IntersectionObserver' in window){
-    new IntersectionObserver(function(es){
-      es.forEach(function(e){inView=e.isIntersecting;if(inView)restart();else{clearTimeout(timer);timer=null}});
-    },{threshold:.35}).observe(deck);
+  /* видимость считаем сами по прокрутке (надёжно и в Telegram): колода видна хотя бы на треть. Когда она появляется,
+     первая полоска запускается с нуля вместе с таймером, карточка сразу «идёт», как Reels, без касания */
+  function vis(){
+    var r=tilt.getBoundingClientRect(),h=window.innerHeight||document.documentElement.clientHeight;
+    var seen=Math.min(r.bottom,h)-Math.max(r.top,0),v=seen>r.height*.33;
+    if(v!==inView){inView=v;if(v){place();restart()}else{clearTimeout(timer);timer=null}}
   }
+  var vt=0;
+  addEventListener('scroll',function(){if(hold&&sx!==null&&!moved)release();if(!vt)vt=requestAnimationFrame(function(){vt=0;vis()})},{passive:true});
+  addEventListener('resize',vis);addEventListener('load',vis);vis();
   document.addEventListener('visibilitychange',function(){if(document.hidden){clearTimeout(timer);timer=null}else restart()});
 })();
 

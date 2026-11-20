@@ -13,6 +13,8 @@
   }
   btn.addEventListener('click',function(){set(!hdr.classList.contains('is-menu'))});
   nav.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+  /* тап по затемнению (псевдоэлемент шапки) закрывает меню */
+  hdr.addEventListener('click',function(e){if(e.target===hdr&&hdr.classList.contains('is-menu'))set(false)});
   addEventListener('keydown',function(e){if(e.key==='Escape'&&hdr.classList.contains('is-menu')){set(false);btn.focus()}});
   matchMedia('(min-width:1001px)').addEventListener('change',function(m){if(m.matches)set(false)});
 })();

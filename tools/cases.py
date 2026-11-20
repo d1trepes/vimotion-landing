@@ -11,7 +11,7 @@ site/case-<slug>.html      — отдельная страница на кажд
 """
 import os, re
 ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'site')
-V = '20261121f'
+V = '20261120m'
 N = '&nbsp;'
 UP = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg>'
 RT = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5"/></svg>'
@@ -75,7 +75,7 @@ def first(c):
 
 
 def srcset(base, sizes):
-    return (f'src="img/{base}-600.webp?v={V}" srcset="img/{base}-600.webp?v={V} 600w, img/{base}-900.webp?v={V} 900w" '
+    return (f'src="img/{base}-600.webp?v={V}" srcset="img/{base}-400.webp?v={V} 400w, img/{base}-600.webp?v={V} 600w, img/{base}-900.webp?v={V} 900w" '
             f'sizes="{sizes}"')
 
 
@@ -128,7 +128,7 @@ def faces(cur=None):
     out = ['<ul class="cs-faces">']
     for i, c in enumerate(C):
         on = ' class="is-cur" aria-current="page"' if cur == c['slug'] else ''
-        out.append(f'  <li style="--i:{i}"><a href="case-{c["slug"]}.html"{on}><img src="img/{first(c)}-600.webp?v={V}" width="600" height="800" alt="" decoding="async"><span>{c["name"]}</span></a></li>')
+        out.append(f'  <li style="--i:{i}"><a href="case-{c["slug"]}.html"{on}><img src="img/{first(c)}-400.webp?v={V}" srcset="img/{first(c)}-400.webp?v={V} 400w, img/{first(c)}-600.webp?v={V} 600w" sizes="(max-width:720px) 150px, 300px" width="600" height="800" alt=""{' fetchpriority="high"' if i < 4 else ''} decoding="async"><span>{c["name"]}</span></a></li>')
     out.append('</ul>')
     return '\n'.join(out)
 
