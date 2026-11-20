@@ -27,6 +27,8 @@
 .st-vn{position:absolute;left:50%;bottom:26px;transform:translateX(-50%) skewX(10deg);writing-mode:vertical-rl;rotate:180deg;
   font:900 24px/1 var(--cond);color:rgba(246,238,230,.85);white-space:nowrap;transition:opacity .3s}
 .st-it.is-on .st-vn{opacity:0}
+/* на компьютере полоса открывается кликом; при наведении закрытая полоса только подсвечивается */
+@media (hover:hover) and (pointer:fine){.st-it:not(.is-on) .st-b:hover .st-sk img{filter:grayscale(.4) brightness(.85) contrast(1.05);transition-duration:.4s}}
 
 /* плашка с именем, цитатой и суммой */
 .st-pl{position:absolute;left:44px;right:30px;bottom:26px;padding:20px 26px 20px 30px;background:rgba(14,14,14,.66);

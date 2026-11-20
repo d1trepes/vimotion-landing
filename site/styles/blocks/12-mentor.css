@@ -28,7 +28,7 @@
 
 /* табло */
 .mn-fx{position:relative;overflow:hidden;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
-  margin-top:64px;padding:44px 0;border-radius:20px;background:#121212;color:var(--on-red)}
+  margin-top:64px;padding:44px 0;border-radius:0;background:#121212;color:var(--on-red)}
 .mn-fx::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;opacity:.9;
   background:conic-gradient(#121212 25%,#F6EEE6 0 50%,#121212 0 75%,#F6EEE6 0) 0 0/10px 10px}
 .mn-fx li{padding:6px 48px;border-left:1px solid rgba(246,238,230,.14)}
@@ -70,7 +70,7 @@
   .mn-flag{width:24px;height:16px;background-size:8px 8px}
   .mn-car{top:72px;left:calc(8px + (100% - 20px)*.62);width:76px;height:76px;box-shadow:0 0 0 4px var(--cream),0 0 0 6px var(--red),0 14px 20px -8px rgba(40,10,0,.4)}
   .mn.is-wait .mn-car{left:8px}
-  .mn-fx{grid-template-columns:1fr;margin-top:28px;padding:22px 22px 8px;border-radius:16px}
+  .mn-fx{grid-template-columns:1fr;margin-top:28px;padding:22px 22px 8px;border-radius:0}
   .mn-fx::before{height:8px;background-size:8px 8px}
   .mn-fx li{display:grid;grid-template-columns:104px minmax(0,1fr);align-items:center;gap:16px;padding:16px 0;border-left:0;border-top:1px solid rgba(246,238,230,.14)}
   .mn-fx li:first-child{border-top:0}

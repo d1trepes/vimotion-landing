@@ -31,10 +31,10 @@
     rotate(calc(var(--rr) * var(--e,1))) rotateY(calc(var(--ry,0deg) * var(--e,1))) rotateX(calc(var(--rx,0deg) * var(--e,1)))
     translateZ(calc(var(--h)*40px)) scale(calc(.7 + .3*var(--e,1)));
   opacity:var(--o,1);transition:--h .45s var(--ease)}
-.vc-c img{width:100%;height:auto;background:#fff;border-radius:1.2cqw;
+.vc-c img{width:100%;height:auto;background:#fff;border-radius:0;
   box-shadow:0 0 0 1px rgba(17,17,17,.05),0 .1cqw .3cqw rgba(40,20,10,.06),0 .9cqw 2cqw rgba(70,40,25,.12),0 2.4cqw 5cqw rgba(70,40,25,.14);
   transition:box-shadow .45s var(--ease)}
-.vc-main img{border-radius:1.5cqw;
+.vc-main img{border-radius:0;
   box-shadow:0 0 0 1px rgba(17,17,17,.05),0 .2cqw .5cqw rgba(40,20,10,.08),0 1.6cqw 3.4cqw rgba(70,40,25,.18),0 4cqw 8cqw rgba(70,40,25,.2)}
 
 @media (hover:hover) and (pointer:fine){
@@ -51,8 +51,8 @@
   .vc-board{width:min(100cqw,calc(100cqh*.64));aspect-ratio:358/560}
   .vc-c{display:none}
   .vc-c.vc-mob{display:block;left:calc(var(--mx)*1%);top:calc(var(--my)*1%);width:calc(var(--mw)*1%);--rr:var(--mr)}
-  .vc-c img{border-radius:2.8cqw}
-  .vc-main img{border-radius:3.4cqw}
+  .vc-c img{border-radius:0}
+  .vc-main img{border-radius:0}
 }
 
 @media (prefers-reduced-motion:reduce){

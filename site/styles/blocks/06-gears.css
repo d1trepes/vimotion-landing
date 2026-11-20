@@ -30,7 +30,13 @@
 .gb-knob{position:absolute;left:80.8%;top:24.87%;width:8.4%;height:auto;transform:translate(-50%,-50%);
   filter:drop-shadow(5px 9px 7px rgba(40,20,8,.45)) drop-shadow(1px 2px 2px rgba(40,20,8,.35))}
 /* с JS ручка стоит в углу и едет по transform: без пересчёта раскладки и перерисовки тени на каждом кадре */
-.gb.js .gb-knob{left:0;top:0;transform:translate(var(--kx,0),var(--ky,0)) translate(-50%,-50%);will-change:transform}
+.gb.js .gb-knob{left:0;top:0;transform:translate(var(--kx,0),var(--ky,0)) translate(-50%,-50%);will-change:transform;
+  z-index:3;cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+/* ручку можно взять и переключить передачу самому (scripts/gears.js), подписи передач тоже кликаются */
+.gb.js .gb-knob:hover{filter:drop-shadow(6px 12px 9px rgba(40,20,8,.5)) drop-shadow(1px 2px 2px rgba(40,20,8,.35)) brightness(1.06)}
+.gb.is-grab .gb-knob{cursor:grabbing;filter:drop-shadow(8px 16px 12px rgba(40,20,8,.5)) drop-shadow(1px 2px 2px rgba(40,20,8,.35)) brightness(1.08)}
+.gb.is-grab{cursor:grabbing}
+.gb.js .gb-l{cursor:pointer}
 
 /* уровни */
 .gb-lv{list-style:none}

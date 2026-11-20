@@ -8,7 +8,7 @@
 
 /* обложка в стеклянной рамке: полупрозрачная, под ней размытая копия обложки, тонкий светлый кант, скругление.
    Рамка растёт целиком (вау-момент) */
-.les-frame{--p:1;position:relative;width:100%;max-width:1400px;padding:10px;border-radius:30px;
+.les-frame{--p:1;position:relative;width:100%;max-width:1400px;padding:10px;border-radius:0;
   /* стекло и размытая обложка нарисованы фоном самой рамки (размытие вшито в frame-bg.webp).
      Раньше это были ::before с filter:blur и ::after с backdrop-filter: в iOS и Telegram такие слои
      не обрезаются по скруглению, и углы оставались острыми. Фон элемента скругляется всегда */
@@ -18,7 +18,7 @@
   transform:scale(calc(.88 + .12*var(--p)));transform-origin:50% 0}
 /* обложка тоже фон карточки, а не <img>: ничего не надо обрезать, углы круглые в любом браузере.
    Картинка подключается классом bg, когда блок подъезжает к экрану (lesson.js), чтобы не грузить её сразу */
-.les-card{position:relative;width:100%;aspect-ratio:16/9;border-radius:21px;cursor:pointer;
+.les-card{position:relative;width:100%;aspect-ratio:16/9;border-radius:0;cursor:pointer;
   background:#2a0705 center/cover no-repeat;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
 .les-card.bg{background-image:url(../../img/lesson/cover-1200.webp?v=20261117z3)}
 @media (min-width:1181px) and (min-resolution:1.5dppx),(min-width:1500px){.les-card.bg{background-image:url(../../img/lesson/cover-1672.webp?v=20261117z3)}}
@@ -56,8 +56,8 @@
   .les-frame{margin-top:44px}
   .les-sub{font-size:19px}
   .les-btn{height:58px;padding:0 28px;font-size:14px}
-  .les-frame{padding:8px;border-radius:24px}
-  .les-card{border-radius:17px}
+  .les-frame{padding:8px;border-radius:0}
+  .les-card{border-radius:0}
   .les-play{width:76px;height:76px;margin:-38px 0 0 -38px}
   .tape{margin-top:96px}
   .tape span{font-size:34px}
@@ -66,8 +66,8 @@
   .les{padding-bottom:72px}
   .les-frame{margin-top:28px}
   .les-sub{margin-top:16px;font-size:17px}
-  .les-frame{padding:6px;border-radius:18px}
-  .les-card{border-radius:13px}
+  .les-frame{padding:6px;border-radius:0}
+  .les-card{border-radius:0}
   .les-btn{margin-top:28px;width:100%;height:58px}
   .les-play{width:60px;height:60px;margin:-30px 0 0 -30px}
   .tape{margin-top:72px;padding:14px 0 12px;transform:rotate(-3deg)}

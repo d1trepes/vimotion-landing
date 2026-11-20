@@ -1,5 +1,5 @@
 /* Блок 15. Колода сторис: автосмена каждые 4 с (пока блок на экране и курсор не держит карточку),
-   тап по левой трети назад, по остальному вперёд, свайп, стрелки-кнопки и клавиши ←/→.
+   тап по левой трети назад, по остальному вперёд, свайп и клавиши ←/→ (кнопки-стрелки убраны 20.11).
    На компьютере колода наклоняется за курсором и по ней бежит блик. prefers-reduced-motion: без автосмены и наклона. */
 (function(){
   'use strict';
@@ -55,8 +55,6 @@
   }
   tilt.addEventListener('pointerup',up);
   tilt.addEventListener('pointercancel',function(){sx=null;hold=false;deck.classList.remove('is-paused');restart()});
-  deck.querySelector('.au-prev').addEventListener('click',function(){go(-1)});
-  deck.querySelector('.au-next').addEventListener('click',function(){go(1)});
   deck.addEventListener('keydown',function(e){if(e.key==='ArrowRight'){go(1)}else if(e.key==='ArrowLeft'){go(-1)}});
 
   // наклон за курсором и блик

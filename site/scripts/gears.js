@@ -60,7 +60,42 @@
     place(s);mark();
     raf=s!==goal?requestAnimationFrame(tick):(last=0,0);
   }
-  function kick(){goal=target();if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  /* ручное управление: ручку можно взять и перетащить по прорезям, отпущенная встаёт в ближайшую передачу.
+     Подписи передач тоже кликаются. Пока посетитель сам держит передачу, скролл её не перебивает;
+     управление возвращается скроллу, когда он ушёл от точки, где отпустили ручку, на заметное расстояние */
+  var manual=false,anchor=0,drag=false;
+  function go(v){goal=v;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  function kick(){
+    if(drag)return;
+    var t=target();
+    if(manual){if(Math.abs(t-anchor)<260)return;manual=false}
+    go(t);
+  }
+  function project(cx,cy){
+    var r=knob.parentNode.getBoundingClientRect(),x=(cx-r.left)/r.width*W,y=(cy-r.top)/r.height*H,best=null;
+    for(var i=1;i<P.length;i++){
+      var ax=P[i-1][0],ay=P[i-1][1],dx=P[i][0]-ax,dy=P[i][1]-ay,L=dx*dx+dy*dy||1;
+      var k=Math.max(0,Math.min(1,((x-ax)*dx+(y-ay)*dy)/L)),px=ax+dx*k,py=ay+dy*k;
+      var d=Math.hypot(x-px,y-py),v=acc[i-1]+k*(acc[i]-acc[i-1]);
+      /* участки трассы, пройденные дважды, дают двух кандидатов: берём ближайший к текущему положению ручки */
+      if(!best||d<best.d-1||(Math.abs(d-best.d)<=1&&Math.abs(v-s)<Math.abs(best.v-s)))best={d:d,v:v};
+    }
+    return best.v;
+  }
+  function nearest(v){var b=0;for(var j=1;j<5;j++)if(Math.abs(GEAR[j]-v)<Math.abs(GEAR[b]-v))b=j;return GEAR[b]}
+  knob.addEventListener('pointerdown',function(e){
+    e.preventDefault();drag=true;manual=true;sec.classList.add('is-grab');
+    try{knob.setPointerCapture(e.pointerId)}catch(_){}
+    go(project(e.clientX,e.clientY));
+  });
+  knob.addEventListener('pointermove',function(e){if(drag)go(project(e.clientX,e.clientY))});
+  function release(){if(!drag)return;drag=false;sec.classList.remove('is-grab');anchor=target();go(nearest(goal))}
+  knob.addEventListener('pointerup',release);knob.addEventListener('pointercancel',release);
+  knob.addEventListener('dragstart',function(e){e.preventDefault()});
+  items.forEach(function(it,i){
+    var g=[0,1,2,3,4][i];
+    it.addEventListener('click',function(){manual=true;anchor=target();go(GEAR[g])});
+  });
 
   sec.classList.add('js');
   place(s);mark();
