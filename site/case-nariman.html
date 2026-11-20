@@ -34,7 +34,7 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)r.classList.add('anim
 </header>
 
 <!-- Переключатель кейсов: закреплён под шапкой с самого начала, переход сразу на страницу человека -->
-<nav class="cx-bar" aria-label="Кейсы учеников"><div class="cx-bar-in"><a class="cx-all" href="cases.html"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.5 8h-11M7 3.5 2.5 8 7 12.5"/></svg>Все кейсы</a><a href="case-alena.html">Алёна</a><a href="case-ivan.html">Иван</a><a href="case-veronika.html">Вероника</a><a href="case-gaiduk.html">Иван Гайдук</a><a href="case-nariman.html" class="is-cur" aria-current="page">Нариман</a><a href="case-nastya.html">Настя</a><a href="case-artem.html">Артём</a><a href="case-angelina-ostap.html">Ангелина и Остап</a></div></nav>
+<nav class="cx-bar" aria-label="Кейсы учеников"><div class="cx-bar-in"><a class="cx-all" href="cases.html">Все кейсы</a><a href="case-alena.html">Алёна</a><a href="case-ivan.html">Иван</a><a href="case-veronika.html">Вероника</a><a href="case-gaiduk.html">Иван Гайдук</a><a href="case-nariman.html" class="is-cur" aria-current="page">Нариман</a><a href="case-nastya.html">Настя</a><a href="case-artem.html">Артём</a><a href="case-angelina-ostap.html">Ангелина и Остап</a></div></nav>
 
 <main>
 
@@ -61,17 +61,16 @@ if(!matchMedia('(prefers-reduced-motion: reduce)').matches)r.classList.add('anim
   </div>
 </article>
 
-<!-- Кейс. Следующий -->
+<!-- Кейс. Следующий: карточка целиком ведёт на следующего, рядом «Все кейсы» (второстепенная слева, основная справа) -->
 <section class="cx-next" aria-label="Следующий кейс">
-  <a class="cx-next-card" href="case-nastya.html">
+  <div class="cx-next-card">
     <span class="cx-next-ph"><span class="ph-k"><img src="img/stories/nastya-600.webp?v=20261121c" srcset="img/stories/nastya-600.webp?v=20261121c 600w, img/stories/nastya-900.webp?v=20261121c 900w" sizes="(max-width:720px) 40vw, 280px" width="900" height="1200" alt="" loading="lazy" decoding="async"></span></span>
     <span class="cx-next-tx">
       <span class="cx-next-nm">Настя</span>
       <span class="cx-next-dq">«Вдруг не разберусь»</span>
-      <span class="btn btn-k"><span class="bt">Следующий кейс</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 8h11M9 3.5 13.5 8 9 12.5"/></svg></span>
+      <span class="cx-next-acts"><a class="btn btn-o" href="cases.html"><span class="bt">Все кейсы</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a><a class="btn btn-k cx-next-go" href="case-nastya.html"><span class="bt">Следующий кейс</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a></span>
     </span>
-  </a>
-  <div class="acts cx-next-acts"><a class="btn btn-o" href="cases.html"><span class="bt">Все кейсы</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a></div>
+  </div>
 </section>
 
 <!-- Блок 19. Финал -->

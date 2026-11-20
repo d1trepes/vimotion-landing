@@ -147,7 +147,7 @@ for i, c in enumerate(C):
       <span class="cc-nm">{c['name']}</span>
       {('<span class="cc-dq"><span class="st-line">' + c['doubt'] + '</span></span>') if c['doubt'] else ''}
       <span class="cc-res"><b>{c['res'][0]}</b>{lab}</span>
-      <span class="cc-go">Читать кейс{RT}</span>
+      <span class="cc-go">Читать кейс{UP}</span>
     </span>
   </a></li>''')
 
@@ -197,7 +197,7 @@ for i, c in enumerate(C):
 {hdr}
 
 <!-- Переключатель кейсов: закреплён под шапкой с самого начала, переход сразу на страницу человека -->
-<nav class="cx-bar" aria-label="Кейсы учеников"><div class="cx-bar-in"><a class="cx-all" href="cases.html">{LT}Все кейсы</a>{bar}</div></nav>
+<nav class="cx-bar" aria-label="Кейсы учеников"><div class="cx-bar-in"><a class="cx-all" href="cases.html">Все кейсы</a>{bar}</div></nav>
 
 <main>
 
@@ -224,17 +224,16 @@ for i, c in enumerate(C):
   </div>
 </article>
 
-<!-- Кейс. Следующий -->
+<!-- Кейс. Следующий: карточка целиком ведёт на следующего, рядом «Все кейсы» (второстепенная слева, основная справа) -->
 <section class="cx-next" aria-label="Следующий кейс">
-  <a class="cx-next-card" href="case-{nxt['slug']}.html">
+  <div class="cx-next-card">
     <span class="cx-next-ph{' cx-ph2' if isinstance(nxt['img'], tuple) else ''}">{photo(nxt, '(max-width:720px) 40vw, 280px', alt=False)}</span>
     <span class="cx-next-tx">
       <span class="cx-next-nm">{nxt['name']}</span>
       {('<span class="cx-next-dq">' + nxt['doubt'] + '</span>') if nxt['doubt'] else ''}
-      <span class="btn btn-k"><span class="bt">Следующий кейс</span>{RT}</span>
+      <span class="cx-next-acts"><a class="btn btn-o" href="cases.html"><span class="bt">Все кейсы</span>{UP}</a><a class="btn btn-k cx-next-go" href="case-{nxt['slug']}.html"><span class="bt">Следующий кейс</span>{UP}</a></span>
     </span>
-  </a>
-  <div class="acts cx-next-acts"><a class="btn btn-o" href="cases.html"><span class="bt">Все кейсы</span>{UP}</a></div>
+  </div>
 </section>
 
 {fin}
