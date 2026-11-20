@@ -156,8 +156,8 @@ html:not(.anim) .st-line{background-size:100% 3px}
 
 /* ---------- кейс: следующий ---------- */
 .cx-next{padding:0 var(--m) 128px}
-.cx-next-card{position:relative;max-width:980px;margin:0 auto;display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:56px;align-items:center;padding:36px 56px 36px 64px;
-  background:#F7F1EA;color:var(--ink);text-decoration:none;box-shadow:0 18px 40px -28px rgba(60,30,10,.4);transition:translate .5s var(--ease),box-shadow .5s}
+.cx-next-card{position:relative;max-width:980px;cursor:default;margin:0 auto;display:grid;grid-template-columns:minmax(0,240px) minmax(0,1fr);gap:56px;align-items:center;padding:36px 56px 36px 64px;
+  background:#F7F1EA;color:var(--ink);text-decoration:none;box-shadow:0 18px 40px -28px rgba(60,30,10,.4);}
 .cx-next-ph{display:block;aspect-ratio:3/4;transform:skewX(var(--sk))}
 .cx-next-ph>.ph-k{height:100%}
 .cx-next-ph img{filter:grayscale(1) contrast(.95);transition:filter .5s ease}
@@ -165,15 +165,10 @@ html:not(.anim) .st-line{background-size:100% 3px}
 .cx-next-nm{font:900 min(6vw,72px)/.95 var(--cond)}
 .cx-next-dq{margin-top:14px;font:500 18px/1.4 var(--text);color:var(--muted)}
 .cx-next-acts{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
-/* вся карточка ведёт на следующего человека (растянутая ссылка), «Все кейсы» лежит поверх */
-.cx-next-go::after{content:"";position:absolute;inset:0}
-.cx-next-acts .btn-o{position:relative;z-index:2}
+/* по просьбе клиента нажимаются только кнопки, сама карточка не ссылка */
 .cx-next-go:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
 @media (hover:hover) and (pointer:fine){
-  .cx-next-card:hover{translate:0 -6px;box-shadow:0 28px 50px -26px rgba(60,30,10,.5)}
-  .cx-next-card:hover .cx-next-ph img{filter:none}
-  .cx-next-card:hover .btn-k{background:#2c2c2c}
-  .cx-next-card:hover .cx-next-go svg{transform:translate(3px,-3px)}
+  .cx-next-card:has(.cx-next-go:hover) .cx-next-ph img{filter:none}
 }
 
 /* ---------- просмотр доказательства ---------- */
