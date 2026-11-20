@@ -1,0 +1,163 @@
+/* ViMotion: анкета (квиз). Только оформление в стиле лендинга.
+   Разметка, id и классы, на которые опирается скрипт в index.html, не менялись:
+   #stepLabel, #progressBar, #contactView, #questionView, #questionEyebrow, #questionText, #options,
+   .option / .is-selected / .is-pressed / .opt-in, .field / .is-invalid / .field-error, .view / .is-anim / .reveal, .cta, .back.
+   Вау-момент: прогресс-трасса. Ручка (красный шар, как в коробке передач) едет по трассе к шашечному флагу,
+   пройденная часть сплошная, впереди пунктир; номер шага на табло. */
+
+@font-face{font-family:"Fira XC";font-weight:900;font-display:swap;src:url(assets/fonts/fira-xc-900.woff2) format("woff2")}
+@font-face{font-family:"Anton";font-weight:400;font-display:swap;src:url(assets/fonts/anton-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:400;font-display:swap;src:url(assets/fonts/inter-cyrillic-400-normal.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Inter";font-weight:400;font-display:swap;src:url(assets/fonts/inter-latin-400-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-2199,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter";font-weight:500;font-display:swap;src:url(assets/fonts/inter-cyrillic-500-normal.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Inter";font-weight:500;font-display:swap;src:url(assets/fonts/inter-latin-500-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-2199,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:"Inter Tight";font-weight:700;font-display:swap;src:url(assets/fonts/inter-tight-cyrillic-700-normal.woff2) format("woff2");unicode-range:U+0301,U+0400-045F,U+0490-0491,U+04B0-04B1,U+2116}
+@font-face{font-family:"Inter Tight";font-weight:700;font-display:swap;src:url(assets/fonts/inter-tight-latin-700-normal.woff2) format("woff2");unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2190-2199,U+2212,U+2215,U+FEFF,U+FFFD}
+
+:root{
+  --cream:#EFE6DE;
+  --paper:#FBF7F2;
+  --cola:#9A0002;
+  --cola-hover:#7a0002;
+  --ink:#111111;
+  --muted:#6A625C;
+  --line:rgba(17,17,17,.14);
+  --on-dark:#F6EEE6;
+  --text:"Inter","Helvetica Neue",Arial,sans-serif;
+  --display:"Inter Tight","Helvetica Neue",Arial,sans-serif;
+  --cond:"Fira XC","Fira Sans Extra Condensed","Arial Narrow",sans-serif;
+  --logo:"Anton","Inter Tight",Arial,sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;min-height:100dvh;overflow-x:hidden;background:var(--cream)}
+body{font-family:var(--text);color:var(--ink);-webkit-font-smoothing:antialiased}
+button,input,textarea{-webkit-tap-highlight-color:transparent}
+
+/* большой вордмарк VIMOTION внизу экрана, едва заметный, как в подвале лендинга */
+body::after{content:"";position:fixed;left:50%;bottom:-4vw;z-index:0;width:min(1500px,120vw);aspect-ratio:800/236;translate:-50% 0;pointer-events:none;
+  background:rgba(17,17,17,.035);
+  -webkit-mask:url(assets/wordmark-800.webp) center/contain no-repeat;mask:url(assets/wordmark-800.webp) center/contain no-repeat}
+
+.shell{position:relative;z-index:1;min-height:100dvh;display:flex;flex-direction:column;padding:36px 32px 64px}
+
+/* шапка: вордмарк и табло шага */
+.top{width:min(760px,100%);margin:0 auto 34px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:inline-block;font:400 26px/1 var(--logo);letter-spacing:.01em;color:var(--ink);text-decoration:none;transform:skewX(-11deg);transition:color .25s}
+.brand:hover{color:var(--cola)}
+.step-label{padding:9px 12px 8px;background:var(--ink);color:var(--on-dark);font:700 12px/1 var(--display);letter-spacing:.12em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+
+/* трасса прогресса: пунктир впереди, сплошная пройденная часть, ручка на конце, шашечный флаг на финише */
+.progress{position:relative;width:min(760px,100%);margin:0 auto 64px;height:2px;overflow:visible;
+  background:repeating-linear-gradient(90deg,rgba(17,17,17,.3) 0 12px,transparent 12px 22px)}
+.progress::after{content:"";position:absolute;right:-2px;top:50%;width:30px;height:20px;translate:0 -50%;
+  background:conic-gradient(#111 25%,#fff 0 50%,#111 0 75%,#fff 0) 0 0/10px 10px;box-shadow:0 0 0 2px var(--cream)}
+.progress>span{position:relative;z-index:1;display:block;height:100%;width:0;background:var(--ink);transition:width .9s cubic-bezier(.45,0,.2,1)}
+.progress>span::after{content:"";position:absolute;right:-11px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#ff6a5c,var(--cola) 55%,#5a0001);
+  box-shadow:0 0 0 3px var(--cream),0 6px 12px rgba(90,0,1,.35)}
+
+.panel{width:min(760px,100%);margin:0 auto;flex:1;display:flex;flex-direction:column}
+
+/* «Контакты» и «Вопрос N» остаются в разметке (их заполняет скрипт), но визуально скрыты: на сайте нет надзаголовков,
+   номер шага уже на табло. Для читалок экрана текст доступен */
+.eyebrow{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+
+h1{font:900 clamp(44px,7vw,80px)/.94 var(--cond);letter-spacing:-.005em;margin-bottom:40px;text-wrap:balance}
+.question{font:900 clamp(32px,4.6vw,52px)/1.02 var(--cond);letter-spacing:-.005em;margin-bottom:32px;max-width:17em;text-wrap:balance}
+.question-hint{margin:-14px 0 22px;max-width:36em;font:400 18px/1.5 var(--text);color:var(--muted)}
+
+/* варианты ответа: острые плитки с номером */
+.options{display:flex;flex-direction:column;gap:10px;counter-reset:opt}
+.option{appearance:none;position:relative;display:flex;align-items:center;gap:20px;width:100%;min-height:68px;text-align:left;
+  border:1px solid var(--line);border-radius:0;background:var(--paper);color:var(--ink);padding:16px 22px;
+  font:500 18px/1.35 var(--text);cursor:pointer;counter-increment:opt;overflow:hidden;
+  transition:border-color .25s,background .25s,color .25s,transform .25s var(--ease)}
+.option::before{content:counter(opt,decimal-leading-zero);flex:none;width:2ch;font:900 26px/1 var(--cond);color:rgba(17,17,17,.28);transition:color .25s}
+.option::after{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--cola);transform:scaleY(0);transition:transform .35s var(--ease)}
+.option:hover{border-color:var(--ink);transform:translateX(4px)}
+.option:hover::before{color:var(--cola)}
+.option:hover::after{transform:none}
+.option:focus-visible{outline:2px solid var(--cola);outline-offset:3px}
+.option.is-selected{border-color:var(--ink);background:var(--ink);color:var(--on-dark)}
+.option.is-selected::before{color:var(--cola)}
+.option.is-selected::after{transform:none}
+.option.is-pressed{animation:opt-press .3s var(--ease)}
+@keyframes opt-press{0%{scale:1}45%{scale:.985}100%{scale:1}}
+.option.is-pressed.opt-in{animation:opt-press .3s var(--ease)}
+
+/* навигация */
+.nav{margin-top:36px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.back{appearance:none;border:0;background:transparent;color:var(--muted);font:700 13px/1 var(--display);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;padding:14px 0;transition:color .2s}
+.back:hover{color:var(--ink)}
+.back[hidden]{visibility:hidden}
+
+.cta{display:inline-flex;align-items:center;justify-content:center;gap:14px;height:64px;padding:0 34px;border:0;border-radius:0;
+  background:var(--cola);color:#fff;text-decoration:none;text-transform:uppercase;font:700 15px/1 var(--display);letter-spacing:.07em;
+  cursor:pointer;white-space:nowrap;transition:background .25s,opacity .25s}
+.cta:hover:not(:disabled){background:var(--cola-hover)}
+.cta:disabled{opacity:.32;cursor:not-allowed}
+.cta:focus-visible{outline:2px solid var(--cola);outline-offset:4px}
+.cta-arrow{font-size:17px;line-height:1;transition:transform .35s var(--ease)}
+.cta:hover:not(:disabled) .cta-arrow{transform:translate(3px,-3px)}
+
+/* поля */
+.form{display:grid;gap:18px}
+.field{display:grid;gap:8px}
+.field label{font:700 12px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.field input,.field textarea{width:100%;min-height:62px;border:1px solid var(--line);border-radius:0;background:var(--paper);color:var(--ink);
+  padding:0 20px;font:400 18px/1.4 var(--text);transition:border-color .2s,background .2s,box-shadow .2s}
+.field textarea{min-height:140px;padding:18px 20px;resize:vertical;line-height:1.5}
+.field input::placeholder,.field textarea::placeholder{color:rgba(17,17,17,.36)}
+.field input:hover,.field textarea:hover{border-color:rgba(17,17,17,.4)}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--ink);background:#fff;box-shadow:inset 4px 0 0 var(--cola)}
+.field.is-invalid input,.field.is-invalid textarea{border-color:var(--cola);background:#fff6f4}
+.field-error{font:500 14px/1.4 var(--text);color:var(--cola)}
+.field-error[hidden]{display:none}
+.hint{margin-top:14px;font:500 15px/1.45 var(--text);color:var(--muted)}
+.hint[hidden]{display:none}
+
+/* появление шага (классы ставит скрипт) */
+.view[hidden]{display:none}
+.view.is-anim>.reveal{animation:reveal-up .5s var(--ease) both}
+.view.is-anim>.reveal:nth-child(1){animation-delay:0ms}
+.view.is-anim>.reveal:nth-child(2){animation-name:title-cut;animation-delay:60ms;animation-duration:.6s}
+.view.is-anim>.reveal:nth-child(3){animation-delay:150ms}
+.view.is-anim>.reveal:nth-child(4){animation-delay:220ms}
+.view.is-anim .form .field{animation:reveal-up .45s var(--ease) both}
+.view.is-anim .form .field:nth-child(1){animation-delay:100ms}
+.view.is-anim .form .field:nth-child(2){animation-delay:160ms}
+.view.is-anim .form .field:nth-child(3){animation-delay:220ms}
+.view.is-anim .form .field:nth-child(4){animation-delay:280ms}
+.view.is-anim .form .nav{animation:reveal-up .45s var(--ease) 340ms both}
+.option.opt-in,.question-hint.opt-in,.field.opt-in{animation:reveal-up .45s var(--ease) calc(var(--i,0)*55ms) both}
+@keyframes reveal-up{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes title-cut{from{opacity:0;clip-path:inset(0 0 100% 0);transform:translateY(10px)}to{opacity:1;clip-path:inset(0 0 -10% 0);transform:none}}
+
+@media (max-width:640px){
+  .shell{padding:20px 16px 32px}
+  .top{margin-bottom:24px}
+  .brand{font-size:22px}
+  .step-label{font-size:11px;padding:8px 10px 7px}
+  .progress{margin-bottom:40px;width:calc(100% - 14px)}
+  .progress::after{width:24px;height:16px;background-size:8px 8px}
+  .progress>span::after{width:18px;height:18px;margin-top:-9px;right:-9px}
+  h1{margin-bottom:28px}
+  .question{margin-bottom:24px}
+  .question-hint{font-size:16px}
+  .option{min-height:60px;padding:14px 16px;gap:14px;font-size:16px}
+  .option::before{font-size:22px}
+  .option:hover{transform:none}
+  .field input,.field textarea{font-size:16px;min-height:56px;padding:0 16px}
+  .field textarea{padding:14px 16px}
+  .nav{flex-wrap:wrap;margin-top:28px}
+  .cta{width:100%;height:58px;padding:0 20px}
+  body::after{bottom:-2vw}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .progress>span,.option,.option::after,.cta,.cta-arrow,.field input,.field textarea{transition:none}
+  .view.is-anim>.reveal,.view.is-anim .form .field,.view.is-anim .form .nav,.option.opt-in,.question-hint.opt-in,.field.opt-in,.option.is-pressed{animation:none}
+  .option:hover{transform:none}
+}

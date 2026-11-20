@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Meta Pixel Code -->
+  <script>
+  !function(f,b,e,v,n,t,s)
+  {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+  n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+  if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+  n.queue=[];t=b.createElement(e);t.async=!0;
+  t.src=v;s=b.getElementsByTagName(e)[0];
+  s.parentNode.insertBefore(t,s)}(window, document,'script',
+  'https://connect.facebook.net/en_US/fbevents.js');
+  fbq('init', '1435661615372398');
+  fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+  src="https://www.facebook.com/tr?id=1435661615372398&ev=PageView&noscript=1"
+  /></noscript>
+  <!-- End Meta Pixel Code -->
+  <title>Анкета ViMotion</title>
+  <link rel="icon" href="../favicon.ico" sizes="any" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../favicon.png" type="image/png" sizes="180x180" />
+  <link rel="apple-touch-icon" href="../favicon.png" />
+  <!-- Дизайн в стиле лендинга (20.11.2026): стили и шрифты лежат рядом с анкетой, логика ниже не менялась -->
+  <link rel="preload" href="assets/fonts/fira-xc-900.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="assets/fonts/inter-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="quiz.css?v=20261120a" />
+</head>
+<body>
+  <div class="shell">
+    <div class="top">
+      <a class="brand" href="../">VIMOTION</a>
+      <p class="step-label" id="stepLabel">Шаг 1 из 10</p>
+    </div>
+
+    <div class="progress" aria-hidden="true">
+      <span id="progressBar"></span>
+    </div>
+
+    <main class="panel">
+      <section class="view" id="contactView">
+        <p class="eyebrow reveal">Контакты</p>
+        <h1 class="reveal">Оставь контакты</h1>
+
+        <form class="form" id="contactForm" novalidate>
+          <div class="field">
+            <label for="name">Имя</label>
+            <input id="name" name="name" type="text" autocomplete="given-name" autocapitalize="words" spellcheck="false" placeholder="Имя" maxlength="80" aria-describedby="nameError" required />
+            <p class="field-error" id="nameError" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="phone">Номер</label>
+            <input id="phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+375 25 555-12-12" maxlength="22" aria-describedby="phoneError" required />
+            <p class="field-error" id="phoneError" role="alert" hidden></p>
+          </div>
+          <div class="field">
+            <label for="telegram">Ник ТГ</label>
+            <input id="telegram" name="telegram" type="text" autocomplete="username" spellcheck="false" placeholder="@username" maxlength="64" aria-describedby="telegramError" required />
+            <p class="field-error" id="telegramError" role="alert" hidden></p>
+          </div>
+
+          <div class="nav">
+            <button class="cta" type="submit" id="contactNextBtn" style="margin-left: auto">
+              <span>К вопросам</span>
+              <span class="cta-arrow" aria-hidden="true">↗</span>
+            </button>
+          </div>
+          <p class="hint" id="formHint" hidden></p>
+        </form>
+      </section>
+
+      <section class="view" id="questionView" hidden>
+        <p class="eyebrow reveal" id="questionEyebrow">Вопрос 1</p>
+        <h2 class="question reveal" id="questionText"></h2>
+        <div class="options" id="options" role="listbox" aria-labelledby="questionText"></div>
+        <div class="nav reveal">
+          <button class="back" type="button" id="backBtn">← Назад</button>
+          <button class="cta" type="button" id="nextBtn" disabled>
+            <span>Дальше</span>
+            <span class="cta-arrow" aria-hidden="true">↗</span>
+          </button>
+        </div>
+        <p class="hint" id="submitHint" hidden></p>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const QUESTIONS = [
+      {
+        id: "interest",
+        text: "Хочешь развиваться в сфере контента?",
+        options: ["Да", "Нет"],
+      },
+      {
+        id: "city",
+        type: "text",
+        text: "Из какого ты города?",
+        placeholder: "Напиши город…",
+      },
+      {
+        id: "age",
+        text: "Сколько тебе полных лет?",
+        options: ["До 18", "18–25", "25–35", "35–45", "От 45"],
+      },
+      {
+        id: "occupation",
+        text: "Чем ты сейчас занимаешься?",
+        hint: "Выбери подходящий вариант ниже",
+        options: [
+          "Работаю официально",
+          "Развиваю своё дело",
+          "Учусь",
+          "Нахожусь в декрете",
+          "Не работаю",
+        ],
+      },
+      {
+        id: "content_exp",
+        text: "Был ли опыт в контенте?",
+        options: [
+          "Не было, но хочу начать!",
+          "Был, но не дошло до результатов",
+          "Активно зарабатываю на контенте",
+        ],
+      },
+      {
+        id: "income",
+        text: "Каков твой доход на данный момент?",
+        options: [
+          "Не зарабатываю",
+          "От 100$ до 250$",
+          "От 250$ до 500$",
+          "От 500$ до 1000$",
+          "От 1000$ до 3000$",
+          "3000$ и выше",
+        ],
+      },
+      {
+        id: "desired_income",
+        text: "На какой уровень заработка в месяц ты хотел(а) бы выйти после прохождения продукта?",
+        hint: "Амбициозная, но адекватная цель",
+        options: [
+          "250$–750$",
+          "750$–1.500$",
+          "1.500$–3.000$",
+          "Любой сумме буду рад(а)!",
+        ],
+      },
+      {
+        id: "dream",
+        type: "text",
+        text: "Расскажи, какая у тебя большая мечта? Что бы ты сделал(а) прямо сейчас, если бы у тебя были неограниченные финансы?",
+        hint: "Можно развёрнуто :)",
+        placeholder: "Напиши свой ответ…",
+      },
+      {
+        id: "invest",
+        text: "Если мы вместе поймём, что тебе реально подходит сфера видеоконтента и мы сможем помочь тебе дойти до первых денег – насколько комфортно будет вложиться в обучение?",
+        options: [
+          "Да, готов(а) рассмотреть",
+          "Сначала хочу узнать детали",
+          "Пока не рассматриваю вложения",
+        ],
+      },
+    ];
+
+    const NEXT_URL = "https://t.me/m/K9CLHtnSMGVi";
+    const TOTAL_STEPS = QUESTIONS.length + 1;
+    const CONTACT_STEP = 0;
+
+    const answers = {};
+    let contact = null;
+    let step = CONTACT_STEP; // 0 contacts, 1..n questions
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const stepLabel = document.getElementById("stepLabel");
+    const progressBar = document.getElementById("progressBar");
+    const contactView = document.getElementById("contactView");
+    const questionView = document.getElementById("questionView");
+    const questionEyebrow = document.getElementById("questionEyebrow");
+    const questionText = document.getElementById("questionText");
+    const optionsEl = document.getElementById("options");
+    const backBtn = document.getElementById("backBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const contactForm = document.getElementById("contactForm");
+    const nameInput = document.getElementById("name");
+    const phoneInput = document.getElementById("phone");
+    const telegramInput = document.getElementById("telegram");
+    const formHint = document.getElementById("formHint");
+    const submitHint = document.getElementById("submitHint");
+
+    const NAME_ALLOWED = /^[A-Za-zА-Яа-яЁёІіЇїЄєҒғҚқҮүҰұҢңӨөҺһʼ'’.\-\s]+$/;
+
+    function compactSpaces(value) {
+      return value.trim().replace(/\s+/g, " ");
+    }
+
+    function nameError(value) {
+      const name = compactSpaces(value);
+      if (!name) return "Укажи имя";
+      if (!NAME_ALLOWED.test(name)) return "Имя может содержать только буквы";
+      const letters = name.replace(/[-ʼ'’.\s]/g, "");
+      if (letters.length < 2) return "Имя — минимум 2 буквы";
+      return "";
+    }
+
+    function phoneDigits(value) {
+      let digits = value.replace(/\D/g, "");
+      // Локальный РФ/РБ без кода страны: 9XXXXXXXXX → +7…
+      if (digits.length === 10 && digits.startsWith("9")) digits = "7" + digits;
+      // РФ: 8XXXXXXXXXX → +7…
+      if (digits.length === 11 && digits.startsWith("8")) digits = "7" + digits.slice(1);
+      return digits;
+    }
+
+    function formatPhone(digits) {
+      if (digits.length === 11 && digits.startsWith("7")) {
+        return `+7 ${digits.slice(1, 4)} ${digits.slice(4, 7)}-${digits.slice(7, 9)}-${digits.slice(9)}`;
+      }
+      if (digits.length === 12 && digits.startsWith("375")) {
+        return `+375 ${digits.slice(3, 5)} ${digits.slice(5, 8)}-${digits.slice(8, 10)}-${digits.slice(10)}`;
+      }
+      return `+${digits}`;
+    }
+
+    function phoneError(value) {
+      const raw = value.trim();
+      if (!raw) return "Укажи номер телефона";
+      const digits = phoneDigits(raw);
+      // E.164: код страны + номер, всего 8–15 цифр, не с нуля
+      if (digits.length < 8 || digits.length > 15 || digits.startsWith("0")) {
+        return "Введи номер с кодом страны, например +375 25 555-12-12";
+      }
+      return "";
+    }
+
+    function telegramHandle(value) {
+      let handle = value.trim();
+      if (!handle) return "";
+      handle = handle.replace(/^https?:\/\/(t\.me|telegram\.me)\//i, "");
+      handle = handle.replace(/^t\.me\//i, "");
+      return handle.replace(/^@/, "");
+    }
+
+    function telegramError(value) {
+      const handle = telegramHandle(value);
+      if (!handle) return "Укажи ник в Telegram";
+      if (!/^[A-Za-z][A-Za-z0-9_]{4,31}$/.test(handle)) {
+        return "Ник должен быть вида @username";
+      }
+      return "";
+    }
+
+    function setFieldError(input, message) {
+      const field = input.closest(".field");
+      const errorEl = field.querySelector(".field-error");
+      const invalid = Boolean(message);
+      field.classList.toggle("is-invalid", invalid);
+      input.setAttribute("aria-invalid", invalid ? "true" : "false");
+      errorEl.hidden = !invalid;
+      errorEl.textContent = message;
+    }
+
+    function validateField(input) {
+      let message = "";
+      if (input === nameInput) message = nameError(input.value);
+      if (input === phoneInput) message = phoneError(input.value);
+      if (input === telegramInput) message = telegramError(input.value);
+      setFieldError(input, message);
+      return !message;
+    }
+
+    function validateContactForm() {
+      const fields = [nameInput, phoneInput, telegramInput];
+      let firstInvalid = null;
+      for (const input of fields) {
+        if (!validateField(input) && !firstInvalid) firstInvalid = input;
+      }
+      return firstInvalid;
+    }
+
+    function questionIndex() {
+      return step - 1;
+    }
+
+    function isLastQuestion() {
+      return questionIndex() === QUESTIONS.length - 1;
+    }
+
+    function setView(view) {
+      [contactView, questionView].forEach((el) => {
+        el.hidden = el !== view;
+        el.classList.remove("is-anim");
+      });
+      if (reduceMotion) return;
+      void view.offsetWidth;
+      view.classList.add("is-anim");
+    }
+
+    function updateChrome() {
+      const current = Math.min(step + 1, TOTAL_STEPS);
+      stepLabel.textContent = `Шаг ${current} из ${TOTAL_STEPS}`;
+      progressBar.style.width = `${(current / TOTAL_STEPS) * 100}%`;
+    }
+
+    function saveTextAnswer(q) {
+      const input = document.getElementById(`answer-${q.id}`);
+      answers[q.id] = (input?.value || "").trim();
+      return answers[q.id];
+    }
+
+    function renderQuestion() {
+      const qIndex = questionIndex();
+      const q = QUESTIONS[qIndex];
+      questionEyebrow.textContent = `Вопрос ${qIndex + 1}`;
+      questionText.textContent = q.text;
+      optionsEl.innerHTML = "";
+
+      if (q.hint) {
+        const hint = document.createElement("p");
+        hint.className = "question-hint" + (reduceMotion ? "" : " opt-in");
+        if (!reduceMotion) hint.style.setProperty("--i", "0");
+        hint.textContent = q.hint;
+        optionsEl.appendChild(hint);
+      }
+
+      if (q.type === "text") {
+        optionsEl.removeAttribute("role");
+        const field = document.createElement("div");
+        field.className = "field" + (reduceMotion ? "" : " opt-in");
+        if (!reduceMotion) field.style.setProperty("--i", q.hint ? "1" : "0");
+        const input = document.createElement("textarea");
+        input.id = `answer-${q.id}`;
+        input.rows = q.id === "city" ? 2 : 4;
+        input.placeholder = q.placeholder || "Напиши свой ответ…";
+        input.value = answers[q.id] || "";
+        input.addEventListener("input", () => {
+          answers[q.id] = input.value.trim();
+          nextBtn.disabled = !answers[q.id];
+        });
+        field.appendChild(input);
+        optionsEl.appendChild(field);
+      } else {
+        optionsEl.setAttribute("role", "listbox");
+        const optionOffset = q.hint ? 1 : 0;
+        q.options.forEach((label, index) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "option" + (answers[q.id] === label ? " is-selected" : "");
+          if (!reduceMotion) {
+            btn.classList.add("opt-in");
+            btn.style.setProperty("--i", String(index + optionOffset));
+          }
+          btn.setAttribute("role", "option");
+          btn.setAttribute("aria-selected", answers[q.id] === label ? "true" : "false");
+          btn.textContent = label;
+          btn.addEventListener("click", () => {
+            answers[q.id] = label;
+            Array.from(optionsEl.querySelectorAll(".option")).forEach((child) => {
+              const selected = child === btn;
+              child.classList.toggle("is-selected", selected);
+              child.setAttribute("aria-selected", selected ? "true" : "false");
+            });
+            if (!reduceMotion) {
+              btn.classList.remove("is-pressed");
+              void btn.offsetWidth;
+              btn.classList.add("is-pressed");
+            }
+            nextBtn.disabled = false;
+          });
+          optionsEl.appendChild(btn);
+        });
+      }
+
+      backBtn.hidden = false;
+      nextBtn.disabled = !answers[q.id];
+      nextBtn.querySelector("span:first-child").textContent = isLastQuestion()
+        ? "Отправить анкету"
+        : "Дальше";
+      nextBtn.querySelector(".cta-arrow").textContent = isLastQuestion() ? "→" : "↗";
+    }
+
+    function goTo(nextStep) {
+      step = nextStep;
+      updateChrome();
+
+      if (step === CONTACT_STEP) {
+        setView(contactView);
+        return;
+      }
+
+      setView(questionView);
+      renderQuestion();
+    }
+
+    async function submitQuiz() {
+      if (!contact) {
+        goTo(CONTACT_STEP);
+        formHint.hidden = false;
+        formHint.textContent = "Сначала оставь контакты.";
+        return;
+      }
+
+      submitHint.hidden = false;
+      submitHint.textContent = "Отправляю анкету…";
+
+      try {
+        const response = await fetch("../api/send-quiz.php", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            contact,
+            answers,
+            questions: QUESTIONS.map((q) => ({ id: q.id, text: q.text, hint: q.hint || "" })),
+            vid: typeof vmVid === "function" ? vmVid() : null,
+            variant: typeof window.vmGetAbVariant === "function" ? window.vmGetAbVariant() : (window.vmAbVariant || null),
+            utm: typeof window.vmUtms === "function" ? window.vmUtms() : {},
+            sourceUrl: typeof window.vmEntryUrl === "function" ? window.vmEntryUrl() : location.href,
+          }),
+        });
+
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok || !result?.ok) {
+          throw new Error(result?.error || "Не удалось отправить анкету");
+        }
+
+        if (typeof fbq === "function") {
+          const abVariant = typeof window.vmGetAbVariant === "function" ? window.vmGetAbVariant() : (window.vmAbVariant || null);
+          fbq("track", "Lead", { ab_variant: abVariant || "unknown" });
+          // Send the B conversion to the same Meta Pixel used on both landing variants.
+          if (abVariant === "B") {
+            fbq("init", "1638653997627566");
+            fbq("trackSingle", "1638653997627566", "Lead", { ab_variant: "B" });
+          }
+        }
+        if (typeof window.gtag === "function") {
+          window.gtag("event", "generate_lead", { ab_variant: (typeof window.vmGetAbVariant === "function" ? window.vmGetAbVariant() : window.vmAbVariant) || "unknown" });
+        }
+        window.setTimeout(() => {
+          window.location.href = NEXT_URL;
+        }, 300);
+      } catch (error) {
+        nextBtn.disabled = false;
+        submitHint.hidden = false;
+        submitHint.textContent =
+          error instanceof Error
+            ? error.message
+            : "Не удалось отправить. Попробуй ещё раз.";
+      }
+    }
+
+    backBtn.addEventListener("click", () => {
+      const q = QUESTIONS[questionIndex()];
+      if (q?.type === "text") saveTextAnswer(q);
+      goTo(step - 1);
+    });
+
+    nextBtn.addEventListener("click", async () => {
+      const q = QUESTIONS[questionIndex()];
+      if (q.type === "text") saveTextAnswer(q);
+      if (!answers[q.id]) return;
+
+      if (isLastQuestion()) {
+        nextBtn.disabled = true;
+        await submitQuiz();
+        return;
+      }
+
+      goTo(step + 1);
+    });
+
+    [nameInput, phoneInput, telegramInput].forEach((input) => {
+      input.addEventListener("blur", () => {
+        validateField(input);
+        if (input === phoneInput && !phoneError(input.value)) {
+          input.value = formatPhone(phoneDigits(input.value));
+        }
+      });
+      input.addEventListener("input", () => {
+        if (input.closest(".field").classList.contains("is-invalid")) {
+          validateField(input);
+        }
+      });
+    });
+
+    contactForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const invalid = validateContactForm();
+      if (invalid) {
+        invalid.focus();
+        return;
+      }
+
+      const digits = phoneDigits(phoneInput.value);
+      const handle = telegramHandle(telegramInput.value);
+      phoneInput.value = formatPhone(digits);
+      telegramInput.value = handle ? "@" + handle : "";
+
+      contact = {
+        name: compactSpaces(nameInput.value),
+        phone: formatPhone(digits),
+        telegram: handle ? "@" + handle : "",
+      };
+
+      formHint.hidden = true;
+      goTo(1);
+    });
+
+    updateChrome();
+    if (!reduceMotion) {
+      void contactView.offsetWidth;
+      contactView.classList.add("is-anim");
+    }
+  </script>
+  <script src="../assets/js/utm.js"></script>
+  <script src="../assets/js/track.js"></script>
+  <script>vmTrack("quiz_open");</script>
+  <script src="https://vimotion-program-production.up.railway.app/vm-analytics.js" defer></script>
+</body>
+</html>
