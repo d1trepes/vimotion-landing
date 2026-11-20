@@ -18,7 +18,7 @@
 /* сцена */
 .vc-run{position:relative;height:calc(var(--vhl,100vh)*1.9)}
 /* один экран: заголовок сверху, веер занимает всё оставшееся место (вписывается по ширине и высоте) */
-.vc-stage{position:sticky;top:0;height:var(--vhl,100svh);display:flex;flex-direction:column;padding:clamp(40px,calc(var(--vhl,100vh)*0.07),72px) 0 clamp(20px,calc(var(--vhl,100vh)*0.035),40px)}
+.vc-stage{position:sticky;top:var(--hb);height:var(--vhs);display:flex;flex-direction:column;padding:clamp(24px,calc(var(--vhl,100vh)*0.05),56px) 0 clamp(20px,calc(var(--vhl,100vh)*0.035),40px)}
 .vc-head{flex:none}
 .vc-area{flex:1;min-height:0;container-type:size;display:grid;place-items:center;perspective:1700px;margin-top:clamp(12px,calc(var(--vhl,100vh)*0.025),28px)}
 .vc-board{position:relative;container-type:inline-size;width:min(1328px,100cqw,calc(100cqh*2.075));aspect-ratio:1328/640;

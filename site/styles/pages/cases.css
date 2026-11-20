@@ -1,0 +1,178 @@
+/* Страница кейсов «Пьедестал ViMotion» (21.11, тексты из content/prototype.html, страница cases).
+   Каждый кейс по одной схеме: косое фото с плашкой (имя и сомнение на старте, как в блоке 14),
+   справа заголовок, табло с двумя цифрами, история, прямая речь и доказательства.
+   Сверху ряд косых полос с лицами (продолжение блоков 14 и 19), под шапкой закреплённая полоса с именами:
+   по ней можно перейти к любому кейсу, текущий подсвечен (scripts/cases.js).
+   Вау-момент: полосы с лицами въезжают по очереди; фото кейса при появлении «проявляется» из ч/б в цвет,
+   цифры табло зажигаются. При prefers-reduced-motion всё стоит на месте. */
+
+.pg-cases{--sk:-10deg}
+.pg-cases main{padding-top:var(--hb)}
+.hl{display:inline-block;white-space:nowrap;background:var(--red) var(--wave);background-size:auto,28px 9px;color:var(--on-red);padding:.03em .14em .07em;margin:.1em 0}
+
+/* ---------- шапка страницы ---------- */
+.cs-top{padding:88px var(--m) 96px;text-align:center}
+.cs-h{font:900 min(7vw,104px)/1 var(--cond);letter-spacing:-.005em;color:var(--ink)}
+.cs-sub{max-width:36em;margin:28px auto 0;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:pretty}
+
+.cs-faces{list-style:none;max-width:1240px;margin:64px auto 0;padding:0 40px;display:flex;gap:12px;height:340px}
+.cs-faces li{position:relative;flex:1 1 0;min-width:0;transform:skewX(var(--sk));transition:translate .5s var(--ease)}
+.cs-faces a{position:absolute;inset:0;display:block;overflow:hidden;background:#d9cec5;color:var(--on-red);text-decoration:none;backface-visibility:hidden}
+.cs-faces img{position:absolute;top:0;left:50%;width:300px;max-width:none;height:100%;object-fit:cover;object-position:50% 25%;
+  transform:translateX(-50%) skewX(10deg);filter:grayscale(1) contrast(.95);transition:filter .45s ease}
+.cs-faces a::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 55%,rgba(10,10,10,.7))}
+.cs-faces span{position:absolute;z-index:1;left:50%;bottom:20px;transform:translateX(-50%) skewX(10deg);writing-mode:vertical-rl;rotate:180deg;
+  font:900 22px/1 var(--cond);white-space:nowrap}
+.cs-faces a:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+@media (hover:hover) and (pointer:fine){
+  .cs-faces li:hover{translate:0 -10px}
+  .cs-faces li:hover img{filter:none}
+}
+.anim .cs-top:not(.is-in) .cs-faces li{opacity:0;translate:90px 0}
+.cs-top.is-in .cs-faces li{animation:cs-in .9s var(--ease) both;animation-delay:calc(var(--i)*70ms)}
+@keyframes cs-in{from{opacity:0;translate:90px 0}to{opacity:1;translate:0 0}}
+
+/* ---------- закреплённая полоса с именами ---------- */
+.cs-bar{position:sticky;top:var(--hb);z-index:60;background:rgba(239,230,222,.97);box-shadow:0 1px 0 rgba(17,17,17,.1),0 -1px 0 rgba(17,17,17,.1)}
+.cs-bar-in{max-width:1240px;margin:0 auto;display:flex;justify-content:center;gap:6px;padding:10px var(--m);overflow-x:auto;scrollbar-width:none}
+.cs-bar-in::-webkit-scrollbar{display:none}
+.cs-bar a{position:relative;flex:none;isolation:isolate;padding:10px 16px;font:600 15px/1 var(--display);color:var(--ink);text-decoration:none;white-space:nowrap;transition:color .3s}
+.cs-bar a::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--ink);transform:skewX(var(--sk)) scaleX(0);transform-origin:0 50%;transition:transform .45s var(--ease)}
+.cs-bar a:hover::before{transform:skewX(var(--sk)) scaleX(.06)}
+.cs-bar a.is-cur{color:var(--on-red)}
+.cs-bar a.is-cur::before{transform:skewX(var(--sk)) scaleX(1)}
+
+/* ---------- кейс ---------- */
+.cs-case{padding:72px var(--m) 112px;scroll-margin-top:56px} /* + scroll-padding-top под шапку */
+.cs-case+.cs-case{border-top:1px solid var(--line)}
+.cs-in{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:88px;align-items:start}
+.cs-case.is-flip .cs-media{order:2}
+
+.cs-media{position:sticky;top:calc(var(--hb) + 96px)}
+.cs-frame{position:relative;transform:skewX(var(--sk));max-width:430px;margin:0 auto}
+.cs-ph{position:relative;aspect-ratio:3/4;max-height:calc(var(--vhs,100vh) - 170px);overflow:hidden;background:#d9cec5}
+.cs-ph img{position:absolute;top:0;left:-15%;width:130%;max-width:none;height:100%;object-fit:cover;object-position:50% 25%;transform:skewX(10deg);
+  transition:filter 1.2s var(--ease)}
+.cs-ph2{display:grid;grid-template-columns:1fr 1fr;gap:10px;background:none}
+.cs-ph2>span{position:relative;display:block;overflow:hidden;background:#d9cec5}
+.cs-ph2 img{left:-30%;width:160%}
+.cs-pl{position:absolute;left:18px;right:18px;bottom:18px;padding:16px 22px;background:rgba(14,14,14,.72);color:var(--on-red)}
+.cs-pl>*{transform:skewX(10deg)}
+.cs-nm{font:900 28px/1 var(--cond)}
+.cs-dq{margin-top:8px;font:400 15px/1.35 var(--text);color:rgba(246,238,230,.7)}
+/* фото проявляется из ч/б в цвет, когда кейс доезжает до экрана */
+.cs-case.is-pre .cs-ph img{filter:grayscale(1) brightness(.85)}
+
+.cs-tx{position:relative;padding-top:8px}
+.cs-no{display:block;font:900 120px/.8 var(--cond);color:transparent;-webkit-text-stroke:1.5px rgba(17,17,17,.18);margin-bottom:28px}
+.cs-t{font:900 min(4.2vw,56px)/1.04 var(--cond);letter-spacing:-.005em;color:var(--ink);text-wrap:balance}
+
+/* табло: две цифры, как в блоке 12 */
+.cs-nums{list-style:none;position:relative;display:grid;grid-template-columns:1fr 1fr;margin-top:40px;background:#131313;color:var(--on-red);overflow:hidden}
+.cs-nums::before{content:"";position:absolute;left:0;right:0;top:0;height:8px;
+  background:repeating-conic-gradient(#f3ece4 0 25%,#111 0 50%) 0 0/16px 16px;opacity:.9}
+.cs-nums li{padding:36px 32px 30px;border-left:1px solid rgba(246,238,230,.14)}
+.cs-nums li:first-child{border-left:0}
+.cs-nums b{display:block;font:900 56px/.95 var(--cond);letter-spacing:-.01em;white-space:nowrap;transition:opacity .6s,translate .8s var(--ease)}
+.cs-nums span{display:block;margin-top:10px;font:400 15px/1.4 var(--text);color:rgba(246,238,230,.62)}
+.cs-case.is-pre .cs-nums b{opacity:0;translate:0 14px}
+.cs-nums li:nth-child(2) b{transition-delay:.12s}
+
+.cs-body{margin-top:40px}
+.cs-body p{font:400 19px/1.6 var(--text);color:#2b2724;max-width:34em}
+.cs-body p+p{margin-top:18px}
+
+.cs-q{position:relative;margin-top:40px;padding:4px 0 4px 34px}
+.cs-q::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--red);transform:skewX(var(--sk))}
+.cs-q p{font:600 26px/1.35 var(--display);color:var(--ink);text-wrap:pretty}
+.cs-q p::before{content:"«"}.cs-q p::after{content:"»"}
+
+.cs-ev{list-style:none;display:flex;flex-wrap:wrap;gap:16px;margin-top:40px}
+.cs-z{display:block;padding:0;border:0;background:#fff;cursor:zoom-in;box-shadow:0 0 0 1px var(--line),0 18px 40px -22px rgba(60,30,10,.45);transition:translate .45s var(--ease),box-shadow .45s}
+.cs-z img{height:240px;width:auto}
+.cs-z:hover{translate:0 -6px;box-shadow:0 0 0 1px var(--line),0 26px 50px -22px rgba(60,30,10,.55)}
+.cs-z:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+.cs-next{display:inline-flex;align-items:center;gap:12px;margin-top:48px;padding:14px 0;font:700 14px/1 var(--display);letter-spacing:.07em;text-transform:uppercase;
+  color:var(--ink);text-decoration:none;border-bottom:1.5px solid var(--ink)}
+.cs-next svg{width:16px;height:16px;transition:transform .35s var(--ease)}
+.cs-next:hover svg{transform:translateX(4px)}
+
+/* ---------- финал ---------- */
+.cs-fin{padding:136px var(--m) 144px;text-align:center;color:var(--on-red);
+  background:#131313 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.cs-fin-h{max-width:13em;margin:0 auto;font:900 min(4.45vw,64px)/1.02 var(--cond);text-wrap:balance}
+.cs-fin-s{max-width:30em;margin:28px auto 0;font:400 19px/1.5 var(--text);color:rgba(246,238,230,.66);text-wrap:pretty}
+.cs-fin .acts{margin-top:44px}
+
+/* ---------- просмотр доказательства ---------- */
+.cs-lb{position:fixed;inset:0;z-index:300;display:grid;place-items:center;padding:72px 24px 32px;background:rgba(10,10,10,.92);cursor:zoom-out;
+  opacity:0;transition:opacity .3s}
+.cs-lb.is-on{opacity:1}
+.cs-lb[hidden]{display:none}
+.cs-lb img{max-width:min(100%,720px);max-height:100%;width:auto;height:auto;object-fit:contain}
+.cs-lb-x{position:absolute;top:18px;right:18px;width:46px;height:46px;border:1.5px solid rgba(246,238,230,.6);background:none;cursor:pointer}
+.cs-lb-x i,.cs-lb-x i::after{position:absolute;left:50%;top:50%;width:18px;height:2px;margin:-1px 0 0 -9px;background:var(--on-red);transform:rotate(45deg)}
+.cs-lb-x i::after{content:"";left:0;top:0;margin:0;transform:rotate(90deg)}
+
+/* ---------- планшет ---------- */
+@media (max-width:1180px){
+  .cs-top{padding:72px var(--m) 80px}
+  .cs-faces{height:290px;padding:0 24px;gap:10px}
+  .cs-faces span{font-size:19px}
+  .cs-case{padding:96px var(--m)}
+  .cs-in{gap:56px}
+  .cs-frame{margin:0 24px}
+  .cs-no{font-size:96px}
+  .cs-nums b{font-size:46px}
+  .cs-nums li{padding:30px 24px 26px}
+  .cs-bar-in{justify-content:flex-start}
+}
+/* ---------- телефон и вертикальный планшет: колонка ---------- */
+@media (max-width:860px){
+  .cs-in{grid-template-columns:minmax(0,1fr);gap:40px}
+  .cs-media{position:relative;top:auto;max-width:440px;width:100%;margin:0 auto}
+  .cs-case.is-flip .cs-media{order:0}
+  .cs-ph{max-height:none}
+  .cs-t{font-size:min(8vw,46px)}
+}
+@media (max-width:720px){
+  .pg-cases{--sk:-6deg}
+  .cs-top{padding:48px var(--m) 56px}
+  .cs-h{font-size:min(13vw,60px)}
+  .cs-sub{font-size:16px;margin-top:18px}
+  /* лица: 4 в ряд, две строки */
+  .cs-faces{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));height:auto;gap:10px 8px;padding:0 10px;margin-top:40px}
+  .cs-faces li{aspect-ratio:3/4.6}
+  .cs-faces img{width:150px;transform:translateX(-50%) skewX(6deg)}
+  .cs-faces span{writing-mode:horizontal-tb;rotate:0deg;bottom:8px;font-size:13px;transform:translateX(-50%) skewX(6deg);white-space:normal;text-align:center;width:90%;line-height:1}
+  .cs-bar a{padding:9px 13px;font-size:14px}
+  .cs-case{padding:64px var(--m)}
+  .cs-media{padding:0 24px}
+  .cs-ph img{transform:skewX(6deg);left:-8%;width:116%}
+  .cs-pl{left:12px;right:12px;bottom:12px;padding:12px 16px}
+  .cs-pl>*{transform:skewX(6deg)}
+  .cs-nm{font-size:24px}.cs-dq{font-size:13px}
+  .cs-no{font-size:64px;margin-bottom:16px}
+  .cs-t{font-size:min(9vw,36px)}
+  .cs-nums{margin-top:28px}
+  .cs-nums li{padding:26px 16px 20px}
+  .cs-nums b{font-size:min(9vw,38px)}
+  .cs-nums span{font-size:13px}
+  .cs-body{margin-top:28px}
+  .cs-body p{font-size:16px}
+  .cs-q{margin-top:28px;padding-left:24px}
+  .cs-q::before{width:5px}
+  .cs-q p{font-size:20px}
+  .cs-ev{margin-top:28px;gap:12px}
+  .cs-z img{height:200px}
+  .cs-next{margin-top:36px;font-size:13px}
+  .cs-fin{padding:88px var(--m) 96px}
+  .cs-fin-h{font-size:min(10.2vw,42px)}
+  .cs-fin-s{font-size:16px;margin-top:20px}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .cs-top.is-pre .cs-faces li,.cs-case.is-pre .cs-nums b{opacity:1;translate:none}
+  .cs-case.is-pre .cs-ph img{filter:none}
+}

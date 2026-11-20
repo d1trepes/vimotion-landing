@@ -33,9 +33,14 @@
   --m:56px;
   /* ширина композиции первого экрана: всегда на всю ширину, поля --m одинаковые везде */
   --W:100vw;
+  /* высота закреплённой шапки и видимая под ней часть окна (для закреплённых сцен) */
+  --hb:68px;
+  --vhs:calc(var(--vhl,100svh) - var(--hb));
 }
 @media (max-width:1180px){:root{--m:32px}}
-@media (max-width:720px){:root{--m:16px}}
+@media (max-width:720px){:root{--m:16px;--hb:58px}}
+/* переходы по якорям не прячут заголовок блока под шапкой */
+html{scroll-padding-top:var(--hb)}
 
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
@@ -56,6 +61,18 @@ a,button{-webkit-tap-highlight-color:transparent}
 @supports (text-box:cap alphabetic){.btn .bt{padding-top:0;text-box:cap alphabetic}}
 .btn svg{width:16px;height:16px;flex:none;transition:transform .35s var(--ease)}
 .btn:hover svg{transform:translate(3px,-3px)}
+/* вторичные кнопки (21.11): ведут по сайту (к блокам, на кейсы), а не на анкету. Контур вместо заливки,
+   чтобы главной оставалась красная кнопка анкеты. Стрелка вниз — переход к блоку на этой же странице */
+.btn-o{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 1.5px currentColor}
+.btn-o:hover{background:var(--ink);color:var(--cream)}
+.btn-o.is-dark{color:var(--on-red);box-shadow:inset 0 0 0 1.5px rgba(246,238,230,.55)}
+.btn-o.is-dark:hover{background:var(--on-red);color:#111}
+.btn:hover svg.dn{transform:translateY(3px)}
+.acts{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin-top:56px}
+@media (max-width:720px){
+  .acts{flex-direction:column;align-items:stretch;gap:12px;margin-top:36px}
+  .acts .btn{width:100%;height:58px;padding:0 20px;font-size:14px}
+}
 
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}

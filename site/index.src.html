@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script>/* Высота окна, зафиксированная при загрузке (--vhl). На телефонах обновляется только при смене ширины (поворот) и в первые секунды после открытия:
+   встроенные браузеры (Telegram, Instagram) меняют высоту при скролле, из-за этого первый экран «прыгал» и увеличивался */
+(function(){var r=document.documentElement,w=-1,h=-1,t0=Date.now(),c=matchMedia('(pointer:coarse)').matches,V=window.visualViewport;
+/* Telegram открывает страницу в шторке, которая ещё разворачивается: первые 4 с (пока виден прелоадер) высоту обновляем, дальше фиксируем */
+function H(){var v=innerHeight;if(V&&V.height>0&&V.height<v)v=Math.round(V.height);return v}
+function s(){var v=H(),early=Date.now()-t0<4000&&(window.scrollY||0)<5;if(!c||innerWidth!==w||(early&&v!==h)){w=innerWidth;h=v;window.vmVH=v;r.style.setProperty('--vhl',v+'px');if(window.vmFit&&early)window.vmFit()}}
+s();addEventListener('resize',s);if(V)V.addEventListener('resize',s);addEventListener('load',s);setTimeout(s,600);setTimeout(s,1500);setTimeout(s,3000)})();</script>
+
+<script>/* Ссылка всегда открывается с первого экрана: браузер и Telegram не восстанавливают прошлую позицию прокрутки */
+(function(){if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)return;
+function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);addEventListener('pageshow',function(e){if(e.persisted)t()})})();</script>
+
+<title>ViMotion: из монтажёра в контент-креатора</title>
+<meta name="description" content="Менторская программа Валентина Сушнёва: из монтажёра в контент-креатора с доходом от $1 000 за 2 месяца">
+<meta name="theme-color" content="#EFE6DE">
+<link rel="icon" href="data:,">
+<script>
+  /* прелоадер и анимации только без prefers-reduced-motion */
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    document.documentElement.classList.add('is-loading');
+    /* страховка: если скрипты не загрузились, через 6 с всё равно показываем сайт */
+    setTimeout(function(){document.documentElement.classList.remove('is-loading')},6000);
+  }
+</script>
+<link rel="preload" href="fonts/fira-xc-900.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/inter-tight-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" type="image/webp" href="img/wordmark.webp" imagesrcset="img/wordmark-800.webp?v=20261117z6 800w, img/wordmark-1100.webp?v=20261117z6 1100w, img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
+<link rel="preload" as="image" type="image/webp" href="img/valentin-poster.webp?v=20261117z3" imagesrcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
+<!-- build:css -->
+<link rel="stylesheet" href="styles/fonts.css?v=20261121a">
+<link rel="stylesheet" href="styles/tokens.css?v=20261121a">
+<link rel="stylesheet" href="styles/preloader.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/00-header.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/01-hero.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/02-people.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/03-lesson.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/04-pain.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/05-nobloger.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/06-gears.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/07-vacancies.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/08-whales.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/09-route.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/11-results.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/12-mentor.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/14-stories.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/15-author.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/16-formats.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/17-fears.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/18-faq.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/19-final.css?v=20261121a">
+<link rel="stylesheet" href="styles/blocks/20-footer.css?v=20261121a">
+<!-- /build:css -->
+<!-- build:js -->
+<script src="scripts/menu.js?v=20261121a" defer></script>
+<script src="scripts/live-photo.js?v=20261121a" defer></script>
+<script src="scripts/nowidow.js?v=20261121a" defer></script>
+<script src="scripts/perf.js?v=20261121a" defer></script>
+<script src="scripts/hero-fit.js?v=20261121a" defer></script>
+<script src="scripts/hero.js?v=20261121a" defer></script>
+<script src="scripts/preloader.js?v=20261121a" defer></script>
+<script src="scripts/people.js?v=20261121a" defer></script>
+<script src="scripts/lesson.js?v=20261121a" defer></script>
+<script src="scripts/pain.js?v=20261121a" defer></script>
+<script src="scripts/nobloger.js?v=20261121a" defer></script>
+<script src="scripts/gears.js?v=20261121a" defer></script>
+<script src="scripts/vacancies.js?v=20261121a" defer></script>
+<script src="scripts/whales.js?v=20261121a" defer></script>
+<script src="scripts/route.js?v=20261121a" defer></script>
+<script src="scripts/results.js?v=20261121a" defer></script>
+<script src="scripts/mentor.js?v=20261121a" defer></script>
+<script src="scripts/stories.js?v=20261121a" defer></script>
+<script src="scripts/author.js?v=20261121a" defer></script>
+<script src="scripts/formats.js?v=20261121a" defer></script>
+<script src="scripts/fears.js?v=20261121a" defer></script>
+<script src="scripts/faq.js?v=20261121a" defer></script>
+<script src="scripts/final.js?v=20261121a" defer></script>
+<!-- /build:js -->
+</head>
+<body>
+
+<!-- Прелоадер: спидометр -->
+<div class="pre" id="pre" aria-hidden="true">
+  <div class="gauge">
+    <svg id="gsvg" viewBox="0 30 400 300"></svg>
+    <div class="g-brand">VIMOTION</div>
+  </div>
+</div>
+
+<header class="hdr">
+  <a class="logo" href="./">VIMOTION</a>
+  <nav class="nav" id="nav" aria-label="Разделы"><a href="#how">Как устроено</a><a href="#route">Программа</a><a href="cases.html">Кейсы</a><a href="#formats">Форматы</a><a href="#faq">Вопросы</a></nav>
+  <div class="hdr-right">
+    <a class="btn btn-line" href="https://vi-motion.pro/quiz/"><span class="bt">Заполнить анкету</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+    <button class="burger" type="button" aria-label="Меню" aria-expanded="false" aria-controls="nav"><i></i></button>
+  </div>
+</header>
+
+<main>
+
+<!-- Блок 1. Первый экран -->
+<section class="hero" id="hero">
+ <div class="hero-in">
+  <div class="wm"><img src="img/wordmark.webp" srcset="img/wordmark-800.webp?v=20261117z6 800w, img/wordmark-1100.webp?v=20261117z6 1100w, img/wordmark.webp 1600w" sizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)" alt="" width="1600" height="471"></div>
+
+  <div class="pt" id="pt">
+    <img src="img/valentin-poster.webp?v=20261117z3" srcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" sizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" alt="Валентин Сушнёв" width="744" height="690" fetchpriority="high">
+    <canvas id="live" width="744" height="690" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="copy">
+    <h1 class="h1">
+      <span class="ln">Из монтажёра</span>
+      <span class="ln"><span class="hl">в контент-креатора</span></span>
+      <span class="ln">с доходом от $1&nbsp;000 <span class="nw">за&nbsp;2&nbsp;месяца</span></span>
+    </h1>
+    <p class="sub">Даже если начинаешь с нуля. Снимаешь с телефона, ментор рядом на каждом шаге, а первых клиентов ищем&nbsp;вместе</p>
+  </div>
+
+  <ul class="stats">
+    <li class="stat"><div class="stat-num" data-to="400" data-suffix="+">400+</div><div class="stat-lbl">учеников за всё&nbsp;время</div></li>
+    <li class="stat"><div class="stat-num" data-to="7" data-unit="лет">7<small>лет</small></div><div class="stat-lbl">в контенте · своё&nbsp;агентство</div></li>
+    <li class="stat"><div class="stat-num" data-to="4.61" data-dec="2" data-suffix="/5">4,61/5</div><div class="stat-lbl">оценка учеников</div></li>
+  </ul>
+ </div>
+</section>
+
+<!-- Блок 2. Это сделали люди без опыта -->
+<section class="ppl" id="people" aria-labelledby="ppl-h">
+  <h2 class="h2" id="ppl-h">Это сделали люди <span class="hl">без опыта</span></h2>
+  <ul class="ppl-row">
+    <li class="pc"><a href="cases.html#alena"><span class="ph"><img src="img/people/alena.webp?v=20261117z3" srcset="img/people/alena-260.webp?v=20261121a 260w, img/people/alena.webp?v=20261117z3 480w" sizes="(max-width:720px) 46vw, (max-width:1180px) 22vw, 12vw" alt="Алёна" width="480" height="640" loading="lazy" fetchpriority="low" decoding="async"></span><span class="nm">Алёна</span><span class="cp"><span class="l">$3&nbsp;000 в месяц</span><span class="l">с ребёнком на руках</span></span></a></li>
+    <li class="pc"><a href="cases.html#ivan"><span class="ph"><img src="img/people/ivan.webp?v=20261117z3" srcset="img/people/ivan-260.webp?v=20261121a 260w, img/people/ivan.webp?v=20261117z3 480w" sizes="(max-width:720px) 46vw, (max-width:1180px) 22vw, 12vw" alt="Иван" width="480" height="640" loading="lazy" fetchpriority="low" decoding="async"></span><span class="nm">Иван</span><span class="cp"><span class="l">из Таиланда</span><span class="l">на $2&nbsp;000 в месяц</span></span></a></li>
+    <li class="pc"><a href="cases.html#veronika"><span class="ph"><img src="img/people/veronika.webp?v=20261117z3" srcset="img/people/veronika-260.webp?v=20261121a 260w, img/people/veronika.webp?v=20261117z3 480w" sizes="(max-width:720px) 46vw, (max-width:1180px) 22vw, 12vw" alt="Вероника" width="480" height="640" loading="lazy" fetchpriority="low" decoding="async"></span><span class="nm">Вероника</span><span class="cp"><span class="l">с завода</span><span class="l">к $4&nbsp;000+</span></span></a></li>
+    <li class="pc"><a href="cases.html#artem"><span class="ph"><img src="img/people/artem.webp?v=20261117z3" srcset="img/people/artem-260.webp?v=20261121a 260w, img/people/artem.webp?v=20261117z3 480w" sizes="(max-width:720px) 46vw, (max-width:1180px) 22vw, 12vw" alt="Артём" width="480" height="640" loading="lazy" fetchpriority="low" decoding="async"></span><span class="nm">Артём</span><span class="cp"><span class="l">24 своих</span><span class="l">YouTube-канала</span></span></a></li>
+    <li class="pc"><a href="cases.html#gaiduk"><span class="ph"><img src="img/people/gaiduk.webp?v=20261117z3" srcset="img/people/gaiduk-260.webp?v=20261121a 260w, img/people/gaiduk.webp?v=20261117z3 480w" sizes="(max-width:720px) 46vw, (max-width:1180px) 22vw, 12vw" alt="Иван Гайдук" width="480" height="640" loading="lazy" fetchpriority="low" decoding="async"></span><span class="nm">Иван Гайдук</span><span class="cp"><span class="l">от оператора до</span><span class="l">партнёра агентства</span></span></a></li>
+    <li class="pc"><a href="cases.html#nastya"><span class="ph"><img src="img/people/nastya.webp?v=20261117z3" srcset="img/people/nastya-260.webp?v=20261121a 260w, img/people/nastya.webp?v=20261117z3 480w" sizes="(max-width:720px) 46vw, (max-width:1180px) 22vw, 12vw" alt="Настя" width="480" height="640" loading="lazy" fetchpriority="low" decoding="async"></span><span class="nm">Настя</span><span class="cp"><span class="l">$500 ещё</span><span class="l">на обучении</span></span></a></li>
+    <li class="pc pc-2"><a href="cases.html#reality"><span class="ph"><img src="img/people/angelina.webp?v=20261117z3" srcset="img/people/angelina-260.webp?v=20261121a 260w, img/people/angelina.webp?v=20261117z3 480w" alt="Ангелина" width="480" height="640" sizes="(max-width:720px) 22vw, 12vw" loading="lazy" fetchpriority="low" decoding="async"><img src="img/people/ostap.webp?v=20261117z3" srcset="img/people/ostap-260.webp?v=20261121a 260w, img/people/ostap.webp?v=20261117z3 480w" alt="Остап" width="480" height="640" sizes="(max-width:720px) 22vw, 12vw" loading="lazy" fetchpriority="low" decoding="async"></span><span class="nm">Ангелина и Остап</span><span class="cp"><span class="l">~$2&nbsp;000</span><span class="l">за 10 дней</span></span></a></li>
+  </ul>
+  <div class="acts ppl-acts"><a class="btn btn-o" href="cases.html"><span class="bt">Смотреть все кейсы</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a></div>
+</section>
+
+<!-- Блок 3. Видео + бегущая строка -->
+<section class="les" id="lesson" aria-labelledby="les-h">
+  <div class="les-in">
+    <h2 class="h2 les-h" id="les-h">Мои <span class="hl">7 лет</span> в контенте в одном уроке</h2>
+    <p class="les-sub">Куда идти новичку, за что платят и где взять первого клиента, если нет ни опыта, ни&nbsp;портфолио</p>
+    <div class="les-frame"><div class="les-card" id="les-card" data-src="https://vi-motion.pro/assets/video/vsl.mp4" data-poster="img/lesson/cover-1200.webp?v=20261117z3">
+      <span class="vh">Видео-урок Валентина: контент-креатор, $1000 за 2 месяца</span>
+      <button class="les-play" type="button" aria-label="Смотреть урок"><svg viewBox="0 0 24 24" aria-hidden="true"><polygon points="9.4,7.95 16.4,12 9.4,16.05" fill="currentColor" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></button>
+    </div></div>
+    <div class="acts les-acts"><a class="btn btn-red" href="https://vi-motion.pro/quiz/"><span class="bt">Хочу на разбор</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a><a class="btn btn-o" href="#how"><span class="bt">Как устроена программа</span><svg class="dn" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v11M3.5 9l4.5 4.5 4.5-4.5"/></svg></a></div>
+  </div>
+  <div class="tape" role="img" aria-label="Форматы: Reels, Shorts, TikTok, YouTube, реклама, креативы, сценарии">
+    <div class="tape-track" aria-hidden="true">
+      <div class="tape-run"><span>Reels</span><span>Shorts</span><span>TikTok</span><span>YouTube</span><span>реклама</span><span>креативы</span><span>сценарии</span><span>Reels</span><span>Shorts</span><span>TikTok</span><span>YouTube</span><span>реклама</span><span>креативы</span><span>сценарии</span></div>
+      <div class="tape-run"><span>Reels</span><span>Shorts</span><span>TikTok</span><span>YouTube</span><span>реклама</span><span>креативы</span><span>сценарии</span><span>Reels</span><span>Shorts</span><span>TikTok</span><span>YouTube</span><span>реклама</span><span>креативы</span><span>сценарии</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 4. Боль + мысль Валентина -->
+<section class="pain" id="pain" aria-labelledby="pain-h">
+  <h2 class="h2 pain-h" id="pain-h"><span>Хочется большего,</span> <span>а ощущение, что жизнь проходит <span class="hl">мимо</span></span></h2>
+  <ol class="pain-q">
+    <li>«Работаю всё больше, а денег столько же»</li>
+    <li>«Ребёнка вижу только по выходным»</li>
+    <li>«Пробовал крипту, курсы, свои каналы. Опять не то»</li>
+    <li>«Близкие говорят: сиди и не высовывайся»</li>
+  </ol>
+  <div class="story">
+    <div class="board" id="board">
+      <figure class="pin pin-1">
+        <img class="pin-ph" src="img/story/mom-sh-960.webp?v=20261117z6" srcset="img/story/mom-sh-480.webp?v=20261117z6 580w, img/story/mom-sh-960.webp?v=20261117z6 1160w" sizes="(max-width:900px) 75vw, 37vw" alt="Валентин с мамой" width="1160" height="1400" loading="lazy" decoding="async">
+        <figcaption>мы с мамой, когда мне было 14</figcaption>
+      </figure>
+      <figure class="pin pin-2">
+        <img class="pin-ph" src="img/story/pc-sh-960.webp?v=20261117z6" srcset="img/story/pc-sh-480.webp?v=20261117z6 580w, img/story/pc-sh-960.webp?v=20261117z6 1160w" sizes="(max-width:900px) 75vw, 37vw" alt="Мамин компьютер в Орше" width="1160" height="920" loading="lazy" decoding="async">
+        <figcaption>Орша, мамин компьютер</figcaption>
+      </figure>
+      <figure class="pin pin-3">
+        <img class="pin-ph" src="img/story/me-sh-960.webp?v=20261117z6" srcset="img/story/me-sh-480.webp?v=20261117z6 580w, img/story/me-sh-960.webp?v=20261117z6 1160w" sizes="(max-width:900px) 75vw, 37vw" alt="Валентин в начале пути" width="1160" height="1160" loading="lazy" decoding="async">
+        <figcaption>так я выглядел, когда начинал</figcaption>
+      </figure>
+    </div>
+    <div class="letter">
+      <p class="letter-t">Мне было 14, когда мама сказала: <mark class="mk">«Сынок, большие деньги не для таких, как мы»</mark>. Я закрылся в комнате и пообещал себе, что не остановлюсь, пока не получится. Через год у меня была серебряная кнопка YouTube</p>
+      <p class="letter-s">Валентин Сушнёв</p>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 5. Без блогерства -->
+<section class="nob" id="nobl" aria-labelledby="nob-h">
+  <div class="nob-wm" aria-hidden="true"><img src="img/wordmark-1100.webp?v=20261117z6" alt="" width="1600" height="471" loading="lazy" decoding="async"></div>
+  <div class="nob-in">
+    <h2 class="h2 nob-h" id="nob-h">Не нужно светить <span class="hl">лицом</span> и собирать миллионы подписчиков</h2>
+    <ol class="nob-st">
+      <li class="nob-c"><span class="nob-n" aria-hidden="true">01</span><h3 class="nob-t">Аудитория уже есть у бизнеса</h3><p class="nob-p">Кофейне, стоматологии и эксперту нужны ролики каждую неделю. Их делаешь ты</p></li>
+      <li class="nob-c"><span class="nob-n" aria-hidden="true">02</span><h3 class="nob-t">Ты за кадром</h3><p class="nob-p">В кадре продукт или эксперт, а ты отвечаешь за то, чтобы ролик продавал</p></li>
+      <li class="nob-c"><span class="nob-n" aria-hidden="true">03</span><h3 class="nob-t">Доход растёт с каждым клиентом</h3><p class="nob-p">Один бизнес платит <b>$200-1&nbsp;000</b> в месяц. Взял второго, и доход удвоился</p></li>
+    </ol>
+  </div>
+</section>
+
+<!-- Блок 6. Монтажёр и креатор (лестница дохода) -->
+<section class="gb" id="ladder" aria-labelledby="gb-h">
+  <h2 class="h2 gb-h" id="gb-h"><span>Монтажёру платят за ролик,</span> <span>креатору <span class="hl">за результат</span></span></h2>
+  <p class="gb-sub">Клиенту нужен не красивый ролик, а ролик, который приводит людей. Чем больше задач ты берёшь на себя, тем выше чек</p>
+  <div class="gb-run">
+    <div class="gb-stage">
+      <div class="gb-board">
+        <div class="gb-plate">
+          <img class="gb-gate" src="img/gear/gate-1100.webp?v=20261117z3" srcset="img/gear/gate-760.webp?v=20261117z3 760w, img/gear/gate-1100.webp?v=20261117z3 1100w, img/gear/gate-1672.webp?v=20261117z3 1672w" sizes="(max-width:760px) 100vw, min(1000px, 90vw)" alt="" width="1672" height="941" loading="lazy" decoding="async">
+          <svg class="gb-trail" viewBox="0 0 1672 941" preserveAspectRatio="none" aria-hidden="true">
+            <path class="gl" d="M303.5 234V684V517Q303.5 461 359.5 461H772Q828 461 828 405V234V684V517Q828 461 884 461H1295Q1351 461 1351 405V234"/>
+            <path class="co" d="M303.5 234V684V517Q303.5 461 359.5 461H772Q828 461 828 405V234V684V517Q828 461 884 461H1295Q1351 461 1351 405V234"/>
+          </svg>
+          <img class="gb-knob" src="img/gear/knob-160.webp?v=20261117z3" srcset="img/gear/knob-160.webp?v=20261117z3 160w, img/gear/knob-256.webp?v=20261117z3 256w" sizes="80px" alt="" width="256" height="256" loading="lazy" decoding="async">
+        </div>
+        <ol class="gb-lv">
+          <li class="gb-l t" style="--x:18.15%"><span class="gb-a">$10</span><span class="gb-p">за ролик</span><span class="gb-d">Склеиваешь то, что прислали</span></li>
+          <li class="gb-l b" style="--x:18.15%"><span class="gb-a">$100-300</span><span class="gb-p">в месяц</span><span class="gb-d">Монтаж готовых исходников</span></li>
+          <li class="gb-l t" style="--x:49.52%"><span class="gb-a">$300-500</span><span class="gb-p">в месяц</span><span class="gb-d">Монтаж и сценарии</span></li>
+          <li class="gb-l b" style="--x:49.52%"><span class="gb-a">$500-1&nbsp;000</span><span class="gb-p">в месяц</span><span class="gb-d">Идеи, съёмка и монтаж</span></li>
+          <li class="gb-l t" style="--x:80.8%"><span class="gb-a">$1&nbsp;000+</span><span class="gb-p">в месяц</span><span class="gb-d">Весь контент клиента и своя команда</span></li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 7. Вакансии -->
+<section class="vc" id="vacancies" aria-labelledby="vc-h">
+  <div class="vc-run">
+    <div class="vc-stage">
+      <div class="vc-head">
+      <h2 class="h2 vc-h" id="vc-h"><span>Пока ты думаешь, эти вакансии</span> <span class="hl">уже кто-то закрывает</span></h2>
+      <p class="vc-sub">Мы нашли их за 10 минут. На каждую приходит около 30 откликов, и почти все звучат как «Здравствуйте, нужен монтаж?». С правильным сообщением ответят именно тебе</p>
+      </div>
+      <div class="vc-area">
+      <div class="vc-board">
+        <ul class="vc-cards">
+          <li class="vc-c" style="--x:49;--y:15;--w:28;--r:2deg;--rx:0deg;--ry:0deg;--z:2"><img src="img/vac/v04.webp?v=20261117z3" srcset="img/vac/v04-400.webp?v=20261121a 400w, img/vac/v04.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия: контент-креатор, 40 000-300 000 ₽ в месяц" width="720" height="222" loading="lazy" decoding="async"></li>
+          <li class="vc-c vc-mob" style="--x:22;--y:17;--w:27;--r:-4deg;--rx:4deg;--ry:12deg;--z:3;--mx:32;--my:18;--mw:64;--mr:-4deg"><img src="img/vac/v01.webp?v=20261117z3" srcset="img/vac/v01-400.webp?v=20261121a 400w, img/vac/v01.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия: UGC-креатор, до 400 000 ₽ в месяц" width="720" height="301" loading="lazy" decoding="async"></li>
+          <li class="vc-c vc-mob" style="--x:77;--y:17;--w:24;--r:4deg;--rx:5deg;--ry:-12deg;--z:3;--mx:72;--my:22;--mw:54;--mr:4deg"><img src="img/vac/v08.webp?v=20261117z3" srcset="img/vac/v08-400.webp?v=20261121a 400w, img/vac/v08.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Пост в Threads: ищу монтажёра для рилс сразу для двух аккаунтов" width="720" height="432" loading="lazy" decoding="async"></li>
+          <li class="vc-c vc-mob" style="--x:20;--y:40;--w:27;--r:-3deg;--rx:0deg;--ry:0deg;--z:5;--mx:25;--my:32;--mw:54;--mr:-3deg"><img src="img/vac/v06.webp?v=20261117z3" srcset="img/vac/v06-400.webp?v=20261121a 400w, img/vac/v06.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Пост в Threads: ищу начинающего монтажёра к себе в команду" width="720" height="281" loading="lazy" decoding="async"></li>
+          <li class="vc-c" style="--x:81;--y:42;--w:26;--r:3deg;--rx:3deg;--ry:-13deg;--z:5"><img src="img/vac/v07.webp?v=20261117z3" srcset="img/vac/v07-400.webp?v=20261121a 400w, img/vac/v07.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия: Content Creator, до 2 250 $ в месяц" width="720" height="299" loading="lazy" decoding="async"></li>
+          <li class="vc-c vc-mob" style="--x:19;--y:64;--w:26;--r:-2deg;--rx:-3deg;--ry:12deg;--z:6;--mx:74;--my:71;--mw:54;--mr:-3deg"><img src="img/vac/v14.webp?v=20261117z3" srcset="img/vac/v14-400.webp?v=20261121a 400w, img/vac/v14.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия: контент-креатор, от 60 000 ₽ в месяц" width="720" height="308" loading="lazy" decoding="async"></li>
+          <li class="vc-c" style="--x:82;--y:60;--w:27;--r:2deg;--rx:0deg;--ry:0deg;--z:6"><img src="img/vac/v09.webp?v=20261117z3" srcset="img/vac/v09-400.webp?v=20261121a 400w, img/vac/v09.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Пост в Threads: ищу монтажёра для рилсиков" width="720" height="155" loading="lazy" decoding="async"></li>
+          <li class="vc-c" style="--x:9;--y:82;--w:16;--r:-5deg;--rx:0deg;--ry:0deg;--z:4"><img src="img/vac/v12.webp?v=20261117z3" srcset="img/vac/v12-400.webp?v=20261121a 400w, img/vac/v12.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия в Telegram: видеомонтажёр для YouTube-канала" width="720" height="626" loading="lazy" decoding="async"></li>
+          <li class="vc-c vc-mob" style="--x:31;--y:83;--w:25;--r:3deg;--rx:-5deg;--ry:9deg;--z:7;--mx:28;--my:76;--mw:58;--mr:3deg"><img src="img/vac/v02.webp?v=20261117z3" srcset="img/vac/v02-400.webp?v=20261121a 400w, img/vac/v02.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия: UGC-креатор, 1 500-6 000 Br в месяц" width="720" height="362" loading="lazy" decoding="async"></li>
+          <li class="vc-c" style="--x:51;--y:79;--w:21;--r:-2deg;--rx:0deg;--ry:0deg;--z:8"><img src="img/vac/v11.webp?v=20261117z3" srcset="img/vac/v11-400.webp?v=20261121a 400w, img/vac/v11.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Пост в Threads: ищу контент-мейкера для артиста" width="720" height="502" loading="lazy" decoding="async"></li>
+          <li class="vc-c vc-mob" style="--x:70;--y:79;--w:27;--r:-3deg;--rx:-4deg;--ry:-9deg;--z:7;--mx:60;--my:89;--mw:62;--mr:2deg"><img src="img/vac/v03.webp?v=20261117z3" srcset="img/vac/v03-400.webp?v=20261121a 400w, img/vac/v03.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия: контент-креатор Reels и TikTok, 30 000-100 000 ₽ в месяц" width="720" height="262" loading="lazy" decoding="async"></li>
+          <li class="vc-c" style="--x:91;--y:81;--w:16;--r:4deg;--rx:0deg;--ry:0deg;--z:4"><img src="img/vac/v15.webp?v=20261117z3" srcset="img/vac/v15-400.webp?v=20261121a 400w, img/vac/v15.webp?v=20261117z3 720w" sizes="(max-width:720px) 60vw, 26vw" alt="Вакансия в Telegram: сценарист коротких вертикальных видео" width="720" height="640" loading="lazy" decoding="async"></li>
+          <li class="vc-c vc-mob vc-main" style="--x:50;--y:46;--w:37;--r:-1deg;--rx:5deg;--ry:-7deg;--z:10;--mx:50;--my:48;--mw:90;--mr:-1deg"><img src="img/vac/v05.webp?v=20261117z3" srcset="img/vac/v05.webp?v=20261117z3 720w, img/vac/v05-1240.webp?v=20261117z3 1240w" sizes="(max-width:720px) 90vw, min(492px, 37vw)" alt="Вакансия: контент-креатор, от 100 000 ₽ в месяц, без опыта" width="1240" height="639" loading="lazy" decoding="async"></li>
+        </ul>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 8. Три кита ViMotion (20.11 упрощён: без плашек над китами, под картинкой только пункт выбранного кита) -->
+<section class="wh" id="how" aria-labelledby="wh-h">
+  <div class="wh-run">
+    <div class="wh-stage">
+      <div class="wh-in">
+        <h2 class="h2 wh-h" id="wh-h">Три кита <span class="hl">ViMotion</span></h2>
+        <p class="wh-sub">Дело не в таланте. Новички бросают, когда не знают, что делать, застревают или остаются одни. Мы закрыли все три причины</p>
+        <div class="wh-pic">
+          <div class="wh-img"><img src="img/whales/whales-1100.webp?v=20261121a" srcset="img/whales/whales-760.webp?v=20261120k 760w, img/whales/whales-1100.webp?v=20261120k 1100w" sizes="(max-width:1100px) 100vw, 1000px" width="1100" height="585" alt="Три кита ViMotion в красных гоночных комбинезонах" loading="lazy" decoding="async"></div>
+          <div class="wh-hit" aria-hidden="true"><i data-k="0"></i><i data-k="1"></i><i data-k="2"></i></div>
+        </div>
+        <ol class="wh-list">
+          <li class="wh-it"><span class="wh-n" aria-hidden="true">01</span><p><strong>Пошаговый план:</strong> ты всегда знаешь следующий шаг, а каждое задание сразу идёт в портфолио</p></li>
+          <li class="wh-it"><span class="wh-n" aria-hidden="true">02</span><p><strong>Сопровождение:</strong> застрял, ментор разберёт. Пропал, он напишет первым</p></li>
+          <li class="wh-it"><span class="wh-n" aria-hidden="true">03</span><p><strong>Окружение:</strong> рядом поток людей на том же пути и эфиры с Валентином</p></li>
+        </ol>
+        <a class="btn wh-btn" href="https://vi-motion.pro/quiz/"><span class="bt">Обсудить свою точку старта</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 9. Маршрут заезда (объединён с блоком 10 «Программа») -->
+<section class="rt" id="route" aria-labelledby="rt-h">
+  <div class="rt-in">
+    <div class="rt-head">
+      <h2 class="h2 rt-h" id="rt-h">Маршрут <span class="hl">заезда</span></h2>
+      <p class="rt-sub">Не 7 лет, как у меня, а 8 недель. Каждый участок проходишь с ментором</p>
+      <p class="rt-sub rt-sub2">9 модулей и больше 70 уроков. Новый модуль открывается каждый понедельник</p>
+    </div>
+    <div class="rt-trk">
+      <svg class="rt-road" aria-hidden="true" focusable="false">
+        <defs>
+          <pattern id="rt-chk" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#EFE6DE"/><rect width="6" height="6" fill="#111"/><rect x="6" y="6" width="6" height="6" fill="#111"/></pattern>
+          <clipPath id="rt-clip"><rect class="rt-cr" x="-200" y="-200" width="9999" height="0"/></clipPath>
+        </defs>
+        <path class="rt-asph"/><path class="rt-dash"/><path class="rt-done" clip-path="url(#rt-clip)"/>
+        <g class="rt-marks"></g><g class="rt-pins"></g>
+      </svg>
+      <div class="rt-fx" aria-hidden="true"></div>
+      <div class="rt-car" aria-hidden="true"><svg viewBox="0 0 44 92"><path d="M4 7h36v8H4z" fill="#141414"/><path d="M7 9h30v4H7z" fill="#9A0002"/><rect x="2" y="18" width="9" height="17" rx="3.5" fill="#0d0d0d"/><rect x="33" y="18" width="9" height="17" rx="3.5" fill="#0d0d0d"/><rect x="1" y="60" width="10" height="20" rx="3.5" fill="#0d0d0d"/><rect x="33" y="60" width="10" height="20" rx="3.5" fill="#0d0d0d"/><path d="M19 2h6l2.5 20 6 10v12l-2 6 2 6v14l-4 14H14.5l-4-14V56l2-6-2-6V32l6-10z" fill="#9A0002"/><path d="M20 4h4l2 18h-8z" fill="#b8191b"/><path d="M12 50l-5 2v14l5 2zM32 50l5 2v14l-5 2z" fill="#7d0002"/><ellipse cx="22" cy="43" rx="5" ry="7.5" fill="#111"/><circle cx="22" cy="42" r="3" fill="#EFE6DE"/><path d="M5 82h34v8H5z" fill="#141414"/><path d="M8 84h28v3H8z" fill="#9A0002"/></svg></div>
+      <ol class="rt-list">
+        <li class="rt-st"><p class="rt-wk">Старт</p><h3 class="rt-t">Подготовка</h3><div class="rt-card"><p>Знакомишься с ментором и потоком, настраиваешься на два месяца работы</p><ol class="rt-mods"><li><span class="rt-mn">00</span><span class="rt-mt"><b>Подготовка к старту</b>Маршрут, мышление и дисциплина, чтобы дойти до конца</span></li></ol><p class="rt-res">План на весь заезд</p></div></li>
+        <li class="rt-st"><p class="rt-wk">Недели 1-4</p><h3 class="rt-t">Навык</h3><div class="rt-card"><p>Снимаешь и монтируешь на телефоне, пишешь сценарии, подключаешь ИИ</p><ol class="rt-mods"><li><span class="rt-mn">01</span><span class="rt-mt"><b>Контент для бизнеса</b>Как ролик приводит клиентов и какие форматы работают</span></li><li><span class="rt-mn">02</span><span class="rt-mt"><b>Съёмка и монтаж</b>Телефон и CapCut: от первого кадра до сдачи клиенту</span></li><li><span class="rt-mn">03</span><span class="rt-mt"><b>Контент под ключ</b>Аудит, бриф, стратегия, сценарии и отчёт</span></li><li><span class="rt-mn">04</span><span class="rt-mt"><b>ИИ-ассистент креатора</b>Нейросети в идеях, сценариях и монтаже</span></li></ol><p class="rt-res">5 работ для реальных бизнесов</p></div></li>
+        <li class="rt-st"><p class="rt-wk">Недели 5-6</p><h3 class="rt-t">Клиенты</h3><div class="rt-card"><p>Выбираешь нишу, считаешь цену и пишешь бизнесам каждый день</p><ol class="rt-mods"><li><span class="rt-mn">05</span><span class="rt-mt"><b>Упаковка и цена</b>Ниша, профиль, прайс и оффер</span></li><li><span class="rt-mn">06</span><span class="rt-mt"><b>Поиск клиентов</b>Все способы, которыми мы находим клиентов сами</span></li></ol><p class="rt-res">Оффер, прайс и первые диалоги</p></div></li>
+        <li class="rt-st"><p class="rt-wk">Недели 7-8</p><h3 class="rt-t">Деньги</h3><div class="rt-card"><p>«Денежный спринт»: созвоны, договор, предоплата и выпускной «Аллея славы»</p><ol class="rt-mods"><li><span class="rt-mn">07</span><span class="rt-mt"><b>Сделка и деньги</b>Созвон, договор, предоплата и налоги</span></li><li><span class="rt-mn">08</span><span class="rt-mt"><b>Рост</b>Чек выше, команда и партнёрства</span></li></ol><p class="rt-res">Первый платный клиент</p></div></li>
+      </ol>
+    </div>
+    <div class="acts rt-acts"><a class="btn btn-o" href="#formats"><span class="bt">Выбрать формат участия</span><svg class="dn" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v11M3.5 9l4.5 4.5 4.5-4.5"/></svg></a></div>
+  </div>
+</section>
+
+<!-- Блок 11. К концу программы -->
+<section class="rc" id="results" aria-labelledby="rc-h">
+  <div class="rc-in">
+    <div class="rc-card">
+      <img class="rc-gl" src="img/results/gloves-560.webp?v=20261121a" srcset="img/results/gloves-320.webp?v=20261120k 320w, img/results/gloves-560.webp?v=20261120k 560w, img/results/gloves-900.webp?v=20261120k 900w" sizes="(max-width:720px) 150px, (max-width:1180px) 320px, 400px" width="900" height="756" alt="" loading="lazy" decoding="async">
+      <h2 class="h2 rc-h" id="rc-h">К концу программы у&nbsp;тебя на&nbsp;руках</h2>
+      <ol class="rc-list">
+        <li style="--i:0"><span class="rc-n" aria-hidden="true">01</span>Навык делать контент от идеи до публикации</li>
+        <li style="--i:1"><span class="rc-n" aria-hidden="true">02</span>5 работ для реальных бизнесов</li>
+        <li style="--i:2"><span class="rc-n" aria-hidden="true">03</span>Ясная ниша и направление</li>
+        <li style="--i:3"><span class="rc-n" aria-hidden="true">04</span>Оффер и пакет услуг</li>
+        <li style="--i:4"><span class="rc-n" aria-hidden="true">05</span>Понимание своей цены</li>
+        <li style="--i:5"><span class="rc-n" aria-hidden="true">06</span>Упакованный профиль</li>
+        <li style="--i:6"><span class="rc-n" aria-hidden="true">07</span>Способы поиска клиентов, проверенные на практике</li>
+        <li style="--i:7"><span class="rc-n" aria-hidden="true">08</span>Сообщения, на которые отвечают</li>
+        <li style="--i:8"><span class="rc-n" aria-hidden="true">09</span>Первые диалоги с клиентами</li>
+        <li style="--i:9"><span class="rc-n" aria-hidden="true">10</span>Структура продающего созвона</li>
+        <li style="--i:10"><span class="rc-n" aria-hidden="true">11</span>Шаблоны договоров и брифов</li>
+        <li style="--i:11"><span class="rc-n" aria-hidden="true">12</span>Контент-стратегия и аудит для клиента</li>
+        <li style="--i:12"><span class="rc-n" aria-hidden="true">13</span>Своя система работы с ИИ</li>
+        <li style="--i:13"><span class="rc-n" aria-hidden="true">14</span>Окружение и сертификат выпускника</li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 12. Ментор (с 18.11 сюда вошла строка из убранного блока 13 «Сопровождение до первого клиента»; 20.11 переделан в «Трассу с табло») -->
+<section class="mn" id="mentor" aria-labelledby="mn-h">
+  <div class="mn-in">
+    <h2 class="h2 mn-h" id="mn-h">Чтобы выйти на $1&nbsp;000, рядом нужен тот, кто уже <span class="mn-nw"><span class="hl">делает $3&nbsp;000</span>,</span> и&nbsp;он у&nbsp;тебя будет</h2>
+    <p class="mn-lead">Артём сам прошёл обучение с нуля, запустил 24 YouTube-канала и теперь ведёт учеников ViMotion. Будем рядом, пока не найдёшь первого клиента</p>
+    <div class="mn-track">
+      <div class="mn-line" aria-hidden="true"><i></i></div>
+      <span class="mn-pt mn-p1" aria-hidden="true"><b>$1&nbsp;000</b><i class="mn-dot"></i></span>
+      <span class="mn-pt mn-p3" aria-hidden="true"><b>$3&nbsp;000</b><i class="mn-flag"></i></span>
+      <div class="mn-car"><img src="img/mentor/artem-ava-240.webp?v=20261121a" srcset="img/mentor/artem-ava-240.webp?v=20261120k 240w, img/mentor/artem-ava-480.webp?v=20261120k 480w" sizes="(max-width:720px) 76px, 112px" width="480" height="480" alt="Артём, ментор ViMotion" loading="lazy" decoding="async"></div>
+    </div>
+    <ul class="mn-fx">
+      <li><b>100%</b><span>заданий с разбором ментора</span></li>
+      <li><b>1 раз</b><span>в неделю созвон по твоим затыкам</span></li>
+      <li><b>30</b><span>учеников максимум на одного ментора</span></li>
+    </ul>
+    <div class="acts mn-acts"><a class="btn btn-o" href="cases.html"><span class="bt">Смотреть кейсы учеников</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a></div>
+  </div>
+</section>
+
+<!-- Блок 14. Истории учеников -->
+<section class="st" id="stories" aria-labelledby="st-h">
+  <div class="st-in">
+    <h2 class="h2 st-h" id="st-h">Они тоже думали, что у&nbsp;них <span class="hl">не получится</span></h2>
+    <p class="st-sub">У кого-то не было времени, у кого-то опыта, у кого-то веры в себя. Вот что было дальше</p>
+    <ul class="st-list">
+      <li class="st-it" id="alena" style="--i:0">
+        <a class="st-b" href="cases.html#alena" aria-label="Кейс: Алёна">
+          <span class="st-sk"><img src="img/stories/alena-600.webp?v=20261121a" srcset="img/stories/alena-600.webp?v=20261120k 600w, img/stories/alena-900.webp?v=20261120k 900w" sizes="(max-width:720px) 100vw, 720px" width="900" height="1200" alt="Алёна" loading="lazy" decoding="async"></span>
+          <span class="st-vn" aria-hidden="true">Алёна</span>
+        </a>
+        <div class="st-pl" id="st-p-alena"><div class="st-pl-in">
+          <div class="st-l"><p class="st-nm">Алёна</p><p class="st-q">«Мне не хватает времени»</p></div>
+          <div class="st-r"><p class="st-sum">$3&nbsp;000</p><span class="st-t">в месяц</span></div><span class="st-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></span>
+        </div></div>
+      </li>
+      <li class="st-it" id="ivan" style="--i:1">
+        <a class="st-b" href="cases.html#ivan" aria-label="Кейс: Иван">
+          <span class="st-sk"><img src="img/stories/ivan-600.webp?v=20261121a" srcset="img/stories/ivan-600.webp?v=20261120k 600w, img/stories/ivan-900.webp?v=20261120k 900w" sizes="(max-width:720px) 100vw, 720px" width="900" height="1200" alt="Иван" loading="lazy" decoding="async"></span>
+          <span class="st-vn" aria-hidden="true">Иван</span>
+        </a>
+        <div class="st-pl" id="st-p-ivan"><div class="st-pl-in">
+          <div class="st-l"><p class="st-nm">Иван</p><p class="st-q">«Не знаю, где искать клиентов»</p></div>
+          <div class="st-r"><p class="st-sum">$2&nbsp;000</p><span class="st-t">в месяц</span></div><span class="st-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></span>
+        </div></div>
+      </li>
+      <li class="st-it is-on" id="veronika" style="--i:2">
+        <a class="st-b" href="cases.html#veronika" aria-label="Кейс: Вероника">
+          <span class="st-sk"><img src="img/stories/veronika-600.webp?v=20261121a" srcset="img/stories/veronika-600.webp?v=20261120k 600w, img/stories/veronika-900.webp?v=20261120k 900w" sizes="(max-width:720px) 100vw, 720px" width="900" height="1200" alt="Вероника" loading="lazy" decoding="async"></span>
+          <span class="st-vn" aria-hidden="true">Вероника</span>
+        </a>
+        <div class="st-pl" id="st-p-veronika"><div class="st-pl-in">
+          <div class="st-l"><p class="st-nm">Вероника</p><p class="st-q">«Не знаю, как совместить с работой»</p></div>
+          <div class="st-r"><p class="st-sum">$4&nbsp;000+</p></div><span class="st-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></span>
+        </div></div>
+      </li>
+      <li class="st-it" id="gaiduk" style="--i:3">
+        <a class="st-b" href="cases.html#gaiduk" aria-label="Кейс: Иван Гайдук">
+          <span class="st-sk"><img src="img/stories/gaiduk-600.webp?v=20261121a" srcset="img/stories/gaiduk-600.webp?v=20261120k 600w, img/stories/gaiduk-900.webp?v=20261120k 900w" sizes="(max-width:720px) 100vw, 720px" width="900" height="1200" alt="Иван Гайдук" loading="lazy" decoding="async"></span>
+          <span class="st-vn" aria-hidden="true">Иван Гайдук</span>
+        </a>
+        <div class="st-pl" id="st-p-gaiduk"><div class="st-pl-in">
+          <div class="st-l"><p class="st-nm">Иван Гайдук</p><p class="st-q">«Не могу быть на двух съёмках сразу»</p></div>
+          <div class="st-r"><p class="st-sum">$10&nbsp;000+</p><span class="st-t">за полгода</span></div><span class="st-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></span>
+        </div></div>
+      </li>
+      <li class="st-it" id="nariman" style="--i:4">
+        <a class="st-b" href="cases.html#nariman" aria-label="Кейс: Нариман">
+          <span class="st-sk"><img src="img/stories/nariman-600.webp?v=20261121a" srcset="img/stories/nariman-600.webp?v=20261120k 600w, img/stories/nariman-900.webp?v=20261120k 900w" sizes="(max-width:720px) 100vw, 720px" width="900" height="1200" alt="Нариман" loading="lazy" decoding="async"></span>
+          <span class="st-vn" aria-hidden="true">Нариман</span>
+        </a>
+        <div class="st-pl" id="st-p-nariman"><div class="st-pl-in">
+          <div class="st-l"><p class="st-nm">Нариман</p><p class="st-q">«Ниша слишком странная»</p></div>
+          <div class="st-r"><p class="st-sum">$5&nbsp;000</p><span class="st-t">в месяц</span></div><span class="st-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></span>
+        </div></div>
+      </li>
+      <li class="st-it" id="nastya" style="--i:5">
+        <a class="st-b" href="cases.html#nastya" aria-label="Кейс: Настя">
+          <span class="st-sk"><img src="img/stories/nastya-600.webp?v=20261121a" srcset="img/stories/nastya-600.webp?v=20261120k 600w, img/stories/nastya-900.webp?v=20261120k 900w" sizes="(max-width:720px) 100vw, 720px" width="900" height="1200" alt="Настя" loading="lazy" decoding="async"></span>
+          <span class="st-vn" aria-hidden="true">Настя</span>
+        </a>
+        <div class="st-pl" id="st-p-nastya"><div class="st-pl-in">
+          <div class="st-l"><p class="st-nm">Настя</p><p class="st-q">«Вдруг не разберусь»</p></div>
+          <div class="st-r"><p class="st-sum">$500</p><span class="st-t">ещё на обучении</span></div><span class="st-go" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></span>
+        </div></div>
+      </li>
+    </ul>
+    <div class="st-acts">
+      <a class="btn" href="https://vi-motion.pro/quiz/"><span class="bt">Хочу так же</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+      <a class="btn st-btn-o" href="cases.html"><span class="bt">Читать истории полностью</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 15. Автор -->
+<section class="au" id="author" aria-labelledby="au-h">
+  <div class="au-in">
+    <div class="au-tx">
+      <h2 class="h2 au-h" id="au-h">Я создал ViMotion, потому что сам не мог найти <span class="hl">сильных креаторов</span></h2>
+      <p class="au-sub">Мне 21, семь лет в контенте и своё агентство G-Agency. Каждый месяц мы ищем людей в команду, и лучших выпускников я забираю в свои проекты</p>
+    </div>
+    <div class="au-deck" role="group" aria-roledescription="карусель" aria-label="Факты о Валентине" tabindex="0">
+      <div class="au-tilt">
+        <figure class="au-card" data-pos="0"><img src="img/author/me.webp?v=20261121a" srcset="img/author/me-480.webp?v=20261121a 480w, img/author/me.webp?v=20261120k 720w, img/author/me-940.webp?v=20261120k 940w" sizes="(max-width:720px) 72vw, (max-width:1180px) 320px, 380px" width="720" height="1280" alt="Валентин" loading="lazy" decoding="async"><span class="au-wm" aria-hidden="true"></span></figure>
+        <figure class="au-card" data-pos="1"><img src="img/author/btn.webp?v=20261121a" srcset="img/author/btn-480.webp?v=20261121a 480w, img/author/btn.webp?v=20261120k 720w, img/author/btn-940.webp?v=20261120k 940w" sizes="(max-width:720px) 72vw, (max-width:1180px) 320px, 380px" width="720" height="1280" alt="" loading="lazy" decoding="async"><div class="au-cap"><b>15 лет</b><span>серебряная кнопка YouTube, начинал на мамином компьютере в Орше</span></div></figure>
+        <figure class="au-card" data-pos="2"><img src="img/author/car.webp?v=20261121a" srcset="img/author/car-480.webp?v=20261121a 480w, img/author/car.webp?v=20261120k 720w, img/author/car-940.webp?v=20261120k 940w" sizes="(max-width:720px) 72vw, (max-width:1180px) 320px, 380px" width="720" height="1280" alt="" loading="lazy" decoding="async"><div class="au-cap"><b>Машина маме</b><span>всё, что у меня есть, заработано одним навыком</span></div></figure>
+        <figure class="au-card" data-pos="3"><img src="img/author/gag.webp?v=20261121a" srcset="img/author/gag-480.webp?v=20261121a 480w, img/author/gag.webp?v=20261120k 720w, img/author/gag-940.webp?v=20261120k 940w" sizes="(max-width:720px) 72vw, (max-width:1180px) 320px, 380px" width="720" height="1280" alt="" loading="lazy" decoding="async"><div class="au-cap"><b>G-Agency</b><span>300+ роликов за год для крупных экспертов</span></div></figure>
+        <figure class="au-card" data-pos="4"><img src="img/author/stage.webp?v=20261121a" srcset="img/author/stage-480.webp?v=20261121a 480w, img/author/stage.webp?v=20261120k 720w, img/author/stage-940.webp?v=20261120k 940w" sizes="(max-width:720px) 72vw, (max-width:1180px) 320px, 380px" width="720" height="1280" alt="" loading="lazy" decoding="async"><div class="au-cap"><b>500 человек</b><span>в зале на моих выступлениях о контенте</span></div></figure>
+        <div class="au-bars" aria-hidden="true"><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i><i><b></b></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Блок 16. Форматы участия -->
+<section class="fm" id="formats" aria-labelledby="fm-h">
+  <div class="fm-in">
+    <h2 class="h2 fm-h" id="fm-h">Форматы <span class="hl">участия</span></h2>
+    <p class="fm-sub">Оба ведут к первому клиенту. Разница в том, сколько личного внимания ты получишь</p>
+    <ul class="fm-row">
+      <li class="fm-it">
+        <article class="fm-t fm-p">
+          <div class="fm-main">
+            <span class="fm-logo" aria-hidden="true">VIMOTION</span>
+            <h3 class="fm-n">Прорыв</h3>
+            <p class="fm-for">Маршрут с личным ментором</p>
+            <p class="fm-d">Ментор на 2 месяца, разбор каждого задания, созвоны раз в неделю, база шаблонов, «Денежный спринт», Биржа ViMotion и сопровождение до первого клиента</p>
+          </div>
+          <div class="fm-stub">
+            <p class="fm-ch">Нужен понятный маршрут и ментор рядом: <b>«Прорыв»</b></p>
+            <a class="btn" href="https://vi-motion.pro/quiz/"><span class="bt">Узнать условия «Прорыва»</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+          </div>
+        </article>
+      </li>
+      <li class="fm-it">
+        <article class="fm-t fm-v"><i class="fm-foil" aria-hidden="true"></i>
+          <div class="fm-main">
+            <span class="fm-logo" aria-hidden="true">VIMOTION</span>
+            <h3 class="fm-n">VIP</h3>
+            <p class="fm-for">Личная работа с Валентином</p>
+            <p class="fm-d">Всё из «Прорыва», плюс четыре разбора с Валентином, встречи 1 на 1 с ментором раз в две недели, тренировка переговоров, экскурсия в агентство и приоритет в рекомендациях</p>
+          </div>
+          <div class="fm-stub">
+            <p class="fm-ch">Хочешь, чтобы я лично разбирал твой путь: <b>VIP</b></p>
+            <a class="btn" href="https://vi-motion.pro/quiz/"><span class="bt">Узнать условия VIP</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+          </div>
+        </article>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- Блок 17. Страхи -->
+<section class="fr" id="fears" aria-labelledby="fr-h">
+  <div class="fr-in">
+    <h2 class="h2 fr-h" id="fr-h">Кажется, что <span class="hl">уже поздно</span> и&nbsp;это не для тебя?</h2>
+    <p class="fr-sub">Эти мысли были почти у всех наших учеников. Не подойдёт ViMotion только тем, кто ждёт волшебную таблетку</p>
+    <ul class="fr-g">
+      <li class="fr-it" style="--i:0">
+        <button class="fr-c" type="button" aria-pressed="false">
+          <span class="fr-in3">
+            <span class="fr-f"><span class="fr-q">«Рынок забит»</span><span class="fr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span></span>
+            <span class="fr-b"><span class="fr-bq" aria-hidden="true">«Рынок забит»</span><span class="fr-a">Он не забит, он слабый. Из 30 откликов на вакансию сильных два-три</span></span>
+          </span>
+        </button>
+      </li>
+      <li class="fr-it" style="--i:1">
+        <button class="fr-c" type="button" aria-pressed="false">
+          <span class="fr-in3">
+            <span class="fr-f"><span class="fr-q">«ИИ всех заменит»</span><span class="fr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span></span>
+            <span class="fr-b"><span class="fr-bq" aria-hidden="true">«ИИ всех заменит»</span><span class="fr-a">Нейросеть не знает бизнес клиента. Креатор с ИИ просто работает в несколько раз быстрее</span></span>
+          </span>
+        </button>
+      </li>
+      <li class="fr-it" style="--i:2">
+        <button class="fr-c" type="button" aria-pressed="false">
+          <span class="fr-in3">
+            <span class="fr-f"><span class="fr-q">«У меня нет опыта»</span><span class="fr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span></span>
+            <span class="fr-b"><span class="fr-bq" aria-hidden="true">«У меня нет опыта»</span><span class="fr-a">Большинство пришли с нуля, и им не пришлось ломать старые привычки</span></span>
+          </span>
+        </button>
+      </li>
+      <li class="fr-it" style="--i:3">
+        <button class="fr-c" type="button" aria-pressed="false">
+          <span class="fr-in3">
+            <span class="fr-f"><span class="fr-q">«Нет хорошего компьютера»</span><span class="fr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span></span>
+            <span class="fr-b"><span class="fr-bq" aria-hidden="true">«Нет хорошего компьютера»</span><span class="fr-a">Хватит телефона и CapCut. Технику ученики покупают уже с первых денег</span></span>
+          </span>
+        </button>
+      </li>
+      <li class="fr-it" style="--i:4">
+        <button class="fr-c" type="button" aria-pressed="false">
+          <span class="fr-in3">
+            <span class="fr-f"><span class="fr-q">«Нет времени»</span><span class="fr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span></span>
+            <span class="fr-b"><span class="fr-bq" aria-hidden="true">«Нет времени»</span><span class="fr-a">Нужно 8-15 часов в неделю. Алёна училась с младенцем, Вероника после смен на заводе</span></span>
+          </span>
+        </button>
+      </li>
+      <li class="fr-it" style="--i:5">
+        <button class="fr-c" type="button" aria-pressed="false">
+          <span class="fr-in3">
+            <span class="fr-f"><span class="fr-q">«Я не умею продавать»</span><span class="fr-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span></span>
+            <span class="fr-b"><span class="fr-bq" aria-hidden="true">«Я не умею продавать»</span><span class="fr-a">Дадим сообщения, на которые отвечают, и разберём твой первый созвон</span></span>
+          </span>
+        </button>
+      </li>
+    </ul>
+    <div class="acts fr-acts"><a class="btn btn-o is-dark" href="#faq"><span class="bt">Ответы на частые вопросы</span><svg class="dn" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2.5v11M3.5 9l4.5 4.5 4.5-4.5"/></svg></a></div>
+  </div>
+</section>
+
+<!-- Блок 18. Вопросы -->
+<section class="faq" id="faq" aria-labelledby="faq-h">
+  <div class="faq-in">
+    <div class="faq-card">
+      <div class="faq-fig"><img src="img/valentin-poster-744.webp?v=20261117z6" srcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" sizes="(max-width:720px) 84vw, 400px" width="1104" height="1024" alt="Валентин" loading="lazy" decoding="async"></div>
+      <div class="faq-pl">
+        <h2 class="h2 faq-h" id="faq-h">Остались <span class="hl">вопросы?</span></h2>
+        <a class="btn" href="https://t.me/way_toyoutube"><span class="bt">Написать в Telegram</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+      </div>
+    </div>
+    <ul class="faq-list">
+      <li class="faq-it is-open">
+        <button class="faq-b" type="button" id="faq-q0" aria-expanded="true" aria-controls="faq-a0">Совсем с нуля, реально потяну?<i class="faq-pl8" aria-hidden="true"></i></button>
+        <div class="faq-a" id="faq-a0" role="region" aria-labelledby="faq-q0"><div><p>Да. Каждый шаг опирается на предыдущий, а ментор проверяет все задания</p></div></div>
+      </li>
+      <li class="faq-it">
+        <button class="faq-b" type="button" id="faq-q1" aria-expanded="false" aria-controls="faq-a1">Сколько времени нужно в неделю?<i class="faq-pl8" aria-hidden="true"></i></button>
+        <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-q1"><div><p>8-15 часов. Этого хватает, чтобы совмещать с работой или учёбой</p></div></div>
+      </li>
+      <li class="faq-it">
+        <button class="faq-b" type="button" id="faq-q2" aria-expanded="false" aria-controls="faq-a2">Это курс монтажа?<i class="faq-pl8" aria-hidden="true"></i></button>
+        <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-q2"><div><p>Нет. Монтаж только часть. Ты учишься делать для бизнеса контент целиком, и за это платят больше</p></div></div>
+      </li>
+      <li class="faq-it">
+        <button class="faq-b" type="button" id="faq-q3" aria-expanded="false" aria-controls="faq-a3">Когда появятся первые деньги?<i class="faq-pl8" aria-hidden="true"></i></button>
+        <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-q3"><div><p>Искать клиентов начнёшь уже на втором месяце. Срок зависит от того, сколько сообщений отправишь, и мы поможем отправить их правильно</p></div></div>
+      </li>
+      <li class="faq-it">
+        <button class="faq-b" type="button" id="faq-q4" aria-expanded="false" aria-controls="faq-a4">Можно оплатить частями?<i class="faq-pl8" aria-hidden="true"></i></button>
+        <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-q4"><div><p>Да. Варианты обсудим на разборе, до оплаты</p></div></div>
+      </li>
+      <li class="faq-it">
+        <button class="faq-b" type="button" id="faq-q5" aria-expanded="false" aria-controls="faq-a5">Что будет после анкеты?<i class="faq-pl8" aria-hidden="true"></i></button>
+        <div class="faq-a" id="faq-a5" role="region" aria-labelledby="faq-q5"><div><p>Куратор напишет в Telegram, и на созвоне разберём твою ситуацию. Решение принимаешь после разговора</p></div></div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<!-- Блок 19. Финал -->
+<section class="fn" id="final" aria-labelledby="fn-h">
+  <div class="fn-in">
+    <h2 class="h2 fn-h" id="fn-h">Следующая история в&nbsp;этом списке <span class="hl">твоя</span></h2>
+    <ul class="fn-row">
+      <li class="fn-it" style="--i:0"><img src="img/people/alena.webp" srcset="img/people/alena-260.webp?v=20261121a 260w, img/people/alena.webp 480w" sizes="(max-width:720px) 170px, 340px" width="480" height="640" alt="Алёна" loading="lazy" decoding="async"></li>
+      <li class="fn-it" style="--i:1"><img src="img/people/gaiduk.webp" srcset="img/people/gaiduk-260.webp?v=20261121a 260w, img/people/gaiduk.webp 480w" sizes="(max-width:720px) 170px, 340px" width="480" height="640" alt="Иван Гайдук" loading="lazy" decoding="async"></li>
+      <li class="fn-it" style="--i:2"><img src="img/people/veronika.webp" srcset="img/people/veronika-260.webp?v=20261121a 260w, img/people/veronika.webp 480w" sizes="(max-width:720px) 170px, 340px" width="480" height="640" alt="Вероника" loading="lazy" decoding="async"></li>
+      <li class="fn-it" style="--i:3"><img src="img/people/ivan.webp" srcset="img/people/ivan-260.webp?v=20261121a 260w, img/people/ivan.webp 480w" sizes="(max-width:720px) 170px, 340px" width="480" height="640" alt="Иван" loading="lazy" decoding="async"></li>
+      <li class="fn-it" style="--i:4"><img src="img/people/nastya.webp" srcset="img/people/nastya-260.webp?v=20261121a 260w, img/people/nastya.webp 480w" sizes="(max-width:720px) 170px, 340px" width="480" height="640" alt="Настя" loading="lazy" decoding="async"></li>
+      <li class="fn-it" style="--i:5"><img src="img/people/artem.webp" srcset="img/people/artem-260.webp?v=20261121a 260w, img/people/artem.webp 480w" sizes="(max-width:720px) 170px, 340px" width="480" height="640" alt="Артём" loading="lazy" decoding="async"></li>
+      <li class="fn-it fn-qi" style="--i:6"><a class="fn-q" href="https://vi-motion.pro/quiz/" tabindex="-1" aria-hidden="true"><span>?</span></a></li>
+    </ul>
+    <p class="fn-sub">Оставь анкету, и мы разберём, с какой точки ты стартуешь и как дойти до первого клиента</p>
+    <a class="btn" href="https://vi-motion.pro/quiz/"><span class="bt">Стать следующим</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+  </div>
+</section>
+
+</main>
+
+<!-- Подвал -->
+<footer class="ft" id="siteFoot">
+  <div class="ft-in">
+    <div>
+      <a class="ft-logo" href="./">VIMOTION</a>
+      <p class="ft-d">Менторская программа по контенту для бизнеса<br>ИП Сушнёв Валентин Андреевич · ИНН&nbsp;775189986429</p>
+    </div>
+    <nav class="ft-nav" aria-label="Документы и контакты"><a href="#">Оферта</a><a href="#">Политика данных</a><a href="cases.html">Кейсы</a><a href="#">Контакты</a><a href="https://t.me/way_toyoutube">Telegram</a><a href="#">YouTube</a><a href="#">Instagram</a></nav>
+  </div>
+  <div class="ft-wm" aria-hidden="true"></div>
+</footer>
+
+<script>/* Только для демо на GitHub Pages: кнопки ведут на новую анкету из этой же папки (quiz/), а не на боевую vi-motion.pro/quiz/.
+   На боевом сайте условие не срабатывает, ссылки остаются как есть. UTM из адреса страницы передаются дальше. */
+(function(){if(!/\.github\.io$/.test(location.hostname))return;
+var q=location.search;[].forEach.call(document.querySelectorAll('a[href^="https://vi-motion.pro/quiz/"]'),function(a){a.href='quiz/'+q})})();</script>
+</body>
+</html>

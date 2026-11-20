@@ -19,13 +19,21 @@
 
 .ppl-row{position:relative;list-style:none;margin-top:56px;display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:40px 16px}
 .pc-2{grid-column:span 2}
-.pc a{display:block;color:inherit;text-decoration:none;outline:none}
+.pc a{display:block;color:inherit;text-decoration:none;outline:none;transition:transform .55s var(--ease)}
+/* наведение (21.11): карточка приподнимается и сразу становится цветной, рамка видоискателя едет вместе с ней (people.js) */
+@media (hover:hover) and (pointer:fine){
+  .pc a:hover{transform:translateY(-8px)}
+  .ppl.is-vf .pc a:hover .ph img{filter:none}
+}
 .ph{position:relative;display:block;aspect-ratio:3/4;background:#d9cec5}
 .pc-2 .ph{aspect-ratio:auto;display:grid;grid-template-columns:1fr 1fr;gap:16px;background:none}
 .ph img{width:100%;height:100%;object-fit:cover}
 .pc-2 .ph img{height:auto;aspect-ratio:3/4;background:#d9cec5}
 .nm{display:block;margin-top:16px;font:900 24px/1.05 var(--cond);color:var(--ink)}
 .cp{display:block;margin-top:6px;font:400 15px/1.45 var(--text);color:var(--muted);text-wrap:pretty}
+/* подпись всегда ровно в две строки (21.11): строки заданы в разметке, на узких колонках шрифт чуть меньше */
+.cp .l{display:block;white-space:nowrap}
+@media (min-width:1181px){.cp{font-size:clamp(12px,1.02vw,15px)}}
 .pc a:focus-visible .nm{text-decoration:underline;text-decoration-color:var(--red);text-decoration-thickness:2px;text-underline-offset:4px}
 
 /* чёрно-белые все, кроме того, на ком рамка (только с JS и без reduced-motion) */

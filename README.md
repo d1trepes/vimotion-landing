@@ -23,3 +23,11 @@ site/      готовый сайт (собираем по блокам)
 
 - Кнопки ведут на https://vi-motion.pro/quiz/
 - Действующий лендинг с историями: https://vi-motion.pro/landing/?ab_variant=B
+
+## Сборка главной (с 21.11)
+
+Главная собирается из исходников: правки вносить в `site/index.src.html`, `site/styles/blocks/*.css`, `site/scripts/*.js`, затем
+
+    python3 tools/build.py
+
+Скрипт склеивает все стили в `site/styles/site.css`, все скрипты в `site/scripts/site.js` и пишет `site/index.html` с одной версией `?v=` по хешу. Страница кейсов `site/cases.html` подключает файлы напрямую.

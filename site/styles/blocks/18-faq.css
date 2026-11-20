@@ -26,6 +26,13 @@
 .faq-it{position:relative;transform:skewX(var(--sk));background:#F7F1EA;box-shadow:0 18px 40px -26px rgba(60,30,10,.35)}
 .faq-it::before{content:"";position:absolute;inset:0;background:#131313;transform:scaleX(0);transform-origin:0 50%;transition:transform .7s var(--ease)}
 .faq-it.is-open::before{transform:scaleX(1)}
+/* наведение (21.11): закрытый вопрос выдвигается вправо, слева показывается полоска асфальта, плюс поворачивается */
+.faq-it{transition:translate .5s var(--ease),box-shadow .5s}
+@media (hover:hover) and (pointer:fine){
+  .faq-it:not(.is-open):hover{translate:14px 0;box-shadow:0 22px 44px -24px rgba(60,30,10,.45)}
+  .faq-it:not(.is-open):hover::before{transform:scaleX(.03)}
+  .faq-it:not(.is-open):hover .faq-pl8{transform:rotate(90deg)}
+}
 .faq-b{position:relative;display:flex;justify-content:space-between;align-items:center;gap:24px;width:100%;padding:28px 34px;border:0;background:none;
   cursor:pointer;text-align:left;font:600 21px/1.3 var(--display);color:var(--ink);transform:skewX(calc(var(--sk)*-1));transition:color .45s;
   -webkit-tap-highlight-color:transparent}

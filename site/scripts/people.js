@@ -39,14 +39,18 @@
   var cur=-1,timer=0,inView=false,hover=false,resume=0,STEP=2400;
 
   /* прямоугольник фото карточки относительно ряда (у двойной: обе фотографии) */
+  /* по offset-координатам (без учёта transform): карточка под курсором приподнимается, рамка едет вместе с ней на LIFT */
+  var LIFT=8,lifted=-1;
   function box(i){
-    var imgs=cards[i].querySelectorAll('.ph img'),r=row.getBoundingClientRect(),
+    /* li не сдвигается, a внутри приподнимается: смещение картинок считаем от a, положение от li */
+    var li=cards[i],a=li.querySelector('a'),imgs=li.querySelectorAll('.ph img'),
+        r=row.getBoundingClientRect(),lr=li.getBoundingClientRect(),ar=a.getBoundingClientRect(),
         L=1e9,T=1e9,R=-1e9,B=-1e9;
     for(var k=0;k<imgs.length;k++){
-      var b=imgs[k].getBoundingClientRect();
-      L=Math.min(L,b.left);T=Math.min(T,b.top);R=Math.max(R,b.right);B=Math.max(B,b.bottom);
+      var b=imgs[k].getBoundingClientRect(),x=lr.left-r.left+b.left-ar.left,y=lr.top-r.top+b.top-ar.top;
+      L=Math.min(L,x);T=Math.min(T,y);R=Math.max(R,x+b.width);B=Math.max(B,y+b.height);
     }
-    return {x:L-r.left,y:T-r.top,w:R-L,h:B-T};
+    return {x:L,y:T-(i===lifted?LIFT:0),w:R-L,h:B-T};
   }
   function place(jump){
     if(cur<0)return;
@@ -75,7 +79,8 @@
   /* наведение мышью и фокус с клавиатуры: рамка встаёт на человека */
   var fine=matchMedia('(hover:hover) and (pointer:fine)');
   cards.forEach(function(c,i){
-    c.addEventListener('mouseenter',function(){if(!fine.matches)return;hover=true;clearTimeout(resume);stop();go(i)});
+    c.addEventListener('mouseenter',function(){if(!fine.matches)return;hover=true;lifted=i;clearTimeout(resume);stop();if(cur===i)place();else go(i)});
+    c.addEventListener('mouseleave',function(){if(lifted!==i)return;lifted=-1;place()});
     c.addEventListener('focusin',function(){hover=true;clearTimeout(resume);stop();go(i)});
     c.addEventListener('focusout',function(){hover=false;resume=setTimeout(run,1200)});
   });

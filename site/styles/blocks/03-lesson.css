@@ -41,7 +41,7 @@
 .les-h{max-width:15em}
 .les-frame{margin-top:56px}
 .les-sub{margin-top:24px;max-width:31em;font:400 21px/1.5 var(--text);color:var(--muted);text-wrap:balance}
-.les-btn{margin-top:40px}
+.les-acts{margin-top:40px}
 
 /* лента форматов: красная, с волной, наклон −2°, разделители $ */
 .tape{margin:112px -4vw 0;transform:rotate(-2deg);background:var(--red) var(--wave);background-size:auto,28px 9px;overflow:hidden;padding:20px 0 18px}
@@ -55,7 +55,7 @@
   .les{padding-bottom:104px}
   .les-frame{margin-top:44px}
   .les-sub{font-size:19px}
-  .les-btn{height:58px;padding:0 28px;font-size:14px}
+  .les-acts .btn{height:58px;padding:0 28px;font-size:14px}
   .les-frame{padding:8px;border-radius:0}
   .les-card{border-radius:0}
   .les-play{width:76px;height:76px;margin:-38px 0 0 -38px}
@@ -68,7 +68,7 @@
   .les-sub{margin-top:16px;font-size:17px}
   .les-frame{padding:6px;border-radius:0}
   .les-card{border-radius:0}
-  .les-btn{margin-top:28px;width:100%;height:58px}
+  .les-acts{margin-top:28px}
   .les-play{width:60px;height:60px;margin:-30px 0 0 -30px}
   .tape{margin-top:72px;padding:14px 0 12px;transform:rotate(-3deg)}
   .tape span{font-size:26px}

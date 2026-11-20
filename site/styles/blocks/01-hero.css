@@ -29,7 +29,7 @@
 .nw{white-space:nowrap}
 /* абзац не заходит на плечо портрета (левый край портрета 33.3vw + ~8% его ширины) */
 .sub{margin-top:24px;font:400 20px/1.55 var(--text);color:#2a2522;max-width:min(520px,calc(37.2vw - var(--m) - 12px));text-wrap:pretty}
-.sub b{font-weight:600;color:var(--ink)}
+
 
 /* цифры в рамке-видоискателе */
 .stats{--c:var(--ink);--k:22px;list-style:none;position:absolute;z-index:5;right:var(--m);bottom:var(--pb);width:212px;padding:20px 22px;
@@ -63,7 +63,8 @@
 .is-go .stat:nth-child(1){animation-delay:.6s}
 .is-go .stat:nth-child(2){animation-delay:.7s}
 .is-go .stat:nth-child(3){animation-delay:.8s}
-@keyframes wm-slam{0%{clip-path:inset(0 0 100% 0);filter:contrast(1.8) saturate(.2)}55%{clip-path:inset(0);filter:contrast(1.35) saturate(.7)}100%{clip-path:inset(0);filter:none}}
+/* 21.11: без анимации filter — Chrome засчитывал её как сдвиг раскладки (CLS 0,35 в PageSpeed) */
+@keyframes wm-slam{0%{clip-path:inset(0 0 100% 0)}55%,100%{clip-path:inset(0)}}
 /* человек плавно выезжает снизу: прозрачность набирается быстрее, чем заканчивается движение */
 @keyframes rise{0%{opacity:0;transform:translateY(9%)}45%{opacity:1}100%{opacity:1;transform:none}}
 @keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}

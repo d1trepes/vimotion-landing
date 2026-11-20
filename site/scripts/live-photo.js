@@ -59,6 +59,12 @@
       glOK=!!gl.getProgramParameter(pr,gl.LINK_STATUS);
     }
   }catch(e){glOK=false}
+  /* 21.11 скорость: без видеокарты (программный WebGL: SwiftShader, llvmpipe — слабые ноутбуки, виртуалки, PageSpeed)
+     загрузка кадра видео в текстуру идёт на процессоре и блокирует страницу на сотни миллисекунд. Там оставляем постер */
+  if(glOK){try{
+    var dbg=gl.getExtension('WEBGL_debug_renderer_info'),rn=String(dbg?gl.getParameter(dbg.UNMASKED_RENDERER_WEBGL):gl.getParameter(gl.RENDERER));
+    if(/swiftshader|llvmpipe|softpipe|software|basic render/i.test(rn))glOK=false;
+  }catch(e){}}
   if(!glOK){window.vmLive=noop;return}
 
   /* ---------- видео ---------- */
@@ -90,10 +96,15 @@
     /* положение вордмарка относительно портрета: пересчёт только при изменении раскладки и во время анимации появления */
     if(wOK&&(rectDirty||performance.now()<rectUntil)){var P=cv.getBoundingClientRect(),M=wmImg.getBoundingClientRect();
       if(P.width&&P.height){gl.uniform4f(wrLoc,(M.left-P.left)/P.width,(M.top-P.top)/P.height,(M.right-P.left)/P.width,(M.bottom-P.top)/P.height);rectDirty=false}}
+    var t0=performance.now();
     gl.texImage2D(gl.TEXTURE_2D,0,gl.RGB,gl.RGB,gl.UNSIGNED_BYTE,video);
     gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
     pt.classList.add('live');
+    /* страховка: если кадр стабильно рисуется дольше 14 мс (слабое устройство), останавливаем видео, остаётся последний кадр */
+    var dt=performance.now()-t0;slow=dt>14?slow+1:Math.max(0,slow-1);
+    if(slow>12){dead=true;video.pause();video.removeAttribute('src');video.load()}
   }
+  var slow=0,dead=false;
   var rectDirty=true,rectUntil=0,cw=0,ch=0;
   addEventListener('resize',function(){rectDirty=true});
   /* рисуем только когда видео выдало новый кадр (requestVideoFrameCallback), а не на каждом обновлении экрана */
@@ -109,6 +120,7 @@
   /* ---------- играет только после прелоадера, на видимой вкладке и пока hero на экране ---------- */
   var started=false,inView=true,visible=!document.hidden,covered=false;
   function sync(){
+    if(dead)return;
     if(started&&inView&&visible&&!covered){var p=video.play();if(p&&p.catch)p.catch(function(){})}
     else if(!video.paused)video.pause();
   }

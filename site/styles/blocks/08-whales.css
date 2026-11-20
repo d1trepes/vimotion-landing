@@ -16,7 +16,7 @@
 
 .wh-pic{position:relative;width:100%;margin-top:28px}
 /* на компьютере ширина картинки подстраивается под высоту окна, чтобы вся сцена влезла и закрепилась */
-@media (min-width:721px){.wh-pic{width:min(100%,max(520px,calc((var(--vhl,100vh) - 560px)*1.88)))}}
+@media (min-width:721px){.wh-pic{width:min(100%,max(520px,calc((var(--vhs) - 520px)*1.88)))}}
 .wh-img{position:relative;aspect-ratio:1100/585;overflow:hidden}
 .wh-img img{width:100%;height:100%}
 /* вуаль прожектора: широкий слой с вырезом едет по transform, --sx ставит whales.js */
@@ -42,7 +42,7 @@
 
 /* закрепление сцены (класс pin ставит whales.js, если сцена влезает в окно) */
 .wh.pin .wh-run{height:calc(var(--vhl,100vh)*2.6)}
-.wh.pin .wh-stage{position:sticky;top:0;height:var(--vhl,100svh);display:grid;align-items:center;padding-top:32px;padding-bottom:32px}
+.wh.pin .wh-stage{position:sticky;top:var(--hb);height:var(--vhs);display:grid;align-items:center;padding-top:32px;padding-bottom:32px}
 
 @media (max-width:1180px){
   .wh-sub{font-size:17px}

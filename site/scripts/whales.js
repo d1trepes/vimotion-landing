@@ -20,7 +20,8 @@
   var pin=false;
   function layout(){
     sec.classList.remove('pin');
-    pin=sec.querySelector('.wh-in').offsetHeight+64<=vh();
+    var hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    pin=sec.querySelector('.wh-in').offsetHeight+64<=vh()-hb;
     sec.classList.toggle('pin',pin);
   }
   function scrollTarget(){

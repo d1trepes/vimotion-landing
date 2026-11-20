@@ -30,9 +30,13 @@
   transform:translateX(-120%);pointer-events:none}
 .fn-row.is-sweep .fn-q::after{animation:fnsh 1.1s .55s ease-out both}
 @keyframes fnsh{from{transform:translateX(-120%)}to{transform:translateX(120%)}}
-/* наведение: полоса только окрашивается, без сдвига и изменения ширины (сдвиг давал светлую линию на косом крае) */
+/* наведение (21.11): полоса окрашивается и приподнимается на 10px. Сдвиг целым числом пикселей и в своём слое,
+   нижний край закрыт clip-path, поэтому на косом крае нет светлой линии; задержка въезда на наведение не действует */
 @media (hover:hover) and (pointer:fine){
-  .fn-it:hover img{filter:grayscale(0) brightness(1) contrast(1)}
+  .fn-it{backface-visibility:hidden}
+  .fn.is-in .fn-it{transition:opacity .7s,translate .5s var(--ease);transition-delay:0s}
+  .fn-it:hover{translate:0 -10px}
+  .fn-it:hover img{filter:grayscale(0) brightness(1) contrast(1);transition-duration:.35s}
   .fn-row .fn-it:hover img{animation:none}
 }
 .fn-q:focus-visible{outline:2px solid var(--on-red);outline-offset:4px}

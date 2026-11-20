@@ -1,5 +1,10 @@
 /* Шапка */
-.hdr{position:absolute;inset:0 0 auto 0;z-index:20;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 max(var(--m),calc((100% - var(--W))/2 + var(--m)))}
+.hdr{position:fixed;inset:0 0 auto 0;z-index:120;height:var(--hb);display:flex;align-items:center;justify-content:space-between;padding:0 max(var(--m),calc((100% - var(--W))/2 + var(--m)));
+  transition:background-color .35s,box-shadow .35s}
+/* шапка закреплена (21.11): на первом экране прозрачная, после прокрутки кремовая плашка с тонкой линией.
+   Без backdrop-filter и transform: иначе мобильная шторка (position:fixed внутри) привязалась бы к шапке */
+.hdr.is-stuck{background:var(--cream);box-shadow:0 1px 0 rgba(17,17,17,.08),0 10px 30px -18px rgba(17,17,17,.35)}
+.nav a.is-cur::after{transform:scaleX(1)}
 .logo{font:400 30px/1 var(--logo);color:var(--red);transform:skewX(-11deg);text-decoration:none;display:inline-block;letter-spacing:.01em}
 .nav{display:flex;gap:34px}
 .nav a{font:500 15px var(--text);color:var(--ink);text-decoration:none;position:relative}
@@ -39,7 +44,6 @@
   .burger i{position:relative}
 }
 @media (max-width:720px){
-  .hdr{height:62px}
   .logo{font-size:21px}
   .btn-line{height:42px;padding:0 13px;font-size:11px;gap:8px}
 }

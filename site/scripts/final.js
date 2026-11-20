@@ -12,6 +12,7 @@
       if(!es[0].isIntersecting)return;
       io.disconnect();
       sec.classList.remove('is-pre');
+      setTimeout(function(){sec.classList.add('is-in')},1700);/* въезд закончился: наведение без задержки */
       if(run)run();
     },{rootMargin:margin});
     io.observe(target);

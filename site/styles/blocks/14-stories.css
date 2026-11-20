@@ -15,8 +15,12 @@
 .st-list{list-style:none;margin:72px 40px 0;display:flex;gap:14px;height:580px;text-align:left}
 .st-it{position:relative;flex:1 1 0;min-width:0;transform:skewX(var(--sk));transition:flex-grow 1.15s cubic-bezier(.33,0,.15,1)}
 .st-it.is-on{flex-grow:4.8}
-.st-b{position:absolute;inset:0;display:block;width:100%;padding:0;border:0;background:#222;cursor:pointer;overflow:hidden;color:inherit;font:inherit;-webkit-tap-highlight-color:transparent}
-.st-it.is-on .st-b{cursor:default}
+.st-b{position:absolute;inset:0;display:block;width:100%;padding:0;border:0;background:#131313;cursor:pointer;overflow:hidden;color:inherit;font:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent;
+  /* обрезка по полосе в своём слое: при раскрытии (transform картинки) края не «искрят» светлой линией */
+  isolation:isolate;-webkit-mask-image:linear-gradient(#000,#000);backface-visibility:hidden}
+/* нижняя кромка: тёмная полоска поверх фото и затемнения (21.11, баг клиента: при раскрытии снизу мелькала белая линия
+   на стыке картинки, которая масштабируется в своём слое, и затемнения поверх неё) */
+.st-b::after{content:"";position:absolute;left:-4px;right:-4px;bottom:-1px;height:3px;background:#131313;z-index:3;pointer-events:none}
 .st-b:focus-visible{outline:2px solid var(--on-red);outline-offset:3px}
 .st-sk{position:absolute;inset:0;overflow:hidden}
 .st-sk img{position:absolute;top:0;left:-40%;width:180%;max-width:none;height:100%;object-fit:cover;object-position:50% 30%;transform:skewX(10deg);
@@ -40,7 +44,7 @@
 
 /* плашка с именем, цитатой и суммой */
 .st-pl{position:absolute;left:44px;right:30px;bottom:26px;padding:20px 26px 20px 30px;background:rgba(14,14,14,.66);
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.12);opacity:0;visibility:hidden;transform:translateY(12px);
+  opacity:0;visibility:hidden;transform:translateY(12px);
   transition:opacity .45s,transform .6s var(--ease),visibility 0s .45s;pointer-events:none}
 .st-it.is-on .st-pl{opacity:1;visibility:visible;transform:none;transition:opacity .5s .35s,transform .7s .35s var(--ease),visibility 0s}
 .st-pl-in{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;transform:skewX(10deg)}
@@ -49,6 +53,12 @@
 .st-r{flex:none;text-align:right}
 .st-sum{font:900 44px/.95 var(--cond);letter-spacing:-.01em;color:var(--on-red);white-space:nowrap}
 .st-t{display:block;margin-top:4px;font:400 13px/1.2 var(--text);color:rgba(246,238,230,.6)}
+/* стрелка «открыть кейс» в плашке; при наведении на раскрытую полосу заливается кремовым */
+.st-go{flex:none;align-self:center;display:grid;place-items:center;width:44px;height:44px;margin-left:4px;border:1.5px solid rgba(246,238,230,.5);color:var(--on-red);
+  transition:background .35s,color .35s,border-color .35s}
+.st-go svg{width:14px;height:14px;transition:transform .45s var(--ease)}
+.st-it.is-on .st-b:hover~.st-pl .st-go,.st-it.is-on .st-b:focus-visible~.st-pl .st-go{background:var(--on-red);color:#111;border-color:var(--on-red)}
+.st-it.is-on .st-b:hover~.st-pl .st-go svg{transform:translate(2px,-2px)}
 
 .st-acts{margin-top:64px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
 .st-btn-o{background:transparent;color:var(--on-red);box-shadow:inset 0 0 0 1.5px rgba(246,238,230,.55)}
@@ -79,6 +89,7 @@
   .st-pl{left:20px;right:12px;bottom:14px;padding:14px 16px}
   .st-pl-in{gap:12px;transform:skewX(5deg)}
   .st-nm{font-size:22px}.st-q{font-size:12px}.st-sum{font-size:30px}.st-t{font-size:11px}
+  .st-go{width:36px;height:36px}
   .st-acts{margin-top:40px;flex-direction:column}
   .st-acts .btn{width:100%;height:58px;padding:0 20px}
   .st.is-wait .st-it{translate:0 40px}

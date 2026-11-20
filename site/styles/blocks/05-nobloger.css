@@ -8,7 +8,7 @@
 .hero~.nob{background:#0e0d0d;color:var(--on-red);overflow:clip;padding:128px var(--m) 136px;
   --chk:repeating-conic-gradient(#f3ece4 0 25%,#111 0 50%);
   --ch:430px;--st:120px;
-  --t0:max(48px,calc((var(--vhl,100svh) - var(--ch) - 2*var(--st))/2))}
+  --t0:max(calc(var(--hb) + 24px),calc(var(--hb) + (var(--vhs) - var(--ch) - 2*var(--st))/2))}
 
 .nob-wm{position:absolute;left:var(--m);right:var(--m);bottom:-1.5%;opacity:.05;filter:grayscale(1) brightness(3);pointer-events:none}
 .nob-wm img{width:100%;height:auto}

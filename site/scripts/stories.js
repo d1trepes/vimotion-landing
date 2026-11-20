@@ -1,4 +1,6 @@
 /* Блок 14. Истории учеников: косой аккордеон.
+   21.11: каждая полоса — ссылка на кейс (cases.html#имя). На компьютере наведение раскрывает, клик открывает кейс;
+   на телефоне первое касание раскрывает полосу, второе по раскрытой открывает кейс; с клавиатуры фокус раскрывает, Enter открывает.
    Наведение (с задержкой 170 мс, чтобы не дёргалось), клик, касание или клавиатура раскрывают человека. Пока посетитель ничего не трогал
    и блок на экране, истории сменяются сами каждые 4,5 с. Ссылки #alena, #ivan и т. п. (из блока 2)
    раскрывают нужного человека. При prefers-reduced-motion без въезда и автосмены. */
@@ -13,9 +15,9 @@
 
   function open(i){
     if(i===cur||i<0||i>=items.length)return;
-    items[cur].classList.remove('is-on');items[cur].querySelector('.st-b').setAttribute('aria-expanded','false');
+    items[cur].classList.remove('is-on');
     cur=i;
-    items[cur].classList.add('is-on');items[cur].querySelector('.st-b').setAttribute('aria-expanded','true');
+    items[cur].classList.add('is-on');
   }
   function stop(){touched=true;clearInterval(timer);timer=null}
   function run(){
@@ -25,7 +27,11 @@
 
   items.forEach(function(li,i){
     var b=li.querySelector('.st-b');
-    b.addEventListener('click',function(){stop();open(i)});
+    b.addEventListener('click',function(e){
+      if(fine||i===cur){stop();return}  /* переход по ссылке на кейс */
+      e.preventDefault();stop();open(i);
+    });
+    b.addEventListener('focus',function(){if(!fine||b.matches(':focus-visible')){stop();open(i)}});
     /* на компьютере раскрытие по наведению, но с небольшой задержкой: при проведении мышью через ряд полосы не дёргаются */
     if(fine){
       var t=null;
