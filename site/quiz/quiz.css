@@ -40,8 +40,8 @@ button,input,textarea{-webkit-tap-highlight-color:transparent}
 
 /* шапка: вордмарк и табло шага */
 .top{width:min(760px,100%);margin:0 auto 34px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.brand{display:inline-block;font:400 26px/1 var(--logo);letter-spacing:.01em;color:var(--ink);text-decoration:none;transform:skewX(-11deg);transition:color .25s}
-.brand:hover{color:var(--cola)}
+.brand{display:inline-block;font:400 26px/1 var(--logo);letter-spacing:.01em;color:var(--cola);text-decoration:none;transform:skewX(-11deg);transition:color .25s}
+.brand:hover{color:var(--cola-hover)}
 /* «Шаг N из 10» прогресс и так показывает болид на дорожке: текст скрыт визуально, но остаётся для скрипта и читалок экрана */
 .step-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 
@@ -167,4 +167,23 @@ h1{font:900 clamp(44px,7vw,80px)/.94 var(--cond);letter-spacing:-.005em;margin-b
   .progress>span,.option,.option::after,.back,.cta,.cta-arrow,.field input,.field textarea{transition:none}
   .view.is-anim>.reveal,.view.is-anim .form .field,.view.is-anim .form .nav,.option.opt-in,.question-hint.opt-in,.field.opt-in,.option.is-pressed{animation:none}
   .option:hover{transform:none}
+}
+
+/* Карта трассы (quiz-track.js добавляет панель .qmap и класс has-qmap на <html>).
+   Компьютер: слева тёмная панель с трассой на 10 отметок, справа вопросы; прямая дорожка прогресса скрыта.
+   Телефон и узкий планшет: панели нет, прогресс показывает прямая дорожка с болидом. */
+.qmap{display:none}
+@media (min-width:901px){
+  .has-qmap .shell{display:grid;grid-template-columns:minmax(300px,400px) minmax(0,720px);justify-content:center;column-gap:clamp(48px,6vw,104px);
+    align-items:start;grid-template-rows:auto 1fr;padding:36px 40px 56px}
+  .has-qmap .qmap{display:block;grid-column:1;grid-row:1/3;position:sticky;top:36px;height:min(calc(100dvh - 72px),800px);min-height:560px;
+    background:#111;padding:26px 24px 20px}
+  .qmap svg{display:block;width:100%;height:calc(100% - 64px)}
+  .qmap-n{font:900 60px/1 var(--cond);color:var(--on-dark);letter-spacing:-.01em;font-variant-numeric:tabular-nums}
+  .qmap-n span{font-size:28px;color:#6b6560}
+  .qmap-dot{fill:#5a5652;stroke:#111;stroke-width:3;transition:fill .4s}
+  .qmap-dot.on{fill:var(--cola)}
+  .has-qmap .top{grid-column:2;width:100%;margin:6px 0 56px}
+  .has-qmap .progress{display:none}
+  .has-qmap .panel{grid-column:2;width:100%;margin:0}
 }
