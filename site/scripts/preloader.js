@@ -5,6 +5,9 @@
   'use strict';
   var root=document.documentElement;
   if(!root.classList.contains('is-loading'))return;
+  /* пока заставка на экране, страницу нельзя сдвинуть пальцем (iOS игнорирует overflow:hidden у части браузеров) */
+  function block(e){if(root.classList.contains('is-loading'))e.preventDefault();else document.removeEventListener('touchmove',block,{passive:false})}
+  document.addEventListener('touchmove',block,{passive:false});
   var svg=document.getElementById('gsvg');
   if(!svg){open();return}
 
