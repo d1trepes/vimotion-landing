@@ -42,7 +42,8 @@ button,input,textarea{-webkit-tap-highlight-color:transparent}
 .top{width:min(760px,100%);margin:0 auto 34px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .brand{display:inline-block;font:400 26px/1 var(--logo);letter-spacing:.01em;color:var(--ink);text-decoration:none;transform:skewX(-11deg);transition:color .25s}
 .brand:hover{color:var(--cola)}
-.step-label{font:700 13px/1 var(--display);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-variant-numeric:tabular-nums}
+/* «Шаг N из 10» прогресс и так показывает болид на дорожке: текст скрыт визуально, но остаётся для скрипта и читалок экрана */
+.step-label{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 
 /* прогресс: асфальт с прерывистой разметкой, шашечный финиш справа, болид едет к нему (ширину полосы задаёт скрипт) */
 .progress{position:relative;width:min(760px,100%);height:40px;margin:0 auto 64px;overflow:visible;background:#3a3735;
@@ -105,8 +106,8 @@ h1{font:900 clamp(44px,7vw,80px)/.94 var(--cond);letter-spacing:-.005em;margin-b
 .cta:hover:not(:disabled){background:var(--cola-hover)}
 .cta:disabled{opacity:.32;cursor:not-allowed}
 .cta:focus-visible{outline:2px solid var(--cola);outline-offset:4px}
-.cta-arrow{font-size:17px;line-height:1;transition:transform .35s var(--ease)}
-.cta:hover:not(:disabled) .cta-arrow{transform:translate(3px,-3px)}
+/* стрелки в кнопках убраны по просьбе клиента: знак остаётся в разметке (его меняет скрипт), но не показывается */
+.cta-arrow{display:none}
 
 /* поля */
 .form{display:grid;gap:18px}
@@ -145,7 +146,6 @@ h1{font:900 clamp(44px,7vw,80px)/.94 var(--cond);letter-spacing:-.005em;margin-b
   .shell{padding:20px 16px 32px}
   .top{margin-bottom:24px}
   .brand{font-size:22px}
-  .step-label{font-size:11px;padding:8px 10px 7px}
   .progress{height:32px;margin-bottom:40px;background-size:18px 2px}
   .progress::after{width:12px;background-size:8px 8px}
   .progress>span{min-width:56px}

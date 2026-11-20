@@ -6,7 +6,8 @@
 - `quiz/index.html`: в `<head>` убраны подключение шрифтов Fontshare и Google Fonts и встроенный `<style>`,
   вместо них подключён `quiz.css` и предзагрузка двух шрифтов. Всё от `<body>` до конца файла
   (разметка, вопросы, проверка полей, отправка в `../api/send-quiz.php`, `../assets/js/utm.js`,
-  `../assets/js/track.js`, `vmTrack("quiz_open")`, Meta Pixel, vm-analytics) совпадает с прежней версией символ в символ.
+  `../assets/js/track.js`, `vmTrack("quiz_open")`, Meta Pixel, vm-analytics) совпадает с прежней версией,
+  кроме одной надписи: у кнопки `#backBtn` текст «← Назад» заменён на «Назад» (без стрелки). Скрипты эту надпись не используют.
 - `quiz/quiz.css`: новые стили.
 - `quiz/assets/fonts/*.woff2`: шрифты для стилей.
 
