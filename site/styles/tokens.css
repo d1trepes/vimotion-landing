@@ -48,6 +48,11 @@ html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
    Поэтому вся страница кремовая за счёт main, а цвет body и html ставит menu.js по блоку у нижнего края экрана:
    тёмный блок (data-hdr="dark", подвал) — #0e0e0e, остальное — кремовый. Красным панель не бывает */
 main{background:var(--cream)}
+/* 20.11: Safari 26 на iPhone красит нижнюю панель цветом закреплённого (fixed/sticky) элемента у нижнего края, который он находит
+   проверкой касания. Закреплённые сцены блоков 6–8 доходят до низа окна, и Safari брал из них красное (вакансии, кнопки),
+   а при быстрой прокрутке так и оставлял. Эта полоса (только iOS, ставит menu.js) всегда лежит поверх них у самого края
+   и окрашена как блок под ней: тёмная или кремовая. pointer-events не отключаем: иначе Safari её не видит */
+.vm-edge{position:fixed;left:0;right:0;bottom:0;height:12px;z-index:115;background:var(--cream)}
 
 body{overflow-x:clip;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%;

@@ -48,6 +48,7 @@ html{scroll-padding-top:var(--hb)}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
 main{background:var(--cream)}
+.vm-edge{position:fixed;left:0;right:0;bottom:0;height:12px;z-index:115;background:var(--cream)}
 body{overflow-x:clip;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%;
   -webkit-touch-callout:none;-webkit-user-select:none;user-select:none;-webkit-user-drag:none}

@@ -46,8 +46,11 @@ try{
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
     /* за подвалом (оттягивание в самом конце) тоже тёмное */
     if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
-    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
+    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c;if(edge)edge.style.backgroundColor=c}
   }
+  /* полоса у нижнего края для Safari на iPhone/iPad (см. .vm-edge в tokens.css) */
+  var ios=/iP(hone|ad|od)/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),edge=null;
+  if(ios){edge=document.createElement('div');edge.className='vm-edge';edge.setAttribute('aria-hidden','true');document.body.appendChild(edge)}
   addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));
