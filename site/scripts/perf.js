@@ -14,6 +14,17 @@
    по 3 картинки за раз, чтобы к моменту прокрутки всё было в кеше. Обложка урока (фон) подключается так же. */
 (function(){
   'use strict';
+  var root=document.documentElement;
+  if(root.classList.contains('vm-touch')||root.classList.contains('vm-low-data')){
+    var pain=document.getElementById('pain');
+    if(pain&&window.IntersectionObserver){
+      var nearby=new IntersectionObserver(function(entries){
+        if(entries[0].isIntersecting){pain.classList.add('cav');nearby.disconnect()}
+      },{rootMargin:'160px'});
+      nearby.observe(pain);
+    }
+    return;
+  }
   function start(){
     var list=[].slice.call(document.querySelectorAll('img[loading="lazy"]'));
     var les=document.getElementById('les-card');if(les)les.classList.add('bg');

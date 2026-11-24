@@ -5,31 +5,48 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="format-detection" content="telephone=no,email=no,address=no">
-<script>/* Высота шторки встроенного браузера меняется отдельно от размеров окна. */
-(function(){var root=document.documentElement,view=window.visualViewport,touch=matchMedia('(pointer:coarse)'),width=0,height=0,frame=0;
-function measure(){frame=0;var w=root.clientWidth||innerWidth,h=innerHeight;
-  if(view&&Math.abs(view.scale-1)<.01&&view.height>0)h=Math.min(h,Math.round(view.height));
-  if(w===width&&(h===height||(touch.matches&&scrollY>4&&Math.abs(h-height)<80)))return;
-  width=w;height=h;window.vmVH=h;root.style.setProperty('--vhl',h+'px');
-  window.dispatchEvent(new Event('vmviewport'));
-}
-function schedule(){if(!frame)frame=requestAnimationFrame(measure)}
-measure();addEventListener('resize',schedule);addEventListener('pageshow',schedule);if(view)view.addEventListener('resize',schedule)})();</script>
-
-<script>/* Ссылка всегда открывается с первого экрана: браузер и Telegram не восстанавливают прошлую позицию прокрутки */
-(function(){if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)return;
-function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);addEventListener('pageshow',function(e){if(e.persisted)t()})})();</script>
+<script>/* Панели и масштабирование меняют видимую область, но не должны перестраивать сцену при свайпе. */
+(function(){
+  var root=document.documentElement,view=window.visualViewport,ua=navigator.userAgent;
+  var ios=/iP(hone|ad|od)/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+  var touch=ios||matchMedia('(pointer:coarse)').matches;
+  var network=navigator.connection,slow=network&&(network.saveData||/^(slow-2g|2g|3g)$/.test(network.effectiveType));
+  root.classList.toggle('vm-touch',touch);
+  root.classList.toggle('vm-low-data',Boolean(slow));
+  root.classList.toggle('vm-native-tint',ios&&!/CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|YaBrowser|GSA\/|DuckDuckGo|Mercury|Brave|Instagram|FBAN|FBAV|VKClient/.test(ua));
+  var width=0,height=0,frame=0;
+  function measure(){
+    frame=0;
+    var w=root.clientWidth||innerWidth;
+    if(touch&&w===width)return;
+    var h=innerHeight;
+    if(touch&&view&&Math.abs(view.scale-1)<.01&&view.height>0)h=Math.min(h,Math.round(view.height));
+    if(w===width&&h===height)return;
+    width=w;height=h;window.vmVH=h;
+    /* На телефоне Hero закрывает и развёрнутую шторку, сохраняя размеры содержимого. */
+    var full=touch&&w<=679&&Math.abs(screen.width-w)<32?Math.max(h,screen.height):h;
+    root.style.setProperty('--vhl',h+'px');
+    root.style.setProperty('--vm-hero-min',full+'px');
+    root.classList.toggle('vm-short',h<=640);
+    root.classList.toggle('vm-compact',h<=660);
+    root.classList.toggle('vm-short-stack',h<=700);
+    root.classList.toggle('vm-tiny',h<370);
+    window.dispatchEvent(new Event('vmviewport'));
+  }
+  function schedule(){if(!frame)frame=requestAnimationFrame(measure)}
+  measure();addEventListener('resize',schedule);addEventListener('pageshow',schedule);
+})();</script>
 
 <title>ViMotion: из монтажёра в контент-креатора</title>
 <meta name="description" content="Менторская программа Валентина Сушнёва: из монтажёра в контент-креатора с доходом от $1 000 за 2 месяца">
 <meta name="theme-color" content="#EFE6DE">
 <link rel="icon" href="data:,">
 <script>
-  /* прелоадер и анимации только без prefers-reduced-motion */
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-    document.documentElement.classList.add('is-loading');
-    /* страховка: если скрипты не загрузились, через 6 с всё равно показываем сайт */
-    setTimeout(function(){document.documentElement.classList.remove('is-loading')},6000);
+  /* На телефоне, слабой сети и при переходе к разделу страница сразу доступна. */
+  var page=document.documentElement;
+  if(!location.hash&&!page.classList.contains('vm-touch')&&!page.classList.contains('vm-low-data')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
+    page.classList.add('is-loading');
+    setTimeout(function(){page.classList.remove('is-loading')},3500);
   }
 </script>
 <link rel="preload" href="fonts/fira-xc-900.woff2" as="font" type="font/woff2" crossorigin>
@@ -37,13 +54,13 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
 <link rel="preload" href="fonts/inter-tight-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="img/wordmark.webp" imagesrcset="img/wordmark-800.webp?v=20261117z6 800w, img/wordmark-1100.webp?v=20261117z6 1100w, img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
 <link rel="preload" as="image" type="image/webp" href="img/valentin-poster.webp?v=20261117z3" imagesrcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
-<link rel="stylesheet" href="styles/site.css?v=c1235d4b">
-<script src="scripts/site.js?v=c1235d4b" defer></script>
+<link rel="stylesheet" href="styles/site.css?v=6e8cb55e">
+<script src="scripts/site.js?v=6e8cb55e" defer></script>
 </head>
 <body>
 
 <!-- Прелоадер: спидометр -->
-<div class="pre" id="pre" aria-hidden="true">
+<div class="pre" id="pre" aria-hidden="true" hidden>
   <div class="gauge">
     <svg id="gsvg" viewBox="0 30 400 300"></svg>
     <div class="g-brand">VIMOTION</div>

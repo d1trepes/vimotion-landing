@@ -18,6 +18,7 @@
       stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),header=document.querySelector('.hdr'),
       lines=[].slice.call(sec.querySelectorAll('.gb-trail path')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
+  var touch=document.documentElement.classList.contains('vm-touch');
 
   var W=1672,H=941,X1=303.5,X3=828,X5=1351,T=234,N=461,B=684;
   /* путь 1→2→3→4→5 прямыми отрезками через нейтраль (21.11: клиент попросил только прямые линии).
@@ -135,14 +136,15 @@
   }
   function shift(gr){
     go(gr);
-    if(!pin)return;
+    if(!pin||touch)return;
     var y=scrollFor(gr);
     if(Math.abs(y-scrollY)>2){lock=gr;lockY=y;lockT=performance.now();window.scrollTo({top:y,behavior:'smooth'})}
   }
   var pid=null,dragGoal=0;
   knob.addEventListener('pointerdown',function(e){
     if(e.button>0)return;
-    e.preventDefault();drag=true;pid=e.pointerId;sec.classList.add('is-grab');
+    if(e.pointerType!=='touch')e.preventDefault();
+    drag=true;pid=e.pointerId;sec.classList.add('is-grab');
     try{knob.setPointerCapture(pid)}catch(_){}
   });
   /* за пальцем: цель ставим сразу, пружина с высокой жёсткостью сглаживает дрожание руки */
@@ -154,7 +156,8 @@
   function release(e){
     if(!drag||(e&&e.pointerId!==pid))return;
     drag=false;pid=null;sec.classList.remove('is-grab');OMEGA=7.5;VMAX=0;
-    shift(Math.round(Math.max(0,Math.min(4,goal))));
+    if(e&&e.type!=='pointerup')kick();
+    else shift(Math.round(Math.max(0,Math.min(4,goal))));
   }
   knob.addEventListener('pointerup',release);knob.addEventListener('pointercancel',release);
   knob.addEventListener('lostpointercapture',release);
@@ -165,7 +168,6 @@
   place(g);
   addEventListener('scroll',kick,{passive:true});
   function resize(){layout();size();place(g);kick()}
-  addEventListener('resize',resize);
   addEventListener('vmviewport',resize);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resize);
   if(window.ResizeObserver)new ResizeObserver(function(){size();place(g)}).observe(knob.parentNode);

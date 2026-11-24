@@ -74,10 +74,18 @@
     draw(q);
     raf=still?(last=0,0):requestAnimationFrame(tick);
   }
-  function kick(){goal=target();if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  function kick(){
+    var next=target();
+    if(next===goal&&Math.abs(gy*-5-tx)<.01&&Math.abs(gx*7-ty)<.01)return;
+    goal=next;
+    if(!raf){last=0;raf=requestAnimationFrame(tick)}
+  }
 
   sec.classList.add('js');
   measure();q=goal=target();draw(q);
-  addEventListener('scroll',kick,{passive:true});
-  addEventListener('resize',function(){measure();draw(q);kick()});
+  var near=true,scrollFrame=0;
+  function schedule(){if(near&&!scrollFrame)scrollFrame=requestAnimationFrame(function(){scrollFrame=0;kick()})}
+  if(window.IntersectionObserver)new IntersectionObserver(function(entries){near=entries[0].isIntersecting;schedule()},{rootMargin:'160px'}).observe(sec);
+  addEventListener('scroll',schedule,{passive:true});
+  addEventListener('vmviewport',function(){measure();draw(q);schedule()});
 })();

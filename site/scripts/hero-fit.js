@@ -11,7 +11,7 @@
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
   /* те же границы, что в 01-hero.css */
-  var mqT=matchMedia('(max-width:1480px)'),mqP=matchMedia('(max-width:559px), (max-width:759px) and (min-height:541px)');
+  var mqT=matchMedia('(max-width:1480px)'),mqP=matchMedia('(max-width:679px)');
 
   /* высота окна без панелей браузера: --vhl из <head> (на телефонах фиксируется при загрузке), иначе svh */
   var probe=document.createElement('div');
@@ -40,7 +40,7 @@
     if(getComputedStyle(root).getPropertyValue('--hero-fit').trim()!=='1')return;
     var W=inn.clientWidth,H=probe.getBoundingClientRect().height||innerHeight;
     var m=parseFloat(getComputedStyle(root).getPropertyValue('--m'))||56;
-    root.classList.toggle('hero-compact',mqP.matches&&W<=720&&H<760);
+    root.classList.toggle('hero-compact',mqP.matches&&W<=360);
     var hh=hdr?hdr.offsetHeight:76;
     var cr=copy.getBoundingClientRect(),sr=stats.getBoundingClientRect();
     var Cw=cr.width,Ch=cr.height,Sw=sr.width,Sh=sr.height;
@@ -95,14 +95,14 @@
       var wmTop=hh+4;
       var ptTop=wmTop+.04*wmFull*WM,g1=12,statsGap=root.classList.contains('hero-compact')?12:20;
       col=Ch+statsGap+Sh;
-      var phFull=Math.min(W*.96,530)*PT;
-      ph=Math.max(phFull*.82,Math.min(phFull,H-ptTop-g1-col-m));
-      heroH=Math.max(H,ptTop+ph+g1+col+m);
-      pw=ph/PT;
+      pw=Math.min(W*.9,530);ph=pw*PT;
+      var copyTop=ptTop+ph+g1;
+      var minimum=parseFloat(root.style.getPropertyValue('--vm-hero-min'))||H;
+      heroH=Math.max(minimum,copyTop+col+m);
       place(wm,m,wmTop,wmFull);
       place(pt,(W-pw)/2,ptTop,pw);pt.style.height=px(ph);
-      place(stats,m,heroH-m-Sh,W-2*m);
-      place(copy,m,heroH-m-col,W-2*m);
+      place(stats,m,copyTop+Ch+statsGap,W-2*m);
+      place(copy,m,copyTop,W-2*m);
     }
     hero.style.setProperty('--hero-height',px(heroH));
     root.classList.add('vm-fit');
@@ -116,7 +116,6 @@
   }
   function force(){lastW=lastH=0;schedule()}
   addEventListener('vmviewport',schedule);
-  addEventListener('resize',schedule);
   addEventListener('load',force);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(force);
   fit();lastW=inn.clientWidth;lastH=probe.getBoundingClientRect().height;

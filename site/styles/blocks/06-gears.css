@@ -35,6 +35,7 @@
 /* с JS ручка стоит в углу и едет по transform: без пересчёта раскладки и перерисовки тени на каждом кадре */
 .gb.js .gb-knob{left:0;top:0;transform:translate(-50%,-50%);will-change:transform;backface-visibility:hidden;
   z-index:3;cursor:grab;touch-action:none;-webkit-user-select:none;user-select:none}
+.vm-touch .gb.js .gb-knob{touch-action:pan-y;touch-action:pan-y pinch-zoom}
 /* ручку можно взять и переключить передачу самому (scripts/gears.js), подписи передач тоже кликаются */
 .gb.js .gb-knob:hover{filter:drop-shadow(6px 12px 9px rgba(40,20,8,.5)) drop-shadow(1px 2px 2px rgba(40,20,8,.35)) brightness(1.06)}
 .gb.is-grab .gb-knob{cursor:grabbing;filter:drop-shadow(8px 16px 12px rgba(40,20,8,.5)) drop-shadow(1px 2px 2px rgba(40,20,8,.35)) brightness(1.08)}

@@ -18,12 +18,13 @@
   function vh(){return window.vmVH||innerHeight}
 
   var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic'),header=document.querySelector('.hdr');
-  var compact=matchMedia('(max-width:720px), (min-width:560px) and (max-height:660px)');
+  var mobile=matchMedia('(max-width:720px)'),wide=matchMedia('(min-width:560px)');
   var pin=false,hb=0;
   function layout(){
     pic.style.removeProperty('--wh-width');
     hb=header?header.offsetHeight:0;
-    var available=vh()-hb-(compact.matches?24:64)-2;
+    var compact=mobile.matches||(wide.matches&&document.documentElement.classList.contains('vm-compact'));
+    var available=vh()-hb-(compact?24:64)-2;
     var picture=pic.getBoundingClientRect(),maxWidth=(available-win.offsetHeight+picture.height)*1100/585;
     pin=maxWidth>=picture.width*.55;
     if(pin&&maxWidth<picture.width)pic.style.setProperty('--wh-width',Math.floor(maxWidth)+'px');
@@ -66,7 +67,7 @@
     raf=q===goal?(last=0,0):requestAnimationFrame(tick);
   }
   function go(v){if(v===goal)return;goal=v;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
-  var scrollFrame=0;
+  var scrollFrame=0,near=true;
   function kick(){
     scrollFrame=0;
     var p=progress();
@@ -82,13 +83,11 @@
 
   sec.classList.add('js');
   layout();q=goal=scrollTarget(progress());draw();
-  function schedule(){if(!scrollFrame)scrollFrame=requestAnimationFrame(kick)}
+  function schedule(){if(near&&!scrollFrame)scrollFrame=requestAnimationFrame(kick)}
+  if(window.IntersectionObserver)new IntersectionObserver(function(entries){near=entries[0].isIntersecting;schedule()},{rootMargin:'120px'}).observe(sec);
   addEventListener('scroll',schedule,{passive:true});
-  var w=innerWidth,h=vh();
-  function re(){w=innerWidth;h=vh();layout();schedule()}
-  function resize(){if(innerWidth!==w||vh()!==h)re()}
-  addEventListener('resize',resize);
-  addEventListener('vmviewport',resize);
+  function re(){layout();schedule()}
+  addEventListener('vmviewport',re);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);
   addEventListener('load',re);
 })();

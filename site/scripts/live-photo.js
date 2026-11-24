@@ -5,7 +5,10 @@
   var noop={video:null,start:function(){}};
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var pt=document.getElementById('pt'),cv=document.getElementById('live'),hero=document.getElementById('hero');
-  if(reduce||!pt||!cv){window.vmLive=noop;return}
+  var root=document.documentElement;
+  if(reduce||!pt||!cv||root.classList.contains('vm-touch')||root.classList.contains('vm-low-data')||!root.classList.contains('is-loading')){
+    window.vmLive=noop;return;
+  }
 
   /* ---------- WebGL ---------- */
   var gl,hLoc,glOK=false;

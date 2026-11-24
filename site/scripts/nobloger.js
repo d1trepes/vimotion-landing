@@ -8,7 +8,7 @@
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var cards=[].slice.call(sec.querySelectorAll('.nob-c'));
   if(cards.length<2)return;
-  var on=false,raf=0;
+  var on=false,raf=0,narrow=matchMedia('(max-width:860px)');
 
   function update(){
     raf=0;
@@ -24,9 +24,9 @@
       c.style.transform=k?'scale('+(1-.04*k).toFixed(4)+')':'';
     });
   }
-  function req(){if(on&&!raf)raf=requestAnimationFrame(update)}
+  function req(){if(on&&!raf&&!narrow.matches)raf=requestAnimationFrame(update)}
 
   new IntersectionObserver(function(es){on=es[0].isIntersecting;if(on)req()}).observe(sec);
   addEventListener('scroll',req,{passive:true});
-  addEventListener('resize',req);
+  addEventListener('vmviewport',req);
 })();

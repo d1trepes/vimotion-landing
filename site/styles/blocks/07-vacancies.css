@@ -55,15 +55,16 @@
   .vc-main img{border-radius:0}
 }
 
-@media (max-height:640px),(prefers-reduced-motion:reduce){
+.vm-short .vc-run{height:auto}
+.vm-short .vc-stage{position:static;height:auto;padding:64px 0 56px}
+.vm-short .vc-area{container-type:inline-size;margin-top:40px}
+.vm-short .vc-board{width:min(760px,100%);transform:none}
+@media (max-width:720px){.vm-short .vc-board{max-width:440px}}
+
+@media (prefers-reduced-motion:reduce){
   .vc-run{height:auto}
   .vc-stage{position:static;height:auto;padding:112px 0 72px}
   .vc-area{container-type:inline-size;margin-top:40px}
   .vc-board{width:min(1328px,100%)}
   .vc-board{transform:none}
 }
-@media (max-height:640px){
-  .vc-stage{padding:64px 0 56px}
-  .vc-board{max-width:760px}
-}
-@media (max-width:720px) and (max-height:640px){.vc-board{max-width:440px}}

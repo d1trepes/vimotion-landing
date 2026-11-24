@@ -39,31 +39,33 @@
      (на страницах кейсов под шапкой ещё полоса с именами, она меняет цвет вместе с шапкой) */
   function upd(){
     t=0;var position=Math.max(0,window.scrollY||0),s=position>8;
-    visibility(position);
-    if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     var y=hdr.offsetHeight+(bar?bar.offsetHeight:0)+1,d=false;
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
+    visibility(position);
+    if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d);tone(d)}
-    bottom();
   }
-  /* 20.11: панели браузера.
-     theme-color (по нему красит панели Telegram и старый Safari) идёт за шапкой.
-     Safari на iPhone (iOS 26) красит нижнюю панель в цвет фона body: ставим body и html цвет блока у нижнего края окна,
-     тёмный или кремовый. Так панель тёмная над тёмными блоками, светлая над светлыми и никогда не красная */
-  var meta=document.querySelector('meta[name="theme-color"]'),bd=null,html=document.documentElement;
-  function tone(dark){if(meta)meta.setAttribute('content',dark?'#0e0e0e':'#EFE6DE')}
-  function bottom(){
-    var y=(window.innerHeight||html.clientHeight)-3,d=false;
-    for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
-    /* за подвалом (оттягивание в самом конце) тоже тёмное */
-    if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
-    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
+  /* Шапка, фон и окрашиваемый край используют один цвет, независимо от карточки под нижней панелью. */
+  var meta=document.querySelector('meta[name="theme-color"]'),html=document.documentElement,lastWidth=0;
+  if(html.classList.contains('vm-native-tint')){
+    var edge=document.createElement('div');
+    edge.className='vm-edge';edge.setAttribute('aria-hidden','true');
+    document.body.appendChild(edge);
+  }
+  function tone(dark){
+    var color=dark?'#0e0e0e':'#EFE6DE';
+    if(meta)meta.setAttribute('content',color);
+    html.style.setProperty('--vm-chrome',color);
   }
   function resize(){
+    var width=html.clientWidth;
+    if(width===lastWidth&&html.classList.contains('vm-touch'))return;
+    lastWidth=width;
     turnY=lastY=Math.max(0,window.scrollY||0);direction=0;
-    hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd();
+    hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);schedule();
   }
-  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',resize);resize();
+  function schedule(){if(!t)t=requestAnimationFrame(upd)}
+  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);resize();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));
   if(!links.length||!('IntersectionObserver' in window))return;

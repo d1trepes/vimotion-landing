@@ -44,6 +44,6 @@
     if(p!==last){last=p;frame.style.setProperty('--p',p)}
   }
   function on(){if(!tick)tick=requestAnimationFrame(upd)}
-  addEventListener('scroll',on,{passive:true});addEventListener('resize',on);
+  addEventListener('scroll',on,{passive:true});addEventListener('vmviewport',on);
   frame.style.setProperty('--p',0);upd();
 })();

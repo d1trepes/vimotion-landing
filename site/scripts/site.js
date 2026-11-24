@@ -41,31 +41,33 @@ try{
      (на страницах кейсов под шапкой ещё полоса с именами, она меняет цвет вместе с шапкой) */
   function upd(){
     t=0;var position=Math.max(0,window.scrollY||0),s=position>8;
-    visibility(position);
-    if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     var y=hdr.offsetHeight+(bar?bar.offsetHeight:0)+1,d=false;
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
+    visibility(position);
+    if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d);tone(d)}
-    bottom();
   }
-  /* 20.11: панели браузера.
-     theme-color (по нему красит панели Telegram и старый Safari) идёт за шапкой.
-     Safari на iPhone (iOS 26) красит нижнюю панель в цвет фона body: ставим body и html цвет блока у нижнего края окна,
-     тёмный или кремовый. Так панель тёмная над тёмными блоками, светлая над светлыми и никогда не красная */
-  var meta=document.querySelector('meta[name="theme-color"]'),bd=null,html=document.documentElement;
-  function tone(dark){if(meta)meta.setAttribute('content',dark?'#0e0e0e':'#EFE6DE')}
-  function bottom(){
-    var y=(window.innerHeight||html.clientHeight)-3,d=false;
-    for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
-    /* за подвалом (оттягивание в самом конце) тоже тёмное */
-    if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
-    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
+  /* Шапка, фон и окрашиваемый край используют один цвет, независимо от карточки под нижней панелью. */
+  var meta=document.querySelector('meta[name="theme-color"]'),html=document.documentElement,lastWidth=0;
+  if(html.classList.contains('vm-native-tint')){
+    var edge=document.createElement('div');
+    edge.className='vm-edge';edge.setAttribute('aria-hidden','true');
+    document.body.appendChild(edge);
+  }
+  function tone(dark){
+    var color=dark?'#0e0e0e':'#EFE6DE';
+    if(meta)meta.setAttribute('content',color);
+    html.style.setProperty('--vm-chrome',color);
   }
   function resize(){
+    var width=html.clientWidth;
+    if(width===lastWidth&&html.classList.contains('vm-touch'))return;
+    lastWidth=width;
     turnY=lastY=Math.max(0,window.scrollY||0);direction=0;
-    hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd();
+    hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);schedule();
   }
-  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',resize);resize();
+  function schedule(){if(!t)t=requestAnimationFrame(upd)}
+  addEventListener('scroll',schedule,{passive:true});addEventListener('resize',resize);resize();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));
   if(!links.length||!('IntersectionObserver' in window))return;
@@ -104,7 +106,10 @@ try{
   var noop={video:null,start:function(){}};
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
   var pt=document.getElementById('pt'),cv=document.getElementById('live'),hero=document.getElementById('hero');
-  if(reduce||!pt||!cv){window.vmLive=noop;return}
+  var root=document.documentElement;
+  if(reduce||!pt||!cv||root.classList.contains('vm-touch')||root.classList.contains('vm-low-data')||!root.classList.contains('is-loading')){
+    window.vmLive=noop;return;
+  }
 
   /* ---------- WebGL ---------- */
   var gl,hLoc,glOK=false;
@@ -327,6 +332,17 @@ try{
    по 3 картинки за раз, чтобы к моменту прокрутки всё было в кеше. Обложка урока (фон) подключается так же. */
 (function(){
   'use strict';
+  var root=document.documentElement;
+  if(root.classList.contains('vm-touch')||root.classList.contains('vm-low-data')){
+    var pain=document.getElementById('pain');
+    if(pain&&window.IntersectionObserver){
+      var nearby=new IntersectionObserver(function(entries){
+        if(entries[0].isIntersecting){pain.classList.add('cav');nearby.disconnect()}
+      },{rootMargin:'160px'});
+      nearby.observe(pain);
+    }
+    return;
+  }
   function start(){
     var list=[].slice.call(document.querySelectorAll('img[loading="lazy"]'));
     var les=document.getElementById('les-card');if(les)les.classList.add('bg');
@@ -364,7 +380,7 @@ try{
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
   /* те же границы, что в 01-hero.css */
-  var mqT=matchMedia('(max-width:1480px)'),mqP=matchMedia('(max-width:559px), (max-width:759px) and (min-height:541px)');
+  var mqT=matchMedia('(max-width:1480px)'),mqP=matchMedia('(max-width:679px)');
 
   /* высота окна без панелей браузера: --vhl из <head> (на телефонах фиксируется при загрузке), иначе svh */
   var probe=document.createElement('div');
@@ -393,7 +409,7 @@ try{
     if(getComputedStyle(root).getPropertyValue('--hero-fit').trim()!=='1')return;
     var W=inn.clientWidth,H=probe.getBoundingClientRect().height||innerHeight;
     var m=parseFloat(getComputedStyle(root).getPropertyValue('--m'))||56;
-    root.classList.toggle('hero-compact',mqP.matches&&W<=720&&H<760);
+    root.classList.toggle('hero-compact',mqP.matches&&W<=360);
     var hh=hdr?hdr.offsetHeight:76;
     var cr=copy.getBoundingClientRect(),sr=stats.getBoundingClientRect();
     var Cw=cr.width,Ch=cr.height,Sw=sr.width,Sh=sr.height;
@@ -448,14 +464,14 @@ try{
       var wmTop=hh+4;
       var ptTop=wmTop+.04*wmFull*WM,g1=12,statsGap=root.classList.contains('hero-compact')?12:20;
       col=Ch+statsGap+Sh;
-      var phFull=Math.min(W*.96,530)*PT;
-      ph=Math.max(phFull*.82,Math.min(phFull,H-ptTop-g1-col-m));
-      heroH=Math.max(H,ptTop+ph+g1+col+m);
-      pw=ph/PT;
+      pw=Math.min(W*.9,530);ph=pw*PT;
+      var copyTop=ptTop+ph+g1;
+      var minimum=parseFloat(root.style.getPropertyValue('--vm-hero-min'))||H;
+      heroH=Math.max(minimum,copyTop+col+m);
       place(wm,m,wmTop,wmFull);
       place(pt,(W-pw)/2,ptTop,pw);pt.style.height=px(ph);
-      place(stats,m,heroH-m-Sh,W-2*m);
-      place(copy,m,heroH-m-col,W-2*m);
+      place(stats,m,copyTop+Ch+statsGap,W-2*m);
+      place(copy,m,copyTop,W-2*m);
     }
     hero.style.setProperty('--hero-height',px(heroH));
     root.classList.add('vm-fit');
@@ -469,7 +485,6 @@ try{
   }
   function force(){lastW=lastH=0;schedule()}
   addEventListener('vmviewport',schedule);
-  addEventListener('resize',schedule);
   addEventListener('load',force);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(force);
   fit();lastW=inn.clientWidth;lastH=probe.getBoundingClientRect().height;
@@ -519,9 +534,6 @@ try{
   'use strict';
   var root=document.documentElement;
   if(!root.classList.contains('is-loading'))return;
-  /* пока заставка на экране, страницу нельзя сдвинуть пальцем (iOS игнорирует overflow:hidden у части браузеров) */
-  function block(e){if(root.classList.contains('is-loading'))e.preventDefault();else document.removeEventListener('touchmove',block,{passive:false})}
-  document.addEventListener('touchmove',block,{passive:false});
   var svg=document.getElementById('gsvg');
   if(!svg){open();return}
 
@@ -781,7 +793,7 @@ try{
     if(p!==last){last=p;frame.style.setProperty('--p',p)}
   }
   function on(){if(!tick)tick=requestAnimationFrame(upd)}
-  addEventListener('scroll',on,{passive:true});addEventListener('resize',on);
+  addEventListener('scroll',on,{passive:true});addEventListener('vmviewport',on);
   frame.style.setProperty('--p',0);upd();
 })();
 
@@ -857,7 +869,7 @@ try{
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var cards=[].slice.call(sec.querySelectorAll('.nob-c'));
   if(cards.length<2)return;
-  var on=false,raf=0;
+  var on=false,raf=0,narrow=matchMedia('(max-width:860px)');
 
   function update(){
     raf=0;
@@ -873,11 +885,11 @@ try{
       c.style.transform=k?'scale('+(1-.04*k).toFixed(4)+')':'';
     });
   }
-  function req(){if(on&&!raf)raf=requestAnimationFrame(update)}
+  function req(){if(on&&!raf&&!narrow.matches)raf=requestAnimationFrame(update)}
 
   new IntersectionObserver(function(es){on=es[0].isIntersecting;if(on)req()}).observe(sec);
   addEventListener('scroll',req,{passive:true});
-  addEventListener('resize',req);
+  addEventListener('vmviewport',req);
 })();
 
 }catch(e){window.console&&console.error("scripts/nobloger.js",e)}
@@ -903,6 +915,7 @@ try{
       stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),header=document.querySelector('.hdr'),
       lines=[].slice.call(sec.querySelectorAll('.gb-trail path')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
+  var touch=document.documentElement.classList.contains('vm-touch');
 
   var W=1672,H=941,X1=303.5,X3=828,X5=1351,T=234,N=461,B=684;
   /* путь 1→2→3→4→5 прямыми отрезками через нейтраль (21.11: клиент попросил только прямые линии).
@@ -1020,14 +1033,15 @@ try{
   }
   function shift(gr){
     go(gr);
-    if(!pin)return;
+    if(!pin||touch)return;
     var y=scrollFor(gr);
     if(Math.abs(y-scrollY)>2){lock=gr;lockY=y;lockT=performance.now();window.scrollTo({top:y,behavior:'smooth'})}
   }
   var pid=null,dragGoal=0;
   knob.addEventListener('pointerdown',function(e){
     if(e.button>0)return;
-    e.preventDefault();drag=true;pid=e.pointerId;sec.classList.add('is-grab');
+    if(e.pointerType!=='touch')e.preventDefault();
+    drag=true;pid=e.pointerId;sec.classList.add('is-grab');
     try{knob.setPointerCapture(pid)}catch(_){}
   });
   /* за пальцем: цель ставим сразу, пружина с высокой жёсткостью сглаживает дрожание руки */
@@ -1039,7 +1053,8 @@ try{
   function release(e){
     if(!drag||(e&&e.pointerId!==pid))return;
     drag=false;pid=null;sec.classList.remove('is-grab');OMEGA=7.5;VMAX=0;
-    shift(Math.round(Math.max(0,Math.min(4,goal))));
+    if(e&&e.type!=='pointerup')kick();
+    else shift(Math.round(Math.max(0,Math.min(4,goal))));
   }
   knob.addEventListener('pointerup',release);knob.addEventListener('pointercancel',release);
   knob.addEventListener('lostpointercapture',release);
@@ -1050,7 +1065,6 @@ try{
   place(g);
   addEventListener('scroll',kick,{passive:true});
   function resize(){layout();size();place(g);kick()}
-  addEventListener('resize',resize);
   addEventListener('vmviewport',resize);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resize);
   if(window.ResizeObserver)new ResizeObserver(function(){size();place(g)}).observe(knob.parentNode);
@@ -1135,12 +1149,20 @@ try{
     draw(q);
     raf=still?(last=0,0):requestAnimationFrame(tick);
   }
-  function kick(){goal=target();if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  function kick(){
+    var next=target();
+    if(next===goal&&Math.abs(gy*-5-tx)<.01&&Math.abs(gx*7-ty)<.01)return;
+    goal=next;
+    if(!raf){last=0;raf=requestAnimationFrame(tick)}
+  }
 
   sec.classList.add('js');
   measure();q=goal=target();draw(q);
-  addEventListener('scroll',kick,{passive:true});
-  addEventListener('resize',function(){measure();draw(q);kick()});
+  var near=true,scrollFrame=0;
+  function schedule(){if(near&&!scrollFrame)scrollFrame=requestAnimationFrame(function(){scrollFrame=0;kick()})}
+  if(window.IntersectionObserver)new IntersectionObserver(function(entries){near=entries[0].isIntersecting;schedule()},{rootMargin:'160px'}).observe(sec);
+  addEventListener('scroll',schedule,{passive:true});
+  addEventListener('vmviewport',function(){measure();draw(q);schedule()});
 })();
 
 }catch(e){window.console&&console.error("scripts/vacancies.js",e)}
@@ -1166,12 +1188,13 @@ try{
   function vh(){return window.vmVH||innerHeight}
 
   var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic'),header=document.querySelector('.hdr');
-  var compact=matchMedia('(max-width:720px), (min-width:560px) and (max-height:660px)');
+  var mobile=matchMedia('(max-width:720px)'),wide=matchMedia('(min-width:560px)');
   var pin=false,hb=0;
   function layout(){
     pic.style.removeProperty('--wh-width');
     hb=header?header.offsetHeight:0;
-    var available=vh()-hb-(compact.matches?24:64)-2;
+    var compact=mobile.matches||(wide.matches&&document.documentElement.classList.contains('vm-compact'));
+    var available=vh()-hb-(compact?24:64)-2;
     var picture=pic.getBoundingClientRect(),maxWidth=(available-win.offsetHeight+picture.height)*1100/585;
     pin=maxWidth>=picture.width*.55;
     if(pin&&maxWidth<picture.width)pic.style.setProperty('--wh-width',Math.floor(maxWidth)+'px');
@@ -1214,7 +1237,7 @@ try{
     raf=q===goal?(last=0,0):requestAnimationFrame(tick);
   }
   function go(v){if(v===goal)return;goal=v;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
-  var scrollFrame=0;
+  var scrollFrame=0,near=true;
   function kick(){
     scrollFrame=0;
     var p=progress();
@@ -1230,13 +1253,11 @@ try{
 
   sec.classList.add('js');
   layout();q=goal=scrollTarget(progress());draw();
-  function schedule(){if(!scrollFrame)scrollFrame=requestAnimationFrame(kick)}
+  function schedule(){if(near&&!scrollFrame)scrollFrame=requestAnimationFrame(kick)}
+  if(window.IntersectionObserver)new IntersectionObserver(function(entries){near=entries[0].isIntersecting;schedule()},{rootMargin:'120px'}).observe(sec);
   addEventListener('scroll',schedule,{passive:true});
-  var w=innerWidth,h=vh();
-  function re(){w=innerWidth;h=vh();layout();schedule()}
-  function resize(){if(innerWidth!==w||vh()!==h)re()}
-  addEventListener('resize',resize);
-  addEventListener('vmviewport',resize);
+  function re(){layout();schedule()}
+  addEventListener('vmviewport',re);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);
   addEventListener('load',re);
 })();

@@ -42,13 +42,12 @@
 @media (max-width:1180px){:root{--m:32px}}
 @media (max-width:720px){:root{--m:16px;--header-height:58px}}
 /* переходы по якорям не прячут заголовок блока под шапкой */
-html{scroll-padding-top:var(--hb);overflow-x:clip;overscroll-behavior-x:none}
+html{scroll-padding-top:var(--hb);overflow-x:clip;overscroll-behavior-x:none;-webkit-text-size-adjust:100%;text-size-adjust:100%}
 
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{background:var(--cream);color:var(--ink);font-family:var(--text)}
-/* 20.11: Safari на iPhone (iOS 26) красит нижнюю панель в цвет фона body (и тянет его же при оттягивании страницы).
-   Поэтому вся страница кремовая за счёт main, а цвет body и html ставит menu.js по блоку у нижнего края экрана:
-   тёмный блок (data-hdr="dark", подвал) — #0e0e0e, остальное — кремовый. Красным панель не бывает */
+html,body{background:var(--vm-chrome,var(--cream));color:var(--ink);font-family:var(--text)}
+/* Safari с плавающей нижней панелью берёт цвет у закреплённого края. */
+.vm-edge{position:fixed;inset:auto 0 0;height:12px;z-index:115;background:var(--vm-chrome,var(--cream))}
 main{background:var(--cream)}
 body{overflow-x:clip;-webkit-font-smoothing:antialiased}
 img{display:block;max-width:100%;

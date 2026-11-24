@@ -47,21 +47,29 @@
 }
 @media (max-width:860px){
   .nob-in>*{min-width:0} /* длинное слово заголовка не раздвигает сетку и не сдвигает карточки вбок */
-  .hero~.nob{padding:72px var(--m) 80px;--ch:330px;--st:84px}
+  .hero~.nob{padding:72px var(--m) 80px;--st:clamp(46px,calc(var(--vhs)*.112),74px);
+    --ch:clamp(240px,calc(var(--vhs) - 2*var(--st) - 20px),330px);--t0:calc(var(--hb) + 8px)}
   .nob-in{grid-template-columns:1fr;gap:40px}
   .nob-h.h2{position:static;font-size:min(10.2vw,42px)}
-  .nob-st{gap:calc(var(--vhl,100vh)*0.08)} /* 02 и 03 едут сразу следом за 01, без паузы на пустом экране */
-  .nob-c{padding:18px 24px 28px}
+  .nob-st{gap:14px;padding-bottom:var(--st)}
+  .nob-c{height:auto;min-height:var(--ch);margin-bottom:calc((2 - var(--i))*var(--st));padding:14px 24px 24px;will-change:auto;transform:none!important}
   .nob-n{font-size:64px;-webkit-text-stroke-width:1.5px}
-  .nob-t{font-size:23px}.nob-p{font-size:16px}
+  .nob-t{padding-top:12px;font-size:23px}.nob-p{font-size:16px}
   .nob-c:nth-child(3)::after{background-size:24px 24px}
 }
-@media (max-width:860px) and (min-width:600px){.hero~.nob{--ch:300px}}
-
-/* В низком окне и с отключённой анимацией карточки идут списком. */
-@media (max-height:700px),(prefers-reduced-motion:reduce){
+/* Сцена остаётся читаемой в самом низком окне. */
+.vm-tiny .nob-h.h2{position:static}
+.vm-tiny .nob-st{padding-bottom:0}
+.vm-tiny .nob-c{position:relative;top:auto;margin-bottom:0}
+@media (min-width:861px){
+  .vm-short-stack .nob-h.h2{position:static}
+  .vm-short-stack .nob-st{gap:16px}
+  .vm-short-stack .nob-c{position:relative;top:auto;height:auto;min-height:var(--ch);margin-bottom:0;transform:none!important}
+  .vm-short-stack .nob-t{margin-top:56px}
+}
+@media (prefers-reduced-motion:reduce){
   .nob-h.h2{position:static}
-  .nob-st{gap:16px}
+  .nob-st{gap:16px;padding-bottom:0}
   .nob-c{position:relative;top:auto;height:auto;min-height:var(--ch);transform:none!important}
   .nob-c{margin-bottom:0}
   .nob-t{margin-top:56px}
