@@ -1,7 +1,8 @@
 /* Шапка */
-.hdr{position:fixed;inset:0 0 auto 0;z-index:120;height:var(--hb);display:flex;align-items:center;justify-content:space-between;gap:8px;
+.hdr{--hide-offset:var(--hb);position:fixed;inset:0 0 auto 0;z-index:120;height:var(--hb);display:flex;align-items:center;justify-content:space-between;gap:8px;
   padding:var(--safe-top) max(var(--m),env(safe-area-inset-right,0px)) 0 max(var(--m),env(safe-area-inset-left,0px));
-  transition:background-color .35s,box-shadow .35s}
+  transition:top .24s var(--ease),background-color .35s,box-shadow .35s}
+.hdr.is-away:not(.is-menu){top:calc(-1 * var(--hide-offset) - 16px)}
 .hdr.has-inset{background:var(--cream)}
 /* шапка закреплена (21.11): на первом экране прозрачная, после прокрутки кремовая плашка с тонкой линией.
    Без backdrop-filter и transform: иначе мобильная шторка (position:fixed внутри) привязалась бы к шапке */
@@ -31,6 +32,7 @@
 }
 /* меню не помещается в строку уже на вертикальном планшете */
 @media (max-width:1000px){
+  .hdr .btn-line{height:42px}
   .burger{display:inline-flex;position:relative;z-index:2;transition:border-color .3s}
   .burger i{transition:background .3s,box-shadow .3s,transform .4s var(--ease)}
   .logo,.hdr-right{position:relative;z-index:2}
@@ -60,7 +62,7 @@
 @media (max-width:720px){
   .logo{font-size:21px}
   .hdr-right{min-width:0;gap:6px}
-  .btn-line{height:38px;padding:0 10px;font-size:10px;gap:6px}
+  .btn-line{padding:0 10px;font-size:10px;gap:6px}
   .burger{flex:none}
 }
 @media (max-width:360px){

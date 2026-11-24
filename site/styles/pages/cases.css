@@ -82,8 +82,10 @@ html:not(.anim) .st-line{background-size:100% 3px}
 }
 
 /* ---------- кейс: переключатель людей ---------- */
+.pg-case .hdr{--hide-offset:calc(var(--hb) + var(--bar))}
 .cx-bar{position:fixed;left:0;right:0;top:var(--hb);z-index:115;height:var(--bar);background:var(--cream);box-shadow:0 1px 0 rgba(17,17,17,.1);
-  transition:background-color .35s,box-shadow .35s}
+  transition:top .24s var(--ease),background-color .35s,box-shadow .35s}
+.hdr.is-away:not(.is-menu)~.cx-bar{top:calc(-1 * var(--bar) - 16px)}
 .cx-bar-in{height:100%;max-width:1328px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:4px;padding:0 var(--m);
   overflow-x:auto;scrollbar-width:none}
 .cx-bar-in::-webkit-scrollbar{display:none}

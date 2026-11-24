@@ -19,15 +19,28 @@
   matchMedia('(min-width:1001px)').addEventListener('change',function(m){if(m.matches)set(false)});
 })();
 
-/* Закреплённая шапка (21.11): после прокрутки получает плашку; пункт меню того блока, который сейчас на экране, подчёркнут */
+/* Шапка скрывается при прокрутке вниз и возвращается при движении вверх. */
 (function(){
   'use strict';
   var hdr=document.querySelector('.hdr');if(!hdr)return;
   var on=null,dk=null,t=0,darks=[].slice.call(document.querySelectorAll('[data-hdr="dark"]')),bar=document.querySelector('.cx-bar');
+  var lastY=Math.max(0,window.scrollY||0),turnY=lastY,direction=0;
+  function visibility(y){
+    var next=y===lastY?direction:(y>lastY?1:-1);
+    if(next!==direction){turnY=lastY;direction=next}
+    lastY=y;
+    if(y<=8||hdr.classList.contains('is-menu')||turnY-y>=8)hdr.classList.remove('is-away');
+    else if(y-turnY>=14)hdr.classList.add('is-away');
+  }
+  function revealOnFocus(e){if(e.target.matches(':focus-visible'))hdr.classList.remove('is-away')}
+  hdr.addEventListener('focusin',revealOnFocus);
+  if(bar)bar.addEventListener('focusin',revealOnFocus);
   /* над тёмными блоками (асфальт, подвал) шапка тоже тёмная: смотрим, какой блок начинается сразу под шапкой
      (на страницах кейсов под шапкой ещё полоса с именами, она меняет цвет вместе с шапкой) */
   function upd(){
-    t=0;var s=(window.scrollY||0)>8;if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
+    t=0;var position=Math.max(0,window.scrollY||0),s=position>8;
+    visibility(position);
+    if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     var y=hdr.offsetHeight+(bar?bar.offsetHeight:0)+1,d=false;
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
     if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d);tone(d)}
@@ -46,7 +59,10 @@
     if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
     if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
   }
-  function resize(){hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd()}
+  function resize(){
+    turnY=lastY=Math.max(0,window.scrollY||0);direction=0;
+    hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd();
+  }
   addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',resize);resize();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));

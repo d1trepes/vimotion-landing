@@ -71,7 +71,7 @@
 @keyframes fade{from{opacity:0}to{opacity:1}}
 
 /* ---------- планшет: текст и цифры в потоке, цифры строкой под текстом ---------- */
-@media (max-width:1320px){
+@media (max-width:1480px){
   .hero{min-height:var(--vhl,100svh)}
   .hero-in{display:flow-root;width:100%;padding:0 0 8px}
   .copy{width:min(44vw,520px);margin:calc(76px + (100vw - 2*var(--m))*471/1600 + 28px) 0 0 var(--m)}

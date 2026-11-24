@@ -21,15 +21,28 @@ try{
   matchMedia('(min-width:1001px)').addEventListener('change',function(m){if(m.matches)set(false)});
 })();
 
-/* Закреплённая шапка (21.11): после прокрутки получает плашку; пункт меню того блока, который сейчас на экране, подчёркнут */
+/* Шапка скрывается при прокрутке вниз и возвращается при движении вверх. */
 (function(){
   'use strict';
   var hdr=document.querySelector('.hdr');if(!hdr)return;
   var on=null,dk=null,t=0,darks=[].slice.call(document.querySelectorAll('[data-hdr="dark"]')),bar=document.querySelector('.cx-bar');
+  var lastY=Math.max(0,window.scrollY||0),turnY=lastY,direction=0;
+  function visibility(y){
+    var next=y===lastY?direction:(y>lastY?1:-1);
+    if(next!==direction){turnY=lastY;direction=next}
+    lastY=y;
+    if(y<=8||hdr.classList.contains('is-menu')||turnY-y>=8)hdr.classList.remove('is-away');
+    else if(y-turnY>=14)hdr.classList.add('is-away');
+  }
+  function revealOnFocus(e){if(e.target.matches(':focus-visible'))hdr.classList.remove('is-away')}
+  hdr.addEventListener('focusin',revealOnFocus);
+  if(bar)bar.addEventListener('focusin',revealOnFocus);
   /* над тёмными блоками (асфальт, подвал) шапка тоже тёмная: смотрим, какой блок начинается сразу под шапкой
      (на страницах кейсов под шапкой ещё полоса с именами, она меняет цвет вместе с шапкой) */
   function upd(){
-    t=0;var s=(window.scrollY||0)>8;if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
+    t=0;var position=Math.max(0,window.scrollY||0),s=position>8;
+    visibility(position);
+    if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     var y=hdr.offsetHeight+(bar?bar.offsetHeight:0)+1,d=false;
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
     if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d);tone(d)}
@@ -48,7 +61,10 @@ try{
     if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
     if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
   }
-  function resize(){hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd()}
+  function resize(){
+    turnY=lastY=Math.max(0,window.scrollY||0);direction=0;
+    hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd();
+  }
   addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',resize);resize();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));
@@ -348,7 +364,7 @@ try{
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
   /* те же границы, что в 01-hero.css */
-  var mqT=matchMedia('(max-width:1320px)'),mqP=matchMedia('(max-width:559px), (max-width:759px) and (min-height:541px)');
+  var mqT=matchMedia('(max-width:1480px)'),mqP=matchMedia('(max-width:559px), (max-width:759px) and (min-height:541px)');
 
   /* высота окна без панелей браузера: --vhl из <head> (на телефонах фиксируется при загрузке), иначе svh */
   var probe=document.createElement('div');
@@ -420,10 +436,11 @@ try{
       /* Две колонки: размер портрета задаёт правая колонка, независимо от длины текста. */
       var textGap=H<600?16:24,brandBottom=hh+wmFull*WM;
       col=Ch+textGap+Sh;
-      pw=Math.min(W*.49,640);ph=pw*PT;
-      heroH=Math.max(brandBottom+16+col+m,Math.min(H,brandBottom+ph+32));
+      pw=Math.min(W*.66,680,Math.max(W*.47,(H-brandBottom+20)/PT));ph=pw*PT;
+      heroH=Math.max(H,brandBottom+16+col+m);
+      var portraitLeft=Math.max(m+Math.max(Cw,Sw)+12,W-m*.4-pw);
       place(wm,m,hh,wmFull);
-      place(pt,W-m*.4-pw,heroH-ph,pw);pt.style.height=px(ph);
+      place(pt,portraitLeft,heroH-ph,pw);pt.style.height=px(ph);
       place(copy,m,heroH-m-col,Cw);
       place(stats,m,heroH-m-Sh,Sw);
     }else{

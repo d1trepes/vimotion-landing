@@ -11,7 +11,7 @@
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
   /* те же границы, что в 01-hero.css */
-  var mqT=matchMedia('(max-width:1320px)'),mqP=matchMedia('(max-width:559px), (max-width:759px) and (min-height:541px)');
+  var mqT=matchMedia('(max-width:1480px)'),mqP=matchMedia('(max-width:559px), (max-width:759px) and (min-height:541px)');
 
   /* высота окна без панелей браузера: --vhl из <head> (на телефонах фиксируется при загрузке), иначе svh */
   var probe=document.createElement('div');
@@ -83,10 +83,11 @@
       /* Две колонки: размер портрета задаёт правая колонка, независимо от длины текста. */
       var textGap=H<600?16:24,brandBottom=hh+wmFull*WM;
       col=Ch+textGap+Sh;
-      pw=Math.min(W*.49,640);ph=pw*PT;
-      heroH=Math.max(brandBottom+16+col+m,Math.min(H,brandBottom+ph+32));
+      pw=Math.min(W*.66,680,Math.max(W*.47,(H-brandBottom+20)/PT));ph=pw*PT;
+      heroH=Math.max(H,brandBottom+16+col+m);
+      var portraitLeft=Math.max(m+Math.max(Cw,Sw)+12,W-m*.4-pw);
       place(wm,m,hh,wmFull);
-      place(pt,W-m*.4-pw,heroH-ph,pw);pt.style.height=px(ph);
+      place(pt,portraitLeft,heroH-ph,pw);pt.style.height=px(ph);
       place(copy,m,heroH-m-col,Cw);
       place(stats,m,heroH-m-Sh,Sw);
     }else{
