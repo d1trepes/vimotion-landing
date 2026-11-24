@@ -1,7 +1,5 @@
-/* Блок 1: первый экран всегда помещается в окно.
-   Отступ снизу равен отступу по бокам (--m). Если по высоте не хватает места,
-   сначала чуть уменьшается колонка текста и цифр, затем вордмарк и портрет вместе.
-   Без JS работает прежняя CSS-вёрстка. */
+/* Блок 1: первый экран подстраивается под окно и растёт по высоте на низких экранах.
+   Отступ снизу равен боковым полям. Без JS работает CSS-вёрстка. */
 (function(){
   'use strict';
   var root=document.documentElement,hero=document.getElementById('hero');
@@ -12,9 +10,7 @@
   /* силуэт человека по всей петле: левый и правый край в долях ширины кадра, 32 полосы сверху вниз */
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
-  /* параметры композиции десктопа (вариант B, утверждён 17.11): текст растёт с шириной экрана до 116%,
-     вордмарк ради этого сужается не больше чем до 90%, голова заходит на вордмарк на 12% его высоты */
-  var P={grow:1.16,wmMin:.9,head:.12};
+  var wmMin=.9,headOverlap=.12;
   /* те же границы, что в 01-hero.css */
   var mqT=matchMedia('(max-width:1180px)'),mqP=matchMedia('(max-width:720px), (max-width:1180px) and (orientation:portrait)');
 
@@ -25,8 +21,9 @@
 
   function px(v){return Math.round(v*100)/100+'px'}
   function reset(){
-    root.classList.remove('vm-fit');
-    [hero,wm,pt,copy,stats].forEach(function(e){e.removeAttribute('style')});
+    root.classList.remove('vm-fit','hero-scroll');
+    hero.style.removeProperty('height');
+    [wm,pt,copy,stats].forEach(function(e){e.removeAttribute('style')});
   }
   function place(e,l,t,w,s){
     var st=e.style;st.left=px(l);st.top=px(t);
@@ -61,28 +58,21 @@
       gap=desk?6:28;
       var sg=desk?0:26;
       col=desk?Math.max(Ch,Sh):Ch+sg+Sh;
-      /* на больших экранах текст и цифры крупнее: от 1440 растут вместе с шириной */
-      var ds=desk?Math.min(P.grow,Math.max(1,W/1440)):1;
-      var room=function(w){return H-hh-gap-m-w*WM};
-      s=Math.min(ds,room(wmFull)/col);
-      if(s<ds){
-        /* ради крупного текста вордмарк можно немного сузить */
-        wmW=Math.max(wmFull*P.wmMin,(room(0)-col*ds)/WM);
-        s=Math.min(ds,room(wmW)/col);
-      }
-      if(s<.82){s=.82;wmW=Math.max(wmFull*.5,(room(0)-col*s)/WM)}
+      var room=H-hh-gap-m;
+      wmW=Math.max(wmFull*wmMin,Math.min(wmFull,(room-col)/WM));
       var wmH=wmW*WM;
+      s=Math.max(.9,Math.min(1,(room-wmH)/col));
       heroH=Math.max(H,hh+wmH+gap+col*s+m);
       var wmL=(W-wmW)/2;
       /* портрет: голова заходит на вордмарк, низ по краю экрана; крупнее за счёт всей свободной высоты */
       var kc=desk?.5787:.756,cx=wmL+kc*wmW;
-      ph=heroH-(wmTop+P.head*wmH);pw=ph/PT;
+      ph=Math.min(W*PT,heroH-(wmTop+headOverlap*wmH));pw=ph/PT;
       /* куртка и плечи не наезжают на текст слева и на цифры справа: проверка по силуэту, построчно */
       var cTop=heroH-m-(desk?Ch:(Sh+sg+Ch))*s,sTop=heroH-m-Sh*s,sLeft=desk?W-m-Sw*s:m,pad=desk?20:16,cx0=cx;
       var lefts=boxes.map(function(bx){return {t:cTop+bx.t*s,b:cTop+bx.b*s,r:m+bx.r*s}});
       if(!desk)lefts.push({t:sTop,b:heroH-m,r:m+Sw*s});
       for(var it=0;it<60;it++){
-        var top=heroH-ph,lo=-1e9,hi=desk?1e9:W-pw/2;
+        var top=heroH-ph,lo=pw/2,hi=W-pw/2;
         for(var k=1;k<32;k++){
           var y0=top+k*ph/32,y1=y0+ph/32;
           lefts.forEach(function(bx){if(bx.b>y0&&bx.t<y1)lo=Math.max(lo,bx.r+pad-(SL[k]-.5)*pw)});
@@ -106,27 +96,20 @@
     }else{
       /* телефон и вертикальный планшет: портрет сверху на вордмарке, текст и цифры внизу */
       wmTop=hh+(m<20?4:0);
-      var ptTop=wmTop+.04*wmFull*WM,g1=12,sg2=20;
-      col=Ch+(root.classList.contains("hero-compact")?12:sg2)+Sh;
-      var phFull=W*PT;
-      /* человек в приоритете: текст сначала чуть уменьшается (до 86%), чтобы портрет был не меньше 78% ширины экрана */
-      s=Math.max(.84,Math.min(1,(H-ptTop-g1-.78*phFull-m)/col));
-      ph=Math.min(phFull,H-ptTop-g1-col*s-m);
-      if(ph<phFull*.56){
-        ph=phFull*.56;
-        s=Math.max(.8,Math.min(1,(H-ptTop-g1-ph-m)/col));
-      }
-      heroH=Math.max(H,ptTop+ph+g1+col*s+m);
+      var ptTop=wmTop+.04*wmFull*WM,g1=12,statsGap=root.classList.contains('hero-compact')?12:20;
+      col=Ch+statsGap+Sh;
+      var phFull=Math.min(W,H*.96)*PT;
+      ph=Math.max(phFull*.64,Math.min(phFull,H-ptTop-g1-col-m));
+      heroH=Math.max(H,ptTop+ph+g1+col+m);
       pw=ph/PT;
       root.classList.add('vm-fit');
       hero.style.height=px(heroH);
       place(wm,m,wmTop,wmFull);
       place(pt,(W-pw)/2,ptTop,pw);pt.style.height=px(ph);
-      /* колонка на всю ширину между полями и после уменьшения */
-      var sg3=root.classList.contains('hero-compact')?12:sg2;
-      place(stats,m,heroH-m-Sh*s,(W-2*m)/s,s);
-      place(copy,m,heroH-m-(Sh+sg3+Ch)*s,(W-2*m)/s,s);
+      place(stats,m,heroH-m-Sh,W-2*m);
+      place(copy,m,heroH-m-col,W-2*m);
     }
+    root.classList.toggle('hero-scroll',heroH>H+1);
   }
 
   var raf=0,lastW=0,lastH=0,coarse=matchMedia('(pointer:coarse)').matches;

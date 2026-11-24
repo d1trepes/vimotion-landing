@@ -58,8 +58,8 @@
 }
 @media (max-width:860px) and (min-width:600px){.hero~.nob{--ch:300px}}
 
-/* без анимации: обычный список карточек */
-@media (prefers-reduced-motion:reduce){
+/* В низком окне и с отключённой анимацией карточки идут списком. */
+@media (max-height:700px),(prefers-reduced-motion:reduce){
   .nob-h.h2{position:static}
   .nob-st{gap:16px}
   .nob-c{position:relative;top:auto;height:auto;min-height:var(--ch);transform:none!important}

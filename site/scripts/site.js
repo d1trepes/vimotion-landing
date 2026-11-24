@@ -341,10 +341,8 @@ try{
 }catch(e){window.console&&console.error("scripts/perf.js",e)}
 /* scripts/hero-fit.js */
 try{
-/* Блок 1: первый экран всегда помещается в окно.
-   Отступ снизу равен отступу по бокам (--m). Если по высоте не хватает места,
-   сначала чуть уменьшается колонка текста и цифр, затем вордмарк и портрет вместе.
-   Без JS работает прежняя CSS-вёрстка. */
+/* Блок 1: первый экран подстраивается под окно и растёт по высоте на низких экранах.
+   Отступ снизу равен боковым полям. Без JS работает CSS-вёрстка. */
 (function(){
   'use strict';
   var root=document.documentElement,hero=document.getElementById('hero');
@@ -355,9 +353,7 @@ try{
   /* силуэт человека по всей петле: левый и правый край в долях ширины кадра, 32 полосы сверху вниз */
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
-  /* параметры композиции десктопа (вариант B, утверждён 17.11): текст растёт с шириной экрана до 116%,
-     вордмарк ради этого сужается не больше чем до 90%, голова заходит на вордмарк на 12% его высоты */
-  var P={grow:1.16,wmMin:.9,head:.12};
+  var wmMin=.9,headOverlap=.12;
   /* те же границы, что в 01-hero.css */
   var mqT=matchMedia('(max-width:1180px)'),mqP=matchMedia('(max-width:720px), (max-width:1180px) and (orientation:portrait)');
 
@@ -368,8 +364,9 @@ try{
 
   function px(v){return Math.round(v*100)/100+'px'}
   function reset(){
-    root.classList.remove('vm-fit');
-    [hero,wm,pt,copy,stats].forEach(function(e){e.removeAttribute('style')});
+    root.classList.remove('vm-fit','hero-scroll');
+    hero.style.removeProperty('height');
+    [wm,pt,copy,stats].forEach(function(e){e.removeAttribute('style')});
   }
   function place(e,l,t,w,s){
     var st=e.style;st.left=px(l);st.top=px(t);
@@ -404,28 +401,21 @@ try{
       gap=desk?6:28;
       var sg=desk?0:26;
       col=desk?Math.max(Ch,Sh):Ch+sg+Sh;
-      /* на больших экранах текст и цифры крупнее: от 1440 растут вместе с шириной */
-      var ds=desk?Math.min(P.grow,Math.max(1,W/1440)):1;
-      var room=function(w){return H-hh-gap-m-w*WM};
-      s=Math.min(ds,room(wmFull)/col);
-      if(s<ds){
-        /* ради крупного текста вордмарк можно немного сузить */
-        wmW=Math.max(wmFull*P.wmMin,(room(0)-col*ds)/WM);
-        s=Math.min(ds,room(wmW)/col);
-      }
-      if(s<.82){s=.82;wmW=Math.max(wmFull*.5,(room(0)-col*s)/WM)}
+      var room=H-hh-gap-m;
+      wmW=Math.max(wmFull*wmMin,Math.min(wmFull,(room-col)/WM));
       var wmH=wmW*WM;
+      s=Math.max(.9,Math.min(1,(room-wmH)/col));
       heroH=Math.max(H,hh+wmH+gap+col*s+m);
       var wmL=(W-wmW)/2;
       /* портрет: голова заходит на вордмарк, низ по краю экрана; крупнее за счёт всей свободной высоты */
       var kc=desk?.5787:.756,cx=wmL+kc*wmW;
-      ph=heroH-(wmTop+P.head*wmH);pw=ph/PT;
+      ph=Math.min(W*PT,heroH-(wmTop+headOverlap*wmH));pw=ph/PT;
       /* куртка и плечи не наезжают на текст слева и на цифры справа: проверка по силуэту, построчно */
       var cTop=heroH-m-(desk?Ch:(Sh+sg+Ch))*s,sTop=heroH-m-Sh*s,sLeft=desk?W-m-Sw*s:m,pad=desk?20:16,cx0=cx;
       var lefts=boxes.map(function(bx){return {t:cTop+bx.t*s,b:cTop+bx.b*s,r:m+bx.r*s}});
       if(!desk)lefts.push({t:sTop,b:heroH-m,r:m+Sw*s});
       for(var it=0;it<60;it++){
-        var top=heroH-ph,lo=-1e9,hi=desk?1e9:W-pw/2;
+        var top=heroH-ph,lo=pw/2,hi=W-pw/2;
         for(var k=1;k<32;k++){
           var y0=top+k*ph/32,y1=y0+ph/32;
           lefts.forEach(function(bx){if(bx.b>y0&&bx.t<y1)lo=Math.max(lo,bx.r+pad-(SL[k]-.5)*pw)});
@@ -449,27 +439,20 @@ try{
     }else{
       /* телефон и вертикальный планшет: портрет сверху на вордмарке, текст и цифры внизу */
       wmTop=hh+(m<20?4:0);
-      var ptTop=wmTop+.04*wmFull*WM,g1=12,sg2=20;
-      col=Ch+(root.classList.contains("hero-compact")?12:sg2)+Sh;
-      var phFull=W*PT;
-      /* человек в приоритете: текст сначала чуть уменьшается (до 86%), чтобы портрет был не меньше 78% ширины экрана */
-      s=Math.max(.84,Math.min(1,(H-ptTop-g1-.78*phFull-m)/col));
-      ph=Math.min(phFull,H-ptTop-g1-col*s-m);
-      if(ph<phFull*.56){
-        ph=phFull*.56;
-        s=Math.max(.8,Math.min(1,(H-ptTop-g1-ph-m)/col));
-      }
-      heroH=Math.max(H,ptTop+ph+g1+col*s+m);
+      var ptTop=wmTop+.04*wmFull*WM,g1=12,statsGap=root.classList.contains('hero-compact')?12:20;
+      col=Ch+statsGap+Sh;
+      var phFull=Math.min(W,H*.96)*PT;
+      ph=Math.max(phFull*.64,Math.min(phFull,H-ptTop-g1-col-m));
+      heroH=Math.max(H,ptTop+ph+g1+col+m);
       pw=ph/PT;
       root.classList.add('vm-fit');
       hero.style.height=px(heroH);
       place(wm,m,wmTop,wmFull);
       place(pt,(W-pw)/2,ptTop,pw);pt.style.height=px(ph);
-      /* колонка на всю ширину между полями и после уменьшения */
-      var sg3=root.classList.contains('hero-compact')?12:sg2;
-      place(stats,m,heroH-m-Sh*s,(W-2*m)/s,s);
-      place(copy,m,heroH-m-(Sh+sg3+Ch)*s,(W-2*m)/s,s);
+      place(stats,m,heroH-m-Sh,W-2*m);
+      place(copy,m,heroH-m-col,W-2*m);
     }
+    root.classList.toggle('hero-scroll',heroH>H+1);
   }
 
   var raf=0,lastW=0,lastH=0,coarse=matchMedia('(pointer:coarse)').matches;
@@ -873,6 +856,7 @@ try{
 
   function update(){
     raf=0;
+    if(getComputedStyle(cards[0]).position!=='sticky')return;
     var cs=getComputedStyle(sec),ch=parseFloat(cs.getPropertyValue('--ch'))||400;
     /* насколько каждая карточка уже «легла»: 0 далеко внизу, 1 прилипла */
     var p=cards.map(function(c){
@@ -911,6 +895,7 @@ try{
   var sec=document.getElementById('ladder');
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var run=sec.querySelector('.gb-run'),knob=sec.querySelector('.gb-knob'),
+      stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),
       lines=[].slice.call(sec.querySelectorAll('.gb-trail path')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
 
@@ -970,10 +955,18 @@ try{
   }
 
   /* скролл задаёт цель: у каждой передачи пауза (DWELL), между ними равномерный переход */
-  var DWELL=.34;
+  var DWELL=.34,pin=false,hb=0,narrow=matchMedia('(max-width:760px)');
+  function layout(){
+    hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    sec.classList.add('pin');
+    pin=(narrow.matches||board.offsetWidth>=600)&&board.offsetHeight<=stage.offsetHeight;
+    sec.classList.toggle('pin',pin);
+  }
+  layout();
   function target(){
-    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight);
-    var p=len>0?Math.max(0,Math.min(1,-r.top/len)):1,u=p*4,i=Math.min(3,Math.floor(u)),f=u-i;
+    var r=run.getBoundingClientRect(),available=(window.vmVH||innerHeight)-hb;
+    var progress=pin?(hb-r.top)/Math.max(1,r.height-available):(hb+available*.85-r.top)/(r.height+available*.7);
+    var p=Math.max(0,Math.min(1,progress)),u=p*4,i=Math.min(3,Math.floor(u)),f=u-i;
     if(p>=1)return 4;
     return i+Math.max(0,Math.min(1,(f-DWELL/2)/(1-DWELL)));
   }
@@ -993,7 +986,7 @@ try{
     place(g);
     raf=(g!==goal||v!==0)?requestAnimationFrame(tick):(last=0,0);
   }
-  function go(t){goal=t;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  function go(t){if(t===goal)return;goal=t;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
 
   /* ручное управление. Источник правды один: прокрутка страницы */
   var drag=false,lock=null,lockY=0,lockT=0;
@@ -1013,11 +1006,12 @@ try{
     return gAt((cx-r.left)/r.width*W,(cy-r.top)/r.height*H,g);
   }
   function scrollFor(gr){
-    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight);
-    return Math.round(scrollY+r.top+Math.max(0,len)*(gr/4));
+    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight)+hb;
+    return Math.round(scrollY+r.top-hb+Math.max(0,len)*(gr/4));
   }
   function shift(gr){
     go(gr);
+    if(!pin)return;
     var y=scrollFor(gr);
     if(Math.abs(y-scrollY)>2){lock=gr;lockY=y;lockT=performance.now();window.scrollTo({top:y,behavior:'smooth'})}
   }
@@ -1046,7 +1040,9 @@ try{
   sec.classList.add('js');
   place(g);
   addEventListener('scroll',kick,{passive:true});
-  addEventListener('resize',function(){size();place(g);kick()});
+  function resize(){layout();size();place(g);kick()}
+  addEventListener('resize',resize);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resize);
   if(window.ResizeObserver)new ResizeObserver(function(){size();place(g)}).observe(knob.parentNode);
 })();
 
@@ -1144,41 +1140,45 @@ try{
    Если сцена влезает в окно, секция получает класс pin: сцена закреплена, прогресс скролла по .wh-run
    по очереди переводит свет с кита на кита (с паузой на каждом), под картинкой меняется пункт.
    Клик или тап по киту переводит свет к нему; пока посетитель сам выбрал кита, скролл его не перебивает,
-   пока заметно не уйдёт дальше. Если сцена не влезает, свет сам переходит каждые 4,5 с, пока блок на экране.
+   пока заметно не уйдёт дальше. Если сцена не влезает, прогресс задаёт положение картинки в окне.
    При prefers-reduced-motion скрипт не запускается: всё освещено, пункты списком. */
 (function(){
   'use strict';
   var sec=document.getElementById('how');
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var img=sec.querySelector('.wh-img'),run=sec.querySelector('.wh-run'),items=[].slice.call(sec.querySelectorAll('.wh-it'));
-  var hits=[].slice.call(sec.querySelectorAll('.wh-hit i'));
-  if(!run||items.length!==3)return;
+  var hits=[].slice.call(sec.querySelectorAll('.wh-hit button'));
+  if(!run||items.length!==3||hits.length!==items.length)return;
 
   var C=[15.5,48,80];            /* центры китов в % ширины картинки */
   function cl(v,a,b){return v<a?a:v>b?b:v}
   function sm(t){t=cl(t,0,1);return t*t*(3-2*t)}
   function vh(){return window.vmVH||innerHeight}
 
-  /* 20.11 мобильная (вторая правка): кнопка остаётся в сцене сразу под пунктом. Если сцена не влезает в окно
-     (низкое окно, Telegram), картинка уменьшается, но не меньше чем до 50% ширины. Так киты на телефоне листаются
-     скроллом, автосмена остаётся только для совсем низких окон */
   var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic');
-  var mqM=matchMedia('(max-width:720px)');
-  var pin=false;
+  var compact=matchMedia('(max-width:720px), (min-width:560px) and (max-height:660px)');
+  var pin=false,hb=0;
   function layout(){
-    sec.classList.remove('pin');pic.style.removeProperty('--whk');
-    var hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
-    var room=vh()-hb-(mqM.matches?24:64),h=win.offsetHeight;
-    pin=h<=room;
-    if(!pin&&mqM.matches){
-      var ph=pic.offsetHeight,k=(ph-(h-room))/ph;
-      if(k>=.5){pin=true;pic.style.setProperty('--whk',k.toFixed(3))}
-    }
+    pic.style.removeProperty('--wh-width');
+    hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    var available=vh()-hb-(compact.matches?24:64)-2;
+    var picture=pic.getBoundingClientRect(),maxWidth=(available-win.offsetHeight+picture.height)*1100/585;
+    pin=maxWidth>=picture.width*.55;
+    if(pin&&maxWidth<picture.width)pic.style.setProperty('--wh-width',Math.floor(maxWidth)+'px');
+    pin=pin&&win.offsetHeight<=available;
+    if(!pin)pic.style.removeProperty('--wh-width');
     sec.classList.toggle('pin',pin);
   }
-  function scrollTarget(){
-    var r=run.getBoundingClientRect(),len=r.height-vh();
-    var p=len>0?cl(-r.top/len,0,1):0;
+  function progress(){
+    var available=vh()-hb;
+    if(pin){
+      var r=run.getBoundingClientRect();
+      return cl((hb-r.top)/Math.max(1,r.height-available),0,1);
+    }
+    var center=pic.getBoundingClientRect().top+pic.offsetHeight/2;
+    return cl((hb+available*.86-center)/Math.max(1,available*.7),0,1);
+  }
+  function scrollTarget(p){
     var s=cl(p/.86,0,1)*2,i=Math.floor(s),f=s-i;
     if(i>=2)return 2;
     return i+sm((f-.5)/.5);
@@ -1189,7 +1189,12 @@ try{
     var i=Math.floor(q),f=q-i,x=i>=2?C[2]:C[i]+(C[i+1]-C[i])*f;
     img.style.setProperty('--sx',x.toFixed(2));
     var a=Math.round(q);
-    if(a!==act){act=a;items.forEach(function(t,k){t.classList.toggle('on',k===a)})}
+    if(a!==act){
+      act=a;items.forEach(function(t,k){
+        t.classList.toggle('on',k===a);
+        hits[k].setAttribute('aria-pressed',k===a?'true':'false');
+      });
+    }
   }
   function tick(now){
     var dt=Math.min(64,now-(last||now));last=now;
@@ -1198,36 +1203,28 @@ try{
     draw();
     raf=q===goal?(last=0,0):requestAnimationFrame(tick);
   }
-  function go(v){goal=v;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  function go(v){if(v===goal)return;goal=v;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  var scrollFrame=0;
   function kick(){
-    if(!pin)return;
-    var t=scrollTarget();
-    if(manual){if(Math.abs(t-anchor)<.6)return;manual=false}
-    go(t);
-  }
-
-  /* автосмена, если сцена не закреплена */
-  var auto=null,near=false;
-  function autoRun(){
-    clearInterval(auto);auto=null;
-    if(pin||!near)return;
-    auto=setInterval(function(){if(!document.hidden)go((Math.round(goal)+1)%3)},4500);
+    scrollFrame=0;
+    var p=progress();
+    if(manual){if(Math.abs(p-anchor)<.16)return;manual=false}
+    go(scrollTarget(p));
   }
 
   hits.forEach(function(h,k){
     h.addEventListener('click',function(){
-      manual=true;anchor=pin?scrollTarget():0;go(k);
-      if(!pin)autoRun();   /* после выбора отсчёт начинается заново */
+      manual=true;anchor=progress();go(k);
     });
   });
 
   sec.classList.add('js');
-  layout();q=goal=pin?scrollTarget():0;draw();
-  if('IntersectionObserver' in window)new IntersectionObserver(function(es){near=es[0].isIntersecting;if(near)kick();autoRun()},{rootMargin:'0px 0px -20% 0px'}).observe(sec);
-  addEventListener('scroll',kick,{passive:true});
-  var w=innerWidth;
-  function re(){layout();kick();autoRun()}
-  addEventListener('resize',function(){if(innerWidth!==w||!matchMedia('(pointer:coarse)').matches){w=innerWidth;re()}});
+  layout();q=goal=scrollTarget(progress());draw();
+  function schedule(){if(!scrollFrame)scrollFrame=requestAnimationFrame(kick)}
+  addEventListener('scroll',schedule,{passive:true});
+  var w=innerWidth,h=vh();
+  function re(){w=innerWidth;h=vh();layout();schedule()}
+  addEventListener('resize',function(){if(innerWidth!==w||vh()!==h)re()});
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);
   addEventListener('load',re);
 })();

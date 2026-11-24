@@ -34,8 +34,8 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
 <link rel="preload" href="fonts/inter-tight-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="img/wordmark.webp" imagesrcset="img/wordmark-800.webp?v=20261117z6 800w, img/wordmark-1100.webp?v=20261117z6 1100w, img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
 <link rel="preload" as="image" type="image/webp" href="img/valentin-poster.webp?v=20261117z3" imagesrcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
-<link rel="stylesheet" href="styles/site.css?v=eef8df3b">
-<script src="scripts/site.js?v=eef8df3b" defer></script>
+<link rel="stylesheet" href="styles/site.css?v=b62234c7">
+<script src="scripts/site.js?v=b62234c7" defer></script>
 </head>
 <body>
 
@@ -229,8 +229,12 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
         <h2 class="h2 wh-h" id="wh-h">Три кита <span class="hl">ViMotion</span></h2>
         <p class="wh-sub">Дело не в таланте. Новички бросают, когда не знают, что делать, застревают или остаются одни. Мы закрыли все три причины</p>
         <div class="wh-pic">
-          <div class="wh-img"><img src="img/whales/whales-1100.webp?v=20261121a" srcset="img/whales/whales-760.webp?v=20261120k 760w, img/whales/whales-1100.webp?v=20261120k 1100w" sizes="(max-width:1100px) 100vw, 1000px" width="1100" height="585" alt="Три кита ViMotion в красных гоночных комбинезонах" loading="lazy" decoding="async"></div>
-          <div class="wh-hit" aria-hidden="true"><i data-k="0"></i><i data-k="1"></i><i data-k="2"></i></div>
+          <div class="wh-img"><img src="img/whales/whales-1100.webp?v=20261121a" srcset="img/whales/whales-760.webp?v=20261120k 760w, img/whales/whales-1100.webp?v=20261120k 1100w" sizes="(min-width:560px) and (max-height:660px) 360px, min(100vw, 760px)" width="1100" height="585" alt="Три кита ViMotion в красных гоночных комбинезонах" loading="lazy" decoding="async"></div>
+          <div class="wh-hit" role="group" aria-label="Три кита ViMotion">
+            <button type="button" aria-label="Пошаговый план"></button>
+            <button type="button" aria-label="Сопровождение"></button>
+            <button type="button" aria-label="Окружение"></button>
+          </div>
         </div>
         <ol class="wh-list">
           <li class="wh-it"><span class="wh-n" aria-hidden="true">01</span><p><strong>Пошаговый план:</strong> ты всегда знаешь следующий шаг, а каждое задание сразу идёт в портфолио</p></li>
@@ -248,7 +252,7 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
   <div class="rt-in">
     <div class="rt-head">
       <h2 class="h2 rt-h" id="rt-h">Маршрут <span class="hl">заезда</span></h2>
-      <p class="rt-sub">Не 7 лет, как у меня, а 8 недель. Каждый участок проходишь с ментором</p>
+      <p class="rt-sub">8 недель обучающей гонки. Каждый участок проходишь с ментором</p>
       <p class="rt-sub rt-sub2">9 модулей и больше 70 уроков. Новый модуль открывается каждый понедельник</p>
     </div>
     <div class="rt-trk">
@@ -516,7 +520,7 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
       <div class="faq-fig"><img src="img/valentin-poster-744.webp?v=20261117z6" srcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" sizes="(max-width:720px) 84vw, 400px" width="1104" height="1024" alt="Валентин" loading="lazy" decoding="async"></div>
       <div class="faq-pl">
         <h2 class="h2 faq-h" id="faq-h">Остались <span class="hl">вопросы?</span></h2>
-        <a class="btn" href="https://t.me/way_toyoutube"><span class="bt">Написать в Telegram</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
+        <a class="btn" href="https://vi-motion.pro/quiz/"><span class="bt">Заполнить анкету</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
       </div>
     </div>
     <ul class="faq-list">
@@ -573,9 +577,9 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
   <div class="ft-in">
     <div>
       <a class="ft-logo" href="./">VIMOTION</a>
-      <p class="ft-d">Менторская программа по контенту для бизнеса<br>ИП Сушнёв Валентин Андреевич · ИНН&nbsp;775189986429</p>
+      <p class="ft-d">Менторская программа по контенту для бизнеса<br>ИП Сушнёв Валентин Андреевич</p>
     </div>
-    <nav class="ft-nav" aria-label="Документы и контакты"><a href="#">Оферта</a><a href="#">Политика данных</a><a href="cases.html">Кейсы</a><a href="#">Контакты</a><a href="https://t.me/way_toyoutube">Telegram</a><a href="#">YouTube</a><a href="#">Instagram</a></nav>
+    <nav class="ft-nav" aria-label="Документы и контакты"><a href="#">Оферта</a><a href="#">Политика данных</a><a href="cases.html">Кейсы</a><a href="#faq">Контакты</a><a href="https://vi-motion.pro/quiz/">Анкета</a><a href="#">YouTube</a><a href="#">Instagram</a></nav>
   </div>
   <div class="ft-wm" aria-hidden="true"></div>
 </footer>

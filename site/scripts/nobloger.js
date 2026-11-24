@@ -12,6 +12,7 @@
 
   function update(){
     raf=0;
+    if(getComputedStyle(cards[0]).position!=='sticky')return;
     var cs=getComputedStyle(sec),ch=parseFloat(cs.getPropertyValue('--ch'))||400;
     /* насколько каждая карточка уже «легла»: 0 далеко внизу, 1 прилипла */
     var p=cards.map(function(c){

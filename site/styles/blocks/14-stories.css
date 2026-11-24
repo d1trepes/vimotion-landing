@@ -34,13 +34,13 @@
 .st-it.is-on .st-vn{opacity:0}
 /* компьютер: фото фиксированного размера по центру полосы; при раскрытии меняется только масштаб (transform),
    картинка не пересчитывается, полоса просто открывает её шире; раскрытие медленное и мягкое (scripts/stories.js открывает с задержкой наведения) */
-@media (min-width:721px){
+@media (min-width:901px){
   .st-sk img{left:50%;top:0;width:var(--sw,660px);height:auto;aspect-ratio:3/4;transform-origin:50% 35%;
     transform:translate(-50%,var(--sy,-90px)) skewX(10deg) scale(.76);
     transition:transform 1.15s cubic-bezier(.33,0,.15,1),filter 1s var(--ease)}
   .st-it.is-on .st-sk img{left:50%;width:var(--sw,660px);transform:translate(-50%,var(--sy,-90px)) skewX(10deg) scale(1)}
 }
-@media (min-width:721px) and (max-width:1180px){.st-list{--sw:560px;--sy:-74px}}
+@media (min-width:901px) and (max-width:1180px){.st-list{--sw:560px;--sy:-74px}}
 
 /* плашка с именем, цитатой и суммой */
 .st-pl{position:absolute;left:44px;right:30px;bottom:26px;padding:20px 26px 20px 30px;background:rgba(14,14,14,.66);
@@ -71,25 +71,25 @@
   .st-nm{font-size:24px}.st-q{font-size:14px}.st-sum{font-size:36px}
   .st-vn{font-size:21px}
 }
-@media (max-width:720px){
+@media (max-width:900px){
   /* 20.11 мобильная: отступ сверху как у трёх китов; полосы не выходят за сетку: ширина полосы уменьшена
      на величину наклона (высота × tg 5°), поэтому косые края ровно по полям страницы и в закрытом, и в раскрытом виде.
      По умолчанию ничего не раскрыто; тап раскрывает, повторный закрывает (scripts/stories.js).
      В закрытых полосах на уровне середины видны глаза (--ey: где глаза на фото, доля высоты) */
-  .hero~.st,.st{--sk:-5deg;--tg:.0875;padding:64px var(--m) 72px}
+  .hero~.st,.st{--sk:-5deg;--tg:.0875;--st-open:clamp(320px,113vw,440px);padding:64px var(--m) 72px}
   .st-sub{font-size:16px;margin-top:16px}
   .st-list{flex-direction:column;align-items:center;height:auto;margin:32px 0 0;gap:10px}
   /* 20.11 (третий круг, плавность): все полосы одной ширины (по раскрытой), анимируется только высота полосы и transform фото;
      без маски-слоя и без анимации filter (ч/б → цвет переключается один раз посередине раскрытия) — так не лагает на iPhone */
-  .st-it{--sh:66px;flex:none;height:var(--sh);width:calc(100% - 440px*var(--tg));transition:height .55s cubic-bezier(.33,0,.15,1)}
-  .st-it.is-on{flex:none;--sh:440px}
+  .st-it{--sh:66px;flex:none;height:var(--sh);width:calc(100% - var(--st-open)*var(--tg));transition:height .55s cubic-bezier(.33,0,.15,1)}
+  .st-it.is-on{flex:none;--sh:var(--st-open)}
   .st-b{-webkit-mask-image:none;mask-image:none;isolation:auto}
   .st-sk img,.st-it.is-on .st-sk img{left:-10%;width:120%;height:auto;aspect-ratio:3/4;object-fit:cover;top:0;
     transform:translateY(calc(33px - var(--ey,.38)*100%)) skewX(5deg);
     filter:grayscale(1) brightness(.62) contrast(1.1);
     transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .12s}
-  /* фото всегда закрывает раскрытую полосу целиком: сдвиг ограничен так, чтобы низ фото не поднимался выше низа полосы (440px) */
-  .st-it.is-on .st-sk img{transform:translateY(min(0px,max(calc(440px - 100%),calc(158px - var(--ey,.38)*100%)))) skewX(5deg);filter:none;transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .2s}
+  /* сдвиг ограничен так, чтобы низ фото не поднимался выше низа полосы */
+  .st-it.is-on .st-sk img{transform:translateY(min(0px,max(calc(var(--st-open) - 100%),calc(158px - var(--ey,.38)*100%)))) skewX(5deg);filter:none;transition:transform .55s cubic-bezier(.33,0,.15,1),filter 0s .2s}
   .st-sk::after{transition:opacity .4s}
   #alena{--ey:.33}#ivan{--ey:.445}#veronika{--ey:.375}#gaiduk{--ey:.425}#nariman{--ey:.39}#nastya{--ey:.32}
   .st-vn{writing-mode:horizontal-tb;rotate:0deg;left:22px;bottom:auto;top:50%;transform:translateY(-50%) skewX(5deg);font-size:22px;
@@ -100,6 +100,10 @@
   .st-acts{margin-top:40px;flex-direction:column-reverse}
   .st.is-wait .st-it{translate:0 40px}
   @keyframes st-in{from{opacity:0;translate:0 40px}to{opacity:1;translate:0 0}}
+}
+@media (max-width:420px){
+  .st-pl-in{flex-direction:column;align-items:start;gap:8px}
+  .st-r{text-align:left}
 }
 
 @media (prefers-reduced-motion:reduce){

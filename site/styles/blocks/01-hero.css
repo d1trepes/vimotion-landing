@@ -114,8 +114,7 @@
 /* метка для hero-fit.js: скрипт двигает блоки, только если загружены эти стили */
 :root{--hero-fit:1}
 
-/* подгонка под окно (scripts/hero-fit.js): hero ровно в высоту экрана,
-   снизу тот же отступ, что по бокам; координаты задаёт скрипт */
+/* Подгонка под окно (scripts/hero-fit.js): координаты задаёт скрипт. */
 .vm-fit .hero{min-height:0}
 .vm-fit .hero-in{min-height:0;height:100%;padding:0;display:block}
 .vm-fit .wm{right:auto}

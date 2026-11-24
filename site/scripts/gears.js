@@ -15,6 +15,7 @@
   var sec=document.getElementById('ladder');
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var run=sec.querySelector('.gb-run'),knob=sec.querySelector('.gb-knob'),
+      stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),
       lines=[].slice.call(sec.querySelectorAll('.gb-trail path')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
 
@@ -74,10 +75,18 @@
   }
 
   /* скролл задаёт цель: у каждой передачи пауза (DWELL), между ними равномерный переход */
-  var DWELL=.34;
+  var DWELL=.34,pin=false,hb=0,narrow=matchMedia('(max-width:760px)');
+  function layout(){
+    hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    sec.classList.add('pin');
+    pin=(narrow.matches||board.offsetWidth>=600)&&board.offsetHeight<=stage.offsetHeight;
+    sec.classList.toggle('pin',pin);
+  }
+  layout();
   function target(){
-    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight);
-    var p=len>0?Math.max(0,Math.min(1,-r.top/len)):1,u=p*4,i=Math.min(3,Math.floor(u)),f=u-i;
+    var r=run.getBoundingClientRect(),available=(window.vmVH||innerHeight)-hb;
+    var progress=pin?(hb-r.top)/Math.max(1,r.height-available):(hb+available*.85-r.top)/(r.height+available*.7);
+    var p=Math.max(0,Math.min(1,progress)),u=p*4,i=Math.min(3,Math.floor(u)),f=u-i;
     if(p>=1)return 4;
     return i+Math.max(0,Math.min(1,(f-DWELL/2)/(1-DWELL)));
   }
@@ -97,7 +106,7 @@
     place(g);
     raf=(g!==goal||v!==0)?requestAnimationFrame(tick):(last=0,0);
   }
-  function go(t){goal=t;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
+  function go(t){if(t===goal)return;goal=t;if(!raf){last=0;raf=requestAnimationFrame(tick)}}
 
   /* ручное управление. Источник правды один: прокрутка страницы */
   var drag=false,lock=null,lockY=0,lockT=0;
@@ -117,11 +126,12 @@
     return gAt((cx-r.left)/r.width*W,(cy-r.top)/r.height*H,g);
   }
   function scrollFor(gr){
-    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight);
-    return Math.round(scrollY+r.top+Math.max(0,len)*(gr/4));
+    var r=run.getBoundingClientRect(),len=r.height-(window.vmVH||innerHeight)+hb;
+    return Math.round(scrollY+r.top-hb+Math.max(0,len)*(gr/4));
   }
   function shift(gr){
     go(gr);
+    if(!pin)return;
     var y=scrollFor(gr);
     if(Math.abs(y-scrollY)>2){lock=gr;lockY=y;lockT=performance.now();window.scrollTo({top:y,behavior:'smooth'})}
   }
@@ -150,6 +160,8 @@
   sec.classList.add('js');
   place(g);
   addEventListener('scroll',kick,{passive:true});
-  addEventListener('resize',function(){size();place(g);kick()});
+  function resize(){layout();size();place(g);kick()}
+  addEventListener('resize',resize);
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resize);
   if(window.ResizeObserver)new ResizeObserver(function(){size();place(g)}).observe(knob.parentNode);
 })();
