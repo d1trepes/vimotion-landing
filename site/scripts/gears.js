@@ -15,7 +15,7 @@
   var sec=document.getElementById('ladder');
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var run=sec.querySelector('.gb-run'),knob=sec.querySelector('.gb-knob'),
-      stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),
+      stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),header=document.querySelector('.hdr'),
       lines=[].slice.call(sec.querySelectorAll('.gb-trail path')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
 
@@ -59,7 +59,11 @@
   }
 
   var bw=0,bh=0;
-  function size(){var box=knob.parentNode;bw=box.clientWidth;bh=box.clientHeight}
+  function size(){
+    var box=knob.parentNode;
+    bw=box.getBoundingClientRect().width;bh=box.clientHeight;
+    knob.style.width=Math.min(84,bw*.084)+'px';
+  }
   var lastS=-1;
   function place(g){
     var st=state(g);if(!bw)size();
@@ -77,7 +81,7 @@
   /* скролл задаёт цель: у каждой передачи пауза (DWELL), между ними равномерный переход */
   var DWELL=.34,pin=false,hb=0,narrow=matchMedia('(max-width:760px)');
   function layout(){
-    hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    hb=header?header.offsetHeight:0;
     sec.classList.add('pin');
     pin=(narrow.matches||board.offsetWidth>=600)&&board.offsetHeight<=stage.offsetHeight;
     sec.classList.toggle('pin',pin);
@@ -162,6 +166,7 @@
   addEventListener('scroll',kick,{passive:true});
   function resize(){layout();size();place(g);kick()}
   addEventListener('resize',resize);
+  addEventListener('vmviewport',resize);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resize);
   if(window.ResizeObserver)new ResizeObserver(function(){size();place(g)}).observe(knob.parentNode);
 })();

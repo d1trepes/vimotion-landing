@@ -9,7 +9,7 @@
 
 .rt{padding:128px var(--m) 72px;overflow:clip}
 .rt-in{max-width:1328px;margin:0 auto}
-.rt-sub{margin:24px auto 0;max-width:38em;text-align:center;font:400 20px/1.5 var(--text);color:var(--muted)}
+.rt-sub{margin:24px auto 0;max-width:38em;text-align:center;font:400 20px/1.5 var(--text);color:var(--muted);text-wrap:pretty}
 .rt-sub2{margin-top:6px}
 
 .rt-trk{position:relative;margin-top:72px;padding-bottom:190px;--rw:56px}

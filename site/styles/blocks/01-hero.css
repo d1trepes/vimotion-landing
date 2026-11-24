@@ -71,24 +71,24 @@
 @keyframes fade{from{opacity:0}to{opacity:1}}
 
 /* ---------- планшет: текст и цифры в потоке, цифры строкой под текстом ---------- */
-@media (max-width:1180px){
+@media (max-width:1320px){
   .hero{min-height:var(--vhl,100svh)}
   .hero-in{display:flow-root;width:100%;padding:0 0 8px}
-  .copy{width:46vw;margin:calc(76px + (100vw - 2*var(--m))*471/1600 + 28px) 0 0 var(--m)}
-  .h1{font-size:min(3.85vw,44px)}
+  .copy{width:min(44vw,520px);margin:calc(76px + (100vw - 2*var(--m))*471/1600 + 28px) 0 0 var(--m)}
+  .h1{font-size:clamp(22px,3.6vw,44px)}
   .sub{font-size:17px;max-width:none}
   .pt{left:48vw;width:52vw}
 
-  .stats{--k:20px;position:relative;right:auto;bottom:auto;display:flex;width:46vw;margin:26px 0 0 var(--m);padding:18px 20px}
-  .stat,.stat:first-child,.stat:last-child{flex:1;padding:0 16px}
+  .stats{--k:20px;position:relative;right:auto;bottom:auto;display:flex;width:min(44vw,520px);margin:26px 0 0 var(--m);padding:14px clamp(8px,2vw,20px)}
+  .stat,.stat:first-child,.stat:last-child{flex:1;min-width:0;padding:0 clamp(4px,1.2vw,16px)}
   .stat:first-child{padding-left:0}
   .stat+.stat{border-top:0;border-left:1px solid rgba(17,17,17,.18)}
-  .stat-num{font-size:36px}
+  .stat-num{font-size:clamp(23px,3.5vw,38px)}
   .stat-lbl{font-size:9.5px;letter-spacing:.05em}
 }
 
 /* ---------- телефон и вертикальный планшет: портрет сверху, текст ниже ---------- */
-@media (max-width:720px),(max-width:1180px) and (orientation:portrait){
+@media (max-width:559px),(max-width:759px) and (min-height:541px){
   .hero-in{padding-bottom:40px}
   .wm{top:66px}
   .pt{left:2vw;width:96vw;top:84px;bottom:auto}
@@ -103,19 +103,11 @@
   .stats::before{top:8px;right:8px;width:6px;height:6px}
 }
 
-/* вертикальный планшет: текст чуть крупнее */
-@media (min-width:721px) and (max-width:1180px) and (orientation:portrait){
-  .wm{top:76px}
-  .pt{top:94px}
-  .copy{margin-top:calc(94px + 96vw*690/744 + 16px)}
-  .sub{font-size:18px}
-}
-
 /* метка для hero-fit.js: скрипт двигает блоки, только если загружены эти стили */
 :root{--hero-fit:1}
 
 /* Подгонка под окно (scripts/hero-fit.js): координаты задаёт скрипт. */
-.vm-fit .hero{min-height:0}
+.vm-fit .hero{min-height:0;height:var(--hero-height)}
 .vm-fit .hero-in{min-height:0;height:100%;padding:0;display:block}
 .vm-fit .wm{right:auto}
 .vm-fit .pt{bottom:auto;aspect-ratio:auto}

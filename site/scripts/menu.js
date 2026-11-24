@@ -44,16 +44,10 @@
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
     /* за подвалом (оттягивание в самом конце) тоже тёмное */
     if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
-    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c;if(edge)edge.style.backgroundColor=c}
+    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
   }
-  /* полоса у нижнего края для Safari на iPhone/iPad (см. .vm-edge в tokens.css) */
-  /* только Safari и окна браузера внутри приложений (Telegram), где панель плавает поверх страницы: у Chrome, Google, Firefox, Edge, Яндекса на iPhone панель
-     непрозрачная и не перекрывает страницу, там полоса была бы видна внизу экрана */
-  var ua=navigator.userAgent,edge=null;
-  var ios=/iP(hone|ad|od)/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  var safari=ios&&!/CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|YaBrowser|GSA\/|DuckDuckGo|Mercury|Brave|Instagram|FBAN|FBAV|VKClient/.test(ua);
-  if(safari){edge=document.createElement('div');edge.className='vm-edge';edge.setAttribute('aria-hidden','true');document.body.appendChild(edge)}
-  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
+  function resize(){hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd()}
+  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',resize);resize();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));
   if(!links.length||!('IntersectionObserver' in window))return;

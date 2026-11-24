@@ -12,14 +12,14 @@
 
 /* Сцена закрепляется, только когда кулиса и подписи помещаются в окно. */
 .gb-run{position:relative;margin-top:24px}
-.gb-stage{display:grid;place-items:center}
+.gb-stage{display:grid;grid-template-columns:minmax(0,1fr);place-items:center}
 .gb.pin .gb-run{height:calc(var(--vhl,100vh)*3.8)}
 .gb.pin .gb-stage{position:sticky;top:var(--hb);height:var(--vhs)}
 
 .gb-board{--row:150px;position:relative;width:min(1000px,100%);padding:var(--row) 0}
 .gb.pin .gb-board{width:min(1000px,100%,calc((var(--vhs) - 2*var(--row) - 16px)*1.7768))}
-.gb-plate{position:relative;width:100%;aspect-ratio:1672/941}
-.gb-gate{width:100%;height:100%;
+.gb-plate{position:relative;width:100%;min-width:0;aspect-ratio:1672/941;overflow:clip}
+.gb-gate{width:100%;height:auto;
   -webkit-mask:linear-gradient(90deg,transparent,#000 4.5%,#000 95.5%,transparent),linear-gradient(transparent,#000 7%,#000 93%,transparent);
   -webkit-mask-composite:source-in;
   mask:linear-gradient(90deg,transparent,#000 4.5%,#000 95.5%,transparent),linear-gradient(transparent,#000 7%,#000 93%,transparent);
@@ -30,7 +30,7 @@
    Путь прямыми отрезками с острыми углами (21.11). Свечение без SVG-размытия (оно перерисовывалось на каждом кадре и ручка подтормаживала): широкая полупрозрачная линия */
 .gb-trail .gl{stroke:#ff2a1f;stroke-width:16;opacity:.22}
 .gb-trail .co{stroke:#ff5247;stroke-width:3.5}
-.gb-knob{position:absolute;left:80.8%;top:24.87%;width:8.4%;height:auto;transform:translate(-50%,-50%);
+.gb-knob{position:absolute;left:80.8%;top:24.87%;width:8.4%;max-width:84px;max-height:84px;height:auto;transform:translate(-50%,-50%);
   filter:drop-shadow(5px 9px 7px rgba(40,20,8,.45)) drop-shadow(1px 2px 2px rgba(40,20,8,.35))}
 /* с JS ручка стоит в углу и едет по transform: без пересчёта раскладки и перерисовки тени на каждом кадре */
 .gb.js .gb-knob{left:0;top:0;transform:translate(-50%,-50%);will-change:transform;backface-visibility:hidden;

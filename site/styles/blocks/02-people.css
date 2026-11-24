@@ -4,8 +4,8 @@
    Вау-момент: рамка видоискателя с REC переезжает с человека на человека,
    тот, на ком рамка, цветной, остальные чёрно-белые. */
 
-.vm-fit:not(.hero-scroll) .hero{position:sticky;top:0}
-.hero-scroll .hero::before{display:none}
+.vm-fit .hero{position:sticky;top:min(0px,calc(var(--vhl,100svh) - var(--hero-height)))}
+@media (prefers-reduced-motion:reduce){.vm-fit .hero{position:relative;top:auto}.hero::before{display:none}}
 .hero::before{content:"";position:absolute;inset:0;z-index:31;pointer-events:none;background:#111;opacity:calc(var(--cover,0)*.5)}
 .hero-covered .hero{visibility:hidden}
 /* всё, что после hero, лежит поверх него */

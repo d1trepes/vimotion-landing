@@ -2,15 +2,18 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="format-detection" content="telephone=no,email=no,address=no">
-<script>/* Высота окна, зафиксированная при загрузке (--vhl). На телефонах обновляется только при смене ширины (поворот) и в первые секунды после открытия:
-   встроенные браузеры (Telegram, Instagram) меняют высоту при скролле, из-за этого первый экран «прыгал» и увеличивался */
-(function(){var r=document.documentElement,w=-1,h=-1,t0=Date.now(),c=matchMedia('(pointer:coarse)').matches,V=window.visualViewport;
-/* Telegram открывает страницу в шторке, которая ещё разворачивается: первые 4 с (пока виден прелоадер) высоту обновляем, дальше фиксируем */
-function H(){var v=innerHeight;if(V&&V.height>0&&V.height<v)v=Math.round(V.height);return v}
-function s(){var v=H(),early=Date.now()-t0<4000&&(window.scrollY||0)<5;if(!c||innerWidth!==w||(early&&v!==h)){w=innerWidth;h=v;window.vmVH=v;r.style.setProperty('--vhl',v+'px');if(window.vmFit&&early)window.vmFit()}}
-s();addEventListener('resize',s);if(V)V.addEventListener('resize',s);addEventListener('load',s);setTimeout(s,600);setTimeout(s,1500);setTimeout(s,3000)})();</script>
+<script>/* Высота шторки встроенного браузера меняется отдельно от размеров окна. */
+(function(){var root=document.documentElement,view=window.visualViewport,touch=matchMedia('(pointer:coarse)'),width=0,height=0,frame=0;
+function measure(){frame=0;var w=root.clientWidth||innerWidth,h=innerHeight;
+  if(view&&Math.abs(view.scale-1)<.01&&view.height>0)h=Math.min(h,Math.round(view.height));
+  if(w===width&&(h===height||(touch.matches&&scrollY>4&&Math.abs(h-height)<80)))return;
+  width=w;height=h;window.vmVH=h;root.style.setProperty('--vhl',h+'px');
+  window.dispatchEvent(new Event('vmviewport'));
+}
+function schedule(){if(!frame)frame=requestAnimationFrame(measure)}
+measure();addEventListener('resize',schedule);addEventListener('pageshow',schedule);if(view)view.addEventListener('resize',schedule)})();</script>
 
 <script>/* Ссылка всегда открывается с первого экрана: браузер и Telegram не восстанавливают прошлую позицию прокрутки */
 (function(){if('scrollRestoration' in history)history.scrollRestoration='manual';if(location.hash)return;
@@ -287,7 +290,6 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
           <li class="wh-it"><span class="wh-n" aria-hidden="true">02</span><p><strong>Сопровождение:</strong> застрял, ментор разберёт. Пропал, он напишет первым</p></li>
           <li class="wh-it"><span class="wh-n" aria-hidden="true">03</span><p><strong>Окружение:</strong> рядом поток людей на том же пути и эфиры с Валентином</p></li>
         </ol>
-        <a class="btn wh-btn" href="https://vi-motion.pro/quiz/"><span class="bt">Обсудить свою точку старта</span><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 12.5l9-9M5.5 3.5h7v7"/></svg></a>
       </div>
     </div>
   </div>
@@ -298,7 +300,7 @@ function t(){window.scrollTo(0,0)}t();addEventListener('DOMContentLoaded',t);add
   <div class="rt-in">
     <div class="rt-head">
       <h2 class="h2 rt-h" id="rt-h">Маршрут <span class="hl">заезда</span></h2>
-      <p class="rt-sub">8 недель обучающей гонки. Каждый участок проходишь с ментором</p>
+      <p class="rt-sub">8 недель обучающей гонки</p>
       <p class="rt-sub rt-sub2">9 модулей и больше 70 уроков. Новый модуль открывается каждый понедельник</p>
     </div>
     <div class="rt-trk">

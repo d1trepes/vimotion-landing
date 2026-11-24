@@ -46,16 +46,10 @@ try{
     for(var i=0;i<darks.length;i++){var r=darks[i].getBoundingClientRect();if(r.top<=y&&r.bottom>y){d=true;break}}
     /* за подвалом (оттягивание в самом конце) тоже тёмное */
     if(!d&&darks.length){var last=darks[darks.length-1].getBoundingClientRect();if(last.bottom<=y&&last.bottom>0)d=true}
-    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c;if(edge)edge.style.backgroundColor=c}
+    if(d!==bd){bd=d;var c=d?'#0e0e0e':'#EFE6DE';document.body.style.backgroundColor=c;html.style.backgroundColor=c}
   }
-  /* полоса у нижнего края для Safari на iPhone/iPad (см. .vm-edge в tokens.css) */
-  /* только Safari и окна браузера внутри приложений (Telegram), где панель плавает поверх страницы: у Chrome, Google, Firefox, Edge, Яндекса на iPhone панель
-     непрозрачная и не перекрывает страницу, там полоса была бы видна внизу экрана */
-  var ua=navigator.userAgent,edge=null;
-  var ios=/iP(hone|ad|od)/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-  var safari=ios&&!/CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|YaBrowser|GSA\/|DuckDuckGo|Mercury|Brave|Instagram|FBAN|FBAV|VKClient/.test(ua);
-  if(safari){edge=document.createElement('div');edge.className='vm-edge';edge.setAttribute('aria-hidden','true');document.body.appendChild(edge)}
-  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',upd);upd();
+  function resize(){hdr.classList.toggle('has-inset',parseFloat(getComputedStyle(hdr).paddingTop)>0);upd()}
+  addEventListener('scroll',function(){if(!t)t=requestAnimationFrame(upd)},{passive:true});addEventListener('resize',resize);resize();
 
   var links=[].slice.call(document.querySelectorAll('#nav a[href^="#"]'));
   if(!links.length||!('IntersectionObserver' in window))return;
@@ -353,9 +347,8 @@ try{
   /* силуэт человека по всей петле: левый и правый край в долях ширины кадра, 32 полосы сверху вниз */
   var SL=[1,.467,.402,.366,.344,.33,.319,.312,.308,.304,.301,.301,.301,.304,.319,.33,.377,.377,.366,.304,.239,.174,.134,.116,.101,.087,.076,.065,.058,.054,.047,.04],
       SR=[0,.529,.612,.652,.667,.681,.699,.707,.707,.717,.721,.717,.707,.692,.699,.681,.656,.645,.641,.699,.764,.826,.877,.895,.906,.92,.931,.938,.942,.949,.957,.96];
-  var wmMin=.9,headOverlap=.12;
   /* те же границы, что в 01-hero.css */
-  var mqT=matchMedia('(max-width:1180px)'),mqP=matchMedia('(max-width:720px), (max-width:1180px) and (orientation:portrait)');
+  var mqT=matchMedia('(max-width:1320px)'),mqP=matchMedia('(max-width:559px), (max-width:759px) and (min-height:541px)');
 
   /* высота окна без панелей браузера: --vhl из <head> (на телефонах фиксируется при загрузке), иначе svh */
   var probe=document.createElement('div');
@@ -364,8 +357,8 @@ try{
 
   function px(v){return Math.round(v*100)/100+'px'}
   function reset(){
-    root.classList.remove('vm-fit','hero-scroll');
-    hero.style.removeProperty('height');
+    root.classList.remove('vm-fit');
+    hero.style.removeProperty('--hero-height');
     [wm,pt,copy,stats].forEach(function(e){e.removeAttribute('style')});
   }
   function place(e,l,t,w,s){
@@ -394,80 +387,75 @@ try{
       if(!e.classList.contains('btn')){var rg=document.createRange();rg.selectNodeContents(e);right=rg.getBoundingClientRect().right}
       boxes.push({t:r.top-cr.top,b:r.bottom-cr.top,r:right-cr.left})});
     var phone=mqP.matches,desk=!mqT.matches;
-    var wmFull=W-2*m,s=1,wmW=wmFull,heroH,pw,ph,pl,ptop,wmTop=hh,col,gap;
+    var wmFull=W-2*m,heroH,pw,ph,col;
 
-    if(!phone){
-      /* десктоп: текст слева и цифры справа прижаты к низу; планшет: цифры строкой под текстом */
-      gap=desk?6:28;
-      var sg=desk?0:26;
-      col=desk?Math.max(Ch,Sh):Ch+sg+Sh;
-      var room=H-hh-gap-m;
-      wmW=Math.max(wmFull*wmMin,Math.min(wmFull,(room-col)/WM));
+    if(desk){
+      /* На широком экране портрет между текстом и цифрами. */
+      col=Math.max(Ch,Sh);
+      var room=H-hh-6-m,maxWordmark=Math.min(wmFull,1440);
+      var wmW=Math.max(maxWordmark*.74,Math.min(maxWordmark,(room-col)/WM));
       var wmH=wmW*WM;
-      s=Math.max(.9,Math.min(1,(room-wmH)/col));
-      heroH=Math.max(H,hh+wmH+gap+col*s+m);
+      var s=Math.max(.9,Math.min(1,(room-wmH)/col));
+      heroH=Math.max(H,hh+wmH+6+col*s+m);
       var wmL=(W-wmW)/2;
-      /* портрет: голова заходит на вордмарк, низ по краю экрана; крупнее за счёт всей свободной высоты */
-      var kc=desk?.5787:.756,cx=wmL+kc*wmW;
-      ph=Math.min(W*PT,heroH-(wmTop+headOverlap*wmH));pw=ph/PT;
-      /* куртка и плечи не наезжают на текст слева и на цифры справа: проверка по силуэту, построчно */
-      var cTop=heroH-m-(desk?Ch:(Sh+sg+Ch))*s,sTop=heroH-m-Sh*s,sLeft=desk?W-m-Sw*s:m,pad=desk?20:16,cx0=cx;
+      var cx=wmL+.579*wmW;
+      ph=Math.min(W*PT,heroH-(hh+.12*wmH));pw=ph/PT;
+      var cTop=heroH-m-Ch*s,sTop=heroH-m-Sh*s,sLeft=W-m-Sw*s,cx0=cx;
       var lefts=boxes.map(function(bx){return {t:cTop+bx.t*s,b:cTop+bx.b*s,r:m+bx.r*s}});
-      if(!desk)lefts.push({t:sTop,b:heroH-m,r:m+Sw*s});
       for(var it=0;it<60;it++){
         var top=heroH-ph,lo=pw/2,hi=W-pw/2;
         for(var k=1;k<32;k++){
           var y0=top+k*ph/32,y1=y0+ph/32;
-          lefts.forEach(function(bx){if(bx.b>y0&&bx.t<y1)lo=Math.max(lo,bx.r+pad-(SL[k]-.5)*pw)});
-          if(desk&&sTop<y1)hi=Math.min(hi,sLeft-pad-(SR[k]-.5)*pw);
+          lefts.forEach(function(bx){if(bx.b>y0&&bx.t<y1)lo=Math.max(lo,bx.r+20-(SL[k]-.5)*pw)});
+          if(sTop<y1)hi=Math.min(hi,sLeft-20-(SR[k]-.5)*pw);
         }
         if(lo<=hi){cx=Math.max(lo,Math.min(cx0,hi));break}
         ph*=.97;pw=ph/PT;
       }
-      ptop=heroH-ph;pl=Math.min(W-pw,cx-pw/2);
-      root.classList.add('vm-fit');
-      hero.style.height=px(heroH);
-      place(wm,wmL,wmTop,wmW);
-      place(pt,pl,ptop,pw);pt.style.height=px(ph);
-      if(desk){
-        place(copy,m,heroH-m-Ch*s,Cw,s);
-        place(stats,W-m-Sw*s,heroH-m-Sh*s,Sw,s);
-      }else{
-        place(stats,m,heroH-m-Sh*s,Sw,s);
-        place(copy,m,heroH-m-(Sh+sg+Ch)*s,Cw,s);
-      }
+      place(wm,wmL,hh,wmW);
+      place(pt,cx-pw/2,heroH-ph,pw);pt.style.height=px(ph);
+      place(copy,m,cTop,Cw,s);
+      place(stats,sLeft,sTop,Sw,s);
+    }else if(!phone){
+      /* Две колонки: размер портрета задаёт правая колонка, независимо от длины текста. */
+      var textGap=H<600?16:24,brandBottom=hh+wmFull*WM;
+      col=Ch+textGap+Sh;
+      pw=Math.min(W*.49,640);ph=pw*PT;
+      heroH=Math.max(brandBottom+16+col+m,Math.min(H,brandBottom+ph+32));
+      place(wm,m,hh,wmFull);
+      place(pt,W-m*.4-pw,heroH-ph,pw);pt.style.height=px(ph);
+      place(copy,m,heroH-m-col,Cw);
+      place(stats,m,heroH-m-Sh,Sw);
     }else{
-      /* телефон и вертикальный планшет: портрет сверху на вордмарке, текст и цифры внизу */
-      wmTop=hh+(m<20?4:0);
+      /* Телефоны: крупный портрет перед текстом. */
+      var wmTop=hh+4;
       var ptTop=wmTop+.04*wmFull*WM,g1=12,statsGap=root.classList.contains('hero-compact')?12:20;
       col=Ch+statsGap+Sh;
-      var phFull=Math.min(W,H*.96)*PT;
-      ph=Math.max(phFull*.64,Math.min(phFull,H-ptTop-g1-col-m));
+      var phFull=Math.min(W*.96,530)*PT;
+      ph=Math.max(phFull*.82,Math.min(phFull,H-ptTop-g1-col-m));
       heroH=Math.max(H,ptTop+ph+g1+col+m);
       pw=ph/PT;
-      root.classList.add('vm-fit');
-      hero.style.height=px(heroH);
       place(wm,m,wmTop,wmFull);
       place(pt,(W-pw)/2,ptTop,pw);pt.style.height=px(ph);
       place(stats,m,heroH-m-Sh,W-2*m);
       place(copy,m,heroH-m-col,W-2*m);
     }
-    root.classList.toggle('hero-scroll',heroH>H+1);
+    hero.style.setProperty('--hero-height',px(heroH));
+    root.classList.add('vm-fit');
   }
 
-  var raf=0,lastW=0,lastH=0,coarse=matchMedia('(pointer:coarse)').matches;
+  var raf=0,lastW=0,lastH=0;
   function schedule(){
     var W=inn.clientWidth,H=probe.getBoundingClientRect().height;
-    if(W===lastW&&(H===lastH||coarse))return; /* на телефоне смена одной высоты (панели браузера) не пересобирает экран */
+    if(W===lastW&&H===lastH)return;
     lastW=W;lastH=H;cancelAnimationFrame(raf);raf=requestAnimationFrame(fit);
   }
   function force(){lastW=lastH=0;schedule()}
-  /* window.vmFit вызывается из <head>, когда в первые секунды меняется высота окна (шторка Telegram) */
+  addEventListener('vmviewport',schedule);
   addEventListener('resize',schedule);
   addEventListener('load',force);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(force);
   fit();lastW=inn.clientWidth;lastH=probe.getBoundingClientRect().height;
-  window.vmFit=force;
 })();
 
 }catch(e){window.console&&console.error("scripts/hero-fit.js",e)}
@@ -895,7 +883,7 @@ try{
   var sec=document.getElementById('ladder');
   if(!sec||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
   var run=sec.querySelector('.gb-run'),knob=sec.querySelector('.gb-knob'),
-      stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),
+      stage=sec.querySelector('.gb-stage'),board=sec.querySelector('.gb-board'),header=document.querySelector('.hdr'),
       lines=[].slice.call(sec.querySelectorAll('.gb-trail path')),items=[].slice.call(sec.querySelectorAll('.gb-l'));
   if(!run||!knob||!lines.length)return;
 
@@ -939,7 +927,11 @@ try{
   }
 
   var bw=0,bh=0;
-  function size(){var box=knob.parentNode;bw=box.clientWidth;bh=box.clientHeight}
+  function size(){
+    var box=knob.parentNode;
+    bw=box.getBoundingClientRect().width;bh=box.clientHeight;
+    knob.style.width=Math.min(84,bw*.084)+'px';
+  }
   var lastS=-1;
   function place(g){
     var st=state(g);if(!bw)size();
@@ -957,7 +949,7 @@ try{
   /* скролл задаёт цель: у каждой передачи пауза (DWELL), между ними равномерный переход */
   var DWELL=.34,pin=false,hb=0,narrow=matchMedia('(max-width:760px)');
   function layout(){
-    hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    hb=header?header.offsetHeight:0;
     sec.classList.add('pin');
     pin=(narrow.matches||board.offsetWidth>=600)&&board.offsetHeight<=stage.offsetHeight;
     sec.classList.toggle('pin',pin);
@@ -1042,6 +1034,7 @@ try{
   addEventListener('scroll',kick,{passive:true});
   function resize(){layout();size();place(g);kick()}
   addEventListener('resize',resize);
+  addEventListener('vmviewport',resize);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(resize);
   if(window.ResizeObserver)new ResizeObserver(function(){size();place(g)}).observe(knob.parentNode);
 })();
@@ -1155,12 +1148,12 @@ try{
   function sm(t){t=cl(t,0,1);return t*t*(3-2*t)}
   function vh(){return window.vmVH||innerHeight}
 
-  var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic');
+  var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic'),header=document.querySelector('.hdr');
   var compact=matchMedia('(max-width:720px), (min-width:560px) and (max-height:660px)');
   var pin=false,hb=0;
   function layout(){
     pic.style.removeProperty('--wh-width');
-    hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    hb=header?header.offsetHeight:0;
     var available=vh()-hb-(compact.matches?24:64)-2;
     var picture=pic.getBoundingClientRect(),maxWidth=(available-win.offsetHeight+picture.height)*1100/585;
     pin=maxWidth>=picture.width*.55;
@@ -1175,7 +1168,7 @@ try{
       var r=run.getBoundingClientRect();
       return cl((hb-r.top)/Math.max(1,r.height-available),0,1);
     }
-    var center=pic.getBoundingClientRect().top+pic.offsetHeight/2;
+    var box=pic.getBoundingClientRect(),center=box.top+box.height/2;
     return cl((hb+available*.86-center)/Math.max(1,available*.7),0,1);
   }
   function scrollTarget(p){
@@ -1224,7 +1217,9 @@ try{
   addEventListener('scroll',schedule,{passive:true});
   var w=innerWidth,h=vh();
   function re(){w=innerWidth;h=vh();layout();schedule()}
-  addEventListener('resize',function(){if(innerWidth!==w||vh()!==h)re()});
+  function resize(){if(innerWidth!==w||vh()!==h)re()}
+  addEventListener('resize',resize);
+  addEventListener('vmviewport',resize);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);
   addEventListener('load',re);
 })();

@@ -17,12 +17,12 @@
   function sm(t){t=cl(t,0,1);return t*t*(3-2*t)}
   function vh(){return window.vmVH||innerHeight}
 
-  var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic');
+  var win=sec.querySelector('.wh-in'),pic=sec.querySelector('.wh-pic'),header=document.querySelector('.hdr');
   var compact=matchMedia('(max-width:720px), (min-width:560px) and (max-height:660px)');
   var pin=false,hb=0;
   function layout(){
     pic.style.removeProperty('--wh-width');
-    hb=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hb'))||0;
+    hb=header?header.offsetHeight:0;
     var available=vh()-hb-(compact.matches?24:64)-2;
     var picture=pic.getBoundingClientRect(),maxWidth=(available-win.offsetHeight+picture.height)*1100/585;
     pin=maxWidth>=picture.width*.55;
@@ -37,7 +37,7 @@
       var r=run.getBoundingClientRect();
       return cl((hb-r.top)/Math.max(1,r.height-available),0,1);
     }
-    var center=pic.getBoundingClientRect().top+pic.offsetHeight/2;
+    var box=pic.getBoundingClientRect(),center=box.top+box.height/2;
     return cl((hb+available*.86-center)/Math.max(1,available*.7),0,1);
   }
   function scrollTarget(p){
@@ -86,7 +86,9 @@
   addEventListener('scroll',schedule,{passive:true});
   var w=innerWidth,h=vh();
   function re(){w=innerWidth;h=vh();layout();schedule()}
-  addEventListener('resize',function(){if(innerWidth!==w||vh()!==h)re()});
+  function resize(){if(innerWidth!==w||vh()!==h)re()}
+  addEventListener('resize',resize);
+  addEventListener('vmviewport',resize);
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(re);
   addEventListener('load',re);
 })();
