@@ -353,45 +353,7 @@ try{
   },{rootMargin:'200px 0px'});
   [].forEach.call(document.querySelectorAll('.hero,main>section'),function(s){io.observe(s)});
 })();
-
-/* Фоновая догрузка картинок. Встроенный браузер Telegram начинает грузить loading="lazy" только у самого края экрана,
-   поэтому фото появлялись с задержкой уже на глазах. После загрузки первого экрана снимаем lazy по порядку страницы,
-   по 3 картинки за раз, чтобы к моменту прокрутки всё было в кеше. Обложка урока (фон) подключается так же. */
-(function(){
-  'use strict';
-  var root=document.documentElement;
-  if(root.classList.contains('vm-touch')||root.classList.contains('vm-low-data')){
-    var pain=document.getElementById('pain');
-    if(pain&&window.IntersectionObserver){
-      var nearby=new IntersectionObserver(function(entries){
-        if(entries[0].isIntersecting){pain.classList.add('cav');nearby.disconnect()}
-      },{rootMargin:'160px'});
-      nearby.observe(pain);
-    }
-    return;
-  }
-  function start(){
-    var list=[].slice.call(document.querySelectorAll('img[loading="lazy"]'));
-    var les=document.getElementById('les-card');if(les)les.classList.add('bg');
-    document.documentElement.classList.add('cav');
-    var i=0,active=0;
-    function next(){
-      while(active<3&&i<list.length){
-        var img=list[i++];
-        if(img.complete&&img.naturalWidth)continue;
-        active++;
-        var done=function(){active--;next()};
-        img.addEventListener('load',done,{once:true});img.addEventListener('error',done,{once:true});
-        img.loading='eager';
-      }
-    }
-    next();
-  }
-  function later(){(window.requestIdleCallback||function(f){setTimeout(f,300)})(start,{timeout:1500})}
-  if(document.readyState==='complete')later();else addEventListener('load',later);
-})();
-
-}catch(e){window.console&&console.error("scripts/perf.js",e)}
+}catch(e){console.error("scripts/perf.js",e)}
 /* scripts/hero-fit.js */
 try{
 /* Блок 1: первый экран подстраивается под окно и растёт по высоте на низких экранах.
@@ -518,147 +480,6 @@ try{
 })();
 
 }catch(e){window.console&&console.error("scripts/hero-fit.js",e)}
-/* scripts/hero.js */
-try{
-/* Блок 1: запуск анимаций после прелоадера и счётчики цифр.
-   Без анимаций (prefers-reduced-motion) цифры остаются финальными из разметки. */
-(function(){
-  'use strict';
-  var root=document.documentElement;
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-
-  function countUp(){
-    var els=document.querySelectorAll('.stat-num');
-    Array.prototype.forEach.call(els,function(el,i){
-      var to=+el.dataset.to,dec=+(el.dataset.dec||0),suf=el.dataset.suffix||'',unit=el.dataset.unit;
-      var t0=performance.now()+600+i*100,dur=1300;
-      (function step(now){
-        var k=Math.max(0,Math.min(1,(now-t0)/dur)),e=1-Math.pow(1-k,4);
-        var v=(to*e).toFixed(dec).replace('.',',');
-        el.innerHTML=v+suf+(unit?'<small>'+unit+'</small>':'');
-        if(k<1)requestAnimationFrame(step);
-      })(performance.now());
-    });
-  }
-
-  function open(){
-    root.classList.remove('is-loading');
-    void root.offsetWidth;
-    root.classList.add('is-go');
-    countUp();
-    setTimeout(function(){if(window.vmLive)window.vmLive.start()},700);
-  }
-  document.addEventListener('vm:open',open,{once:true});
-})();
-
-}catch(e){window.console&&console.error("scripts/hero.js",e)}
-/* scripts/preloader.js */
-try{
-/* Прелоадер-спидометр, привязан к реальной загрузке: шрифты, постер, вордмарк, canplaythrough видео.
-   Стрелка 0→320 не быстрее 1,7 с, плавно встаёт на 320, через 0,25 с шторка вверх.
-   Если загрузка дольше 4 с, сайт открывается всё равно. По окончании шлёт событие vm:open. */
-(function(){
-  'use strict';
-  var root=document.documentElement;
-  if(!root.classList.contains('is-loading'))return;
-  var svg=document.getElementById('gsvg');
-  if(!svg){open();return}
-
-  /* ---------- шкала ---------- */
-  var CX=200,CY=200,R=150,MAX=320,A0=225,SWEEP=270;
-  function ang(v){return (A0-v/MAX*SWEEP)*Math.PI/180}
-  function pt(v,r){return [CX+r*Math.cos(ang(v)),CY-r*Math.sin(ang(v))]}
-  function arc(v1,v2,r){var a=pt(v1,r),c=pt(v2,r),large=(v2-v1)/MAX*SWEEP>180?1:0;
-    return 'M'+a[0].toFixed(2)+' '+a[1].toFixed(2)+'A'+r+' '+r+' 0 '+large+' 1 '+c[0].toFixed(2)+' '+c[1].toFixed(2)}
-  var g='<path d="'+arc(0,MAX,R+6)+'" fill="none" stroke="#DCD2C8" stroke-width="16" stroke-linecap="butt"/>';
-  g+='<path d="'+arc(0,MAX,R)+'" fill="none" stroke="#111" stroke-width="6"/>';
-  g+='<path id="redzone" d="'+arc(240,MAX,R+6)+'" fill="none" stroke="#9A0002" stroke-width="15"/>';
-  for(var v=0;v<=MAX;v+=20){
-    var major=v%40===0,a=pt(v,R-3),c=pt(v,R-(major?22:13));
-    g+='<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+c[0]+'" y2="'+c[1]+'" stroke="#111" stroke-width="'+(major?4:2)+'" stroke-linecap="round"/>';
-    if(major){var t=pt(v,R-42);g+='<text x="'+t[0]+'" y="'+t[1]+'" text-anchor="middle" dominant-baseline="central" font-family="Inter Tight,Arial" font-weight="700" font-size="15" fill="#111">'+v+'</text>'}
-  }
-  g+='<g id="needle"><path d="M'+(CX-5)+' '+CY+' L'+CX+' '+(CY-2.2)+' L'+(CX+R-14)+' '+CY+' L'+CX+' '+(CY+2.2)+'Z" fill="#9A0002"/></g>';
-  g+='<text id="gnum" x="'+CX+'" y="'+(CY+78)+'" text-anchor="middle" font-family="Inter Tight,Arial" font-weight="900" font-size="68" letter-spacing="-2.5" fill="#111">000</text>';
-  g+='<text x="'+CX+'" y="'+(CY+104)+'" text-anchor="middle" font-family="Inter Tight,Arial" font-weight="700" font-size="12" letter-spacing="2.6" fill="#9A0002">KM/H</text>';
-  g+='<circle cx="'+CX+'" cy="'+CY+'" r="13" fill="none" stroke="#111" stroke-width="1.5"/><circle cx="'+CX+'" cy="'+CY+'" r="8.5" fill="#111"/>';
-  svg.innerHTML=g;
-  var gnum=document.getElementById('gnum'),needle=document.getElementById('needle'),red=document.getElementById('redzone');
-  var redLen=red.getTotalLength();red.style.strokeDasharray=redLen;
-  function setGauge(val){
-    needle.setAttribute('transform','rotate('+(-(A0-val/MAX*SWEEP))+' '+CX+' '+CY+')');
-    gnum.textContent=String(Math.round(val)).padStart(3,'0');
-    var p=Math.max(0,Math.min(1,(val-240)/80));red.style.strokeDashoffset=redLen*(1-p);
-  }
-  setGauge(0);
-
-  /* ---------- реальная загрузка ---------- */
-  function imgReady(img){
-    return new Promise(function(res){
-      if(!img||(img.complete&&img.naturalWidth))return res();
-      img.addEventListener('load',function(){res()},{once:true});
-      img.addEventListener('error',function(){res()},{once:true});
-    });
-  }
-  function fontsReady(){
-    if(!document.fonts)return Promise.resolve();
-    return Promise.all([
-      document.fonts.load('900 1em "Fira XC"'),
-      document.fonts.load('700 1em "Inter Tight"'),
-      document.fonts.load('400 1em "Inter"')
-    ]).catch(function(){}).then(function(){return document.fonts.ready});
-  }
-  /* на компьютере ждём первый кадр живого фото (общий предел тот же, 2,5 с), чтобы человек выезжал уже живым */
-  function firstFrame(){
-    var v=window.vmLive&&window.vmLive.video;
-    if(!v||!matchMedia('(pointer:fine)').matches)return Promise.resolve();
-    return new Promise(function(res){
-      if(v.readyState>=2)return res();
-      v.addEventListener('loadeddata',function(){res()},{once:true});
-      v.addEventListener('error',function(){res()},{once:true});
-    });
-  }
-  var tasks=[
-    fontsReady(),
-    imgReady(document.querySelector('.pt img')),
-    imgReady(document.querySelector('.wm img')),
-    firstFrame()
-    /* на телефоне видео не ждём: пока оно грузится, виден постер, живое фото включается само, когда готово
-       (раньше ждали полной загрузки ролика, и в Telegram на мобильном интернете прелоадер висел до 4 с) */
-  ];
-  var done=0,ready=false;
-  tasks.forEach(function(p){p.then(function(){done++})});
-  Promise.all(tasks).then(function(){ready=true});
-  setTimeout(function(){ready=true},2500);
-
-  /* ---------- стрелка ---------- */
-  var T=1700,t0=null,last=0,p=0,settled=null;
-  function ease(k){return k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2}
-  function tick(now){
-    if(t0===null){t0=now+250;last=now}
-    var dt=Math.min(.05,(now-last)/1000);last=now;
-    var k=Math.max(0,Math.min(1,(now-t0)/T));
-    var target=ease(k);                                   // не быстрее 1,7 с
-    if(!ready)target=Math.min(target,.12+.7*done/tasks.length); // пока грузится, не доходит до красной зоны
-    if(target>p)p+=(target-p)*Math.min(1,dt*9);           // плавное догоняние, без перелёта
-    if(ready&&k>=1&&1-p<.002)p=1;
-    setGauge(p*MAX);
-    if(p===1){
-      if(settled===null)settled=now;
-      if(now-settled>=250){open();return}
-    }
-    requestAnimationFrame(tick);
-  }
-  requestAnimationFrame(tick);
-
-  function open(){
-    root.classList.add('is-leaving');
-    document.dispatchEvent(new Event('vm:open'));
-    setTimeout(function(){root.classList.remove('is-leaving')},1100);
-  }
-})();
-
-}catch(e){window.console&&console.error("scripts/preloader.js",e)}
 /* scripts/people.js */
 try{
 /* Блок 2. Это сделали люди без опыта
@@ -690,88 +511,8 @@ try{
   }
   function onScroll(){if(!tick)tick=requestAnimationFrame(cover)}
   if(hero){addEventListener('scroll',onScroll,{passive:true});addEventListener('resize',onScroll);cover()}
-
-  /* ---------- видоискатель ---------- */
-  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
-  var row=sec.querySelector('.ppl-row'),cards=[].slice.call(sec.querySelectorAll('.pc'));
-  if(!row||!cards.length)return;
-  var vf=document.createElement('span');vf.className='vf';vf.setAttribute('aria-hidden','true');
-  row.appendChild(vf);
-  sec.classList.add('is-vf');
-
-  var cur=-1,timer=0,inView=false,hover=false,resume=0,STEP=2400;
-
-  /* прямоугольник фото карточки относительно ряда (у двойной: обе фотографии) */
-  /* по offset-координатам (без учёта transform): карточка под курсором приподнимается, рамка едет вместе с ней на LIFT */
-  var LIFT=8,lifted=-1;
-  function box(i){
-    /* li не сдвигается, a внутри приподнимается: смещение картинок считаем от a, положение от li */
-    var li=cards[i],a=li.querySelector('a'),imgs=li.querySelectorAll('.ph img'),
-        r=row.getBoundingClientRect(),lr=li.getBoundingClientRect(),ar=a.getBoundingClientRect(),
-        L=1e9,T=1e9,R=-1e9,B=-1e9;
-    for(var k=0;k<imgs.length;k++){
-      var b=imgs[k].getBoundingClientRect(),x=lr.left-r.left+b.left-ar.left,y=lr.top-r.top+b.top-ar.top;
-      L=Math.min(L,x);T=Math.min(T,y);R=Math.max(R,x+b.width);B=Math.max(B,y+b.height);
-    }
-    return {x:L,y:T-(i===lifted?LIFT:0),w:R-L,h:B-T};
-  }
-  function place(jump){
-    if(cur<0)return;
-    var b=box(cur);
-    vf.classList.toggle('jump',!!jump);
-    vf.style.transform='translate('+b.x.toFixed(1)+'px,'+b.y.toFixed(1)+'px)';
-    vf.style.width=b.w.toFixed(1)+'px';vf.style.height=b.h.toFixed(1)+'px';
-    if(jump){void vf.offsetWidth;vf.classList.remove('jump')}
-  }
-  function go(i,jump){
-    i=(i+cards.length)%cards.length;
-    if(i===cur)return;
-    if(cur>=0)cards[cur].classList.remove('on');
-    var first=cur<0;cur=i;cards[cur].classList.add('on');
-    place(jump||first);
-    if(first)requestAnimationFrame(function(){vf.classList.add('ready')});
-  }
-
-  function stop(){clearTimeout(timer);timer=0}
-  function run(){
-    stop();
-    if(!inView||hover||document.hidden)return;
-    timer=setTimeout(function(){go(cur+1);run()},STEP);
-  }
-
-  /* наведение мышью и фокус с клавиатуры: рамка встаёт на человека */
-  var fine=matchMedia('(hover:hover) and (pointer:fine)');
-  cards.forEach(function(c,i){
-    c.addEventListener('mouseenter',function(){if(!fine.matches)return;hover=true;lifted=i;clearTimeout(resume);stop();if(cur===i)place();else go(i)});
-    c.addEventListener('mouseleave',function(){if(lifted!==i)return;lifted=-1;place()});
-    c.addEventListener('focusin',function(){hover=true;clearTimeout(resume);stop();go(i)});
-    c.addEventListener('focusout',function(){hover=false;resume=setTimeout(run,1200)});
-  });
-  /* телефон: по касанию рамка сразу встаёт на человека, автосмена ждёт 4 с */
-  cards.forEach(function(c,i){
-    function tap(e){if(e.pointerType==='mouse')return;clearTimeout(resume);stop();go(i);resume=setTimeout(run,4000)}
-    c.addEventListener('pointerdown',tap,{passive:true});
-  });
-  row.addEventListener('mouseleave',function(){if(!fine.matches)return;hover=false;clearTimeout(resume);resume=setTimeout(run,1200)});
-
-  if('IntersectionObserver' in window){
-    new IntersectionObserver(function(es){
-      inView=es[es.length-1].isIntersecting;
-      if(inView&&cur<0)go(0,true);
-      run();
-    },{threshold:.35}).observe(row);
-  }else{inView=true;go(0,true);run()}
-  document.addEventListener('visibilitychange',run);
-
-  /* раскладка изменилась (окно, шрифты, картинки): рамку на место без анимации */
-  var rz=0;
-  function relayout(){cancelAnimationFrame(rz);rz=requestAnimationFrame(function(){place(true)})}
-  addEventListener('resize',relayout);
-  if(window.ResizeObserver)new ResizeObserver(relayout).observe(row);
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(relayout);
 })();
-
-}catch(e){window.console&&console.error("scripts/people.js",e)}
+}catch(e){console.error("scripts/people.js",e)}
 /* scripts/lesson.js */
 try{
 /* Блок 3. Видео + бегущая строка
@@ -790,11 +531,24 @@ try{
     if(card.classList.contains('is-on'))return;
     var v=document.createElement('video');
     v.src=card.getAttribute('data-src');
-    v.controls=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='auto';
-    v.poster=card.getAttribute('data-poster')||'';
+    v.controls=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='none';
+    var poster=card.getAttribute('data-poster')||'';
+    v.poster=matchMedia('(max-width:720px)').matches
+      ? poster.replace('cover-1200.webp','cover-800.webp') : poster;
     card.appendChild(v);card.classList.add('is-on');
     var p=v.play();if(p&&p.catch)p.catch(function(){});
     v.focus({preventScroll:true});
+    var playback;
+    if('IntersectionObserver' in window){
+      playback=new IntersectionObserver(function(entries){
+        if(!entries[0].isIntersecting&&!document.fullscreenElement&&!v.webkitDisplayingFullscreen)v.pause();
+      });
+      playback.observe(card);
+    }
+    v.addEventListener('error',function(){
+      if(playback)playback.disconnect();
+      v.remove();card.classList.remove('is-on');
+    },{once:true});
   }
   if(btn)btn.addEventListener('click',play);
   card.addEventListener('click',function(e){if(e.target===card)play()});

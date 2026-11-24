@@ -3,6 +3,8 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; connect-src 'none'; form-action 'none'; script-src 'self' 'sha256-AuZkG0GQpXGYXrNk+9wMsz3XTfc6SRpX9X9b+ZwrPUw=' 'sha256-gp4Q9QOizaJVRFmmEOSgdhDcg7Bwsz9Fr3olGckzMKA='; style-src 'self' 'unsafe-inline'; style-src-elem 'self'; img-src 'self' data:; font-src 'self'; media-src 'self' https://vi-motion.pro">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="format-detection" content="telephone=no,email=no,address=no">
 <script>/* Панели и масштабирование меняют видимую область, но не должны перестраивать сцену при свайпе. */
@@ -40,31 +42,14 @@
 <meta name="description" content="Менторская программа Валентина Сушнёва: из монтажёра в контент-креатора с доходом от $1 000 за 2 месяца">
 <meta name="theme-color" content="#EFE6DE">
 <link rel="icon" href="data:,">
-<script>
-  /* На телефоне, слабой сети и при переходе к разделу страница сразу доступна. */
-  var page=document.documentElement;
-  if(!location.hash&&!page.classList.contains('vm-touch')&&!page.classList.contains('vm-low-data')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
-    page.classList.add('is-loading');
-    setTimeout(function(){page.classList.remove('is-loading')},3500);
-  }
-</script>
 <link rel="preload" href="../fonts/fira-xc-900.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../fonts/inter-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="../fonts/inter-tight-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="../img/wordmark.webp" imagesrcset="../img/wordmark-800.webp?v=20261117z6 800w, ../img/wordmark-1100.webp?v=20261117z6 1100w, ../img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
 <link rel="preload" as="image" type="image/webp" href="../img/valentin-poster.webp?v=20261117z3" imagesrcset="../img/valentin-poster-744.webp?v=20261117z6 744w, ../img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
-<link rel="stylesheet" href="../styles/site.css?v=c3a2f5d2">
-<script src="site.js?v=1ad71666" defer></script>
+<link rel="stylesheet" href="site.css?v=39924113" integrity="sha256-OZJBEwzd9Wk+fD73+GBNUEV6uWVhHLMUGOEAW4ngP3s=">
+<script src="site.js?v=0b7f92ae" integrity="sha256-C3+SrofBAMjRB+YPyxu6kxM8E+GWWrWWXKwZ3zjnW7w=" defer></script>
 </head>
 <body>
-
-<!-- Прелоадер: спидометр -->
-<div class="pre" id="pre" aria-hidden="true" hidden>
-  <div class="gauge">
-    <svg id="gsvg" viewBox="0 30 400 300"></svg>
-    <div class="g-brand">VIMOTION</div>
-  </div>
-</div>
 
 <header class="hdr">
   <a class="logo" href="./">VIMOTION</a>
