@@ -13,7 +13,6 @@
   var network=navigator.connection,slow=network&&(network.saveData||/^(slow-2g|2g|3g)$/.test(network.effectiveType));
   root.classList.toggle('vm-touch',touch);
   root.classList.toggle('vm-low-data',Boolean(slow));
-  root.classList.toggle('vm-native-tint',ios&&!/CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|YaBrowser|GSA\/|DuckDuckGo|Mercury|Brave|Instagram|FBAN|FBAV|VKClient/.test(ua));
   var width=0,height=0,frame=0;
   function measure(){
     frame=0;
@@ -54,8 +53,8 @@
 <link rel="preload" href="fonts/inter-tight-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="img/wordmark.webp" imagesrcset="img/wordmark-800.webp?v=20261117z6 800w, img/wordmark-1100.webp?v=20261117z6 1100w, img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
 <link rel="preload" as="image" type="image/webp" href="img/valentin-poster.webp?v=20261117z3" imagesrcset="img/valentin-poster-744.webp?v=20261117z6 744w, img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
-<link rel="stylesheet" href="styles/site.css?v=6e8cb55e">
-<script src="scripts/site.js?v=6e8cb55e" defer></script>
+<link rel="stylesheet" href="styles/site.css?v=c3a2f5d2">
+<script src="scripts/site.js?v=c3a2f5d2" defer></script>
 </head>
 <body>
 

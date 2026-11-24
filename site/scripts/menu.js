@@ -45,13 +45,8 @@
     if(s!==on){on=s;hdr.classList.toggle('is-stuck',s)}
     if(d!==dk){dk=d;hdr.classList.toggle('is-dark',d);tone(d)}
   }
-  /* Шапка, фон и окрашиваемый край используют один цвет, независимо от карточки под нижней панелью. */
+  /* Шапка, фон страницы и браузерная тема используют один цвет. */
   var meta=document.querySelector('meta[name="theme-color"]'),html=document.documentElement,lastWidth=0;
-  if(html.classList.contains('vm-native-tint')){
-    var edge=document.createElement('div');
-    edge.className='vm-edge';edge.setAttribute('aria-hidden','true');
-    document.body.appendChild(edge);
-  }
   function tone(dark){
     var color=dark?'#0e0e0e':'#EFE6DE';
     if(meta)meta.setAttribute('content',color);

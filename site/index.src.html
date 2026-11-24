@@ -12,7 +12,6 @@
   var network=navigator.connection,slow=network&&(network.saveData||/^(slow-2g|2g|3g)$/.test(network.effectiveType));
   root.classList.toggle('vm-touch',touch);
   root.classList.toggle('vm-low-data',Boolean(slow));
-  root.classList.toggle('vm-native-tint',ios&&!/CriOS|FxiOS|EdgiOS|OPiOS|OPT\/|YaBrowser|GSA\/|DuckDuckGo|Mercury|Brave|Instagram|FBAN|FBAV|VKClient/.test(ua));
   var width=0,height=0,frame=0;
   function measure(){
     frame=0;
