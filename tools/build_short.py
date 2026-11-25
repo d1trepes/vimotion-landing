@@ -141,7 +141,15 @@ def main():
         page, count=1, flags=re.S,
     )
     page = replace_once(page, 'href="#how"', 'href="#route"')
-    page = replace_once(page, 'href="#formats"', 'href="../#formats"')
+    page, removed = re.subn(r'^    <div class="acts rt-acts">[^\n]*</div>\n', '', page, flags=re.M)
+    if removed != 1:
+        raise ValueError('Expected one route CTA')
+    page = replace_once(page, 'Оставь анкету, и мы разберём', 'Напиши в Telegram, и мы разберём')
+    page = replace_once(
+        page,
+        'href="https://vi-motion.pro/quiz/"><span class="bt">Стать следующим',
+        'href="https://t.me/m/rUCmwDTQZGZi"><span class="bt">Стать следующим',
+    )
     page = replace_once(page, 'href="#faq"', 'href="../#faq"')
     page = replace_once(page, "a.href='quiz/'+q", "a.href='../quiz/'+q")
     page = re.sub(r'<script>\s*/\* На телефоне, слабой сети.*?</script>\s*', '', page, count=1, flags=re.S)
