@@ -188,7 +188,7 @@ try{
   }
 
   function draw(){
-    if(swiping)return;
+    if(!glOK||swiping)return;
     if(video.readyState<2||!video.videoWidth)return;
     /* холст в размере показа (с учётом плотности экрана), но не больше самого видео */
     var vw=video.videoWidth,vh=video.videoHeight/2;
@@ -242,18 +242,29 @@ try{
   function start(){
     if(mobile&&(swiping||root.classList.contains('is-loading')))return;
     if(started||dead)return;
-    if(!glOK&&!prepareRenderer()){dead=true;return}
+    if(!glOK&&!prepareRenderer()){
+      dead=true;if(cur){video.removeAttribute('src');video.load()}return;
+    }
     started=true;
     rectUntil=deferred?0:performance.now()+2500;
     setSrc();sync();
   }
   function queue(){
-    if(mobile&&(swiping||root.classList.contains('is-loading')))return;
+    if(mobile&&root.classList.contains('is-loading')){warmVideo();return}
+    if(swiping)return;
     if(!deferred||started||dead||timer||!inView||!visible||covered||(poster&&!poster.complete))return;
     timer=setTimeout(function(){
       timer=0;if(inView&&visible&&!covered)start();
     },root.classList.contains('vm-low-data')?1200:240);
   }
+  var wordmark=document.querySelector('.wm img');
+  function warmVideo(){
+    // Fetch only after the two visible hero images. WebGL and playback still start after the speedometer.
+    if(!('WebGLRenderingContext' in window)||root.classList.contains('vm-low-data')||swiping||!inView||!visible||covered)return;
+    if(!poster||!poster.complete||!poster.naturalWidth||(wordmark&&!wordmark.complete))return;
+    setSrc();
+  }
+
   // Pause frame uploads while a swipe or scroll is in progress. Keep the last portrait frame visible.
   var resumeTimer=0;
   function pauseForScroll(){
@@ -263,6 +274,7 @@ try{
     resumeTimer=setTimeout(function(){swiping=false;sync();queue()},150);
   }
   if(mobile){
+    if(wordmark&&!wordmark.complete)wordmark.addEventListener('load',queue,{once:true});
     addEventListener('touchstart',pauseForScroll,{passive:true});
     addEventListener('touchmove',pauseForScroll,{passive:true});
     addEventListener('scroll',pauseForScroll,{passive:true});
@@ -370,6 +382,25 @@ try{
   },{rootMargin:'200px 0px'});
   [].forEach.call(document.querySelectorAll('.hero,main>section'),function(s){io.observe(s)});
 })();
+/* Start loading the author cards as the reader approaches the section. */
+(function(){
+  'use strict';
+  var author=document.getElementById('author');
+  if(!author||!('IntersectionObserver' in window))return;
+  var lowData=document.documentElement.classList.contains('vm-low-data');
+  var images=author.querySelectorAll('.au-card img');
+  var observer=new IntersectionObserver(function(entries){
+    if(!entries[0].isIntersecting)return;
+    observer.disconnect();
+    var count=lowData?Math.min(1,images.length):images.length;
+    for(var i=0;i<count;i++){
+      if(i>0)images[i].setAttribute('fetchpriority','low');
+      images[i].loading='eager';
+    }
+  },{rootMargin:lowData?'0px 0px 320px':'0px 0px 1000px'});
+  observer.observe(author);
+})();
+
 }catch(e){console.error("scripts/perf.js",e)}
 /* scripts/hero-fit.js */
 try{

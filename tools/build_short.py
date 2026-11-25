@@ -62,14 +62,24 @@ def short_scripts(source):
     parts = MODULE_MARKER.split(source)
     modules = dict(zip(parts[1::2], parts[2::2]))
     live_photo = modules['live-photo'].replace("'media/", "'../media/")
-    live_photo = replace_once(live_photo, '  function draw(){', '  function draw(){\n    if(swiping)return;')
+    live_photo = replace_once(live_photo, '  function draw(){', '  function draw(){\n    if(!glOK||swiping)return;')
     live_photo = replace_once(live_photo, '  var timer=0,blocked=false,', '  var swiping=false,timer=0,blocked=false,')
     live_photo = replace_once(live_photo, 'if(started&&inView&&visible&&!covered)', 'if(started&&inView&&visible&&!covered&&!swiping)')
-    for function in ('start', 'queue'):
-        live_photo = replace_once(
-            live_photo, f'  function {function}(){{',
-            f"  function {function}(){{\n    if(mobile&&(swiping||root.classList.contains('is-loading')))return;",
-        )
+    live_photo = replace_once(
+        live_photo, '  function start(){',
+        "  function start(){\n    if(mobile&&(swiping||root.classList.contains('is-loading')))return;",
+    )
+    live_photo = replace_once(
+        live_photo, '    if(!glOK&&!prepareRenderer()){dead=true;return}',
+        '    if(!glOK&&!prepareRenderer()){\n'
+        "      dead=true;if(cur){video.removeAttribute('src');video.load()}return;\n"
+        '    }',
+    )
+    live_photo = replace_once(
+        live_photo, '  function queue(){',
+        "  function queue(){\n    if(mobile&&root.classList.contains('is-loading')){warmVideo();return}\n"
+        '    if(swiping)return;',
+    )
     modules['live-photo'] = replace_once(
         live_photo, "  document.addEventListener('visibilitychange',function(){visible=!document.hidden;sync();queue()});",
         (SHORT_SOURCE / 'live-photo-touch.js').read_text(encoding='utf-8')
@@ -99,7 +109,10 @@ def short_scripts(source):
         "root.classList.remove('is-leaving')},330)",
     )
     effect, _ = modules['perf'].split('/* Фоновая догрузка картинок.', 1)
-    modules['perf'] = effect.rstrip() + '\n}catch(e){console.error("scripts/perf.js",e)}\n'
+    modules['perf'] = (
+        effect.rstrip() + '\n' + (SHORT_SOURCE / 'author-loading.js').read_text(encoding='utf-8')
+        + '\n}catch(e){console.error("scripts/perf.js",e)}\n'
+    )
     cover, _ = modules['people'].split('  /* ---------- видоискатель ---------- */', 1)
     # Keep the sticky hero transition, using the lesson as the next section.
     modules['people'] = replace_once(
