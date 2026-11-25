@@ -8,6 +8,7 @@ import re
 
 
 SITE = Path(__file__).resolve().parents[1] / 'site'
+SHORT_SOURCE = Path(__file__).resolve().parent / 'short'
 SECTIONS = ('hero', 'lesson', 'route', 'author', 'final')
 SCRIPTS = (
     'menu', 'live-photo', 'nowidow', 'perf', 'hero-fit', 'people', 'lesson',
@@ -15,7 +16,7 @@ SCRIPTS = (
 )
 STYLES = (
     'fonts', 'tokens', 'blocks/00-header', 'blocks/01-hero', 'blocks/02-people',
-    'blocks/03-lesson', 'blocks/09-route', 'blocks/15-author', 'blocks/19-final',
+    'blocks/03-lesson', 'blocks/09-route', 'blocks/15-author',
     'blocks/20-footer',
 )
 MODULE_MARKER = re.compile(r'^/\* scripts/([a-z-]+)\.js \*/$', re.M)
@@ -37,6 +38,7 @@ def select_sections(source):
         section_id = re.search(r'\bid="([^"]+)"', match['tag'])
         if section_id:
             sections[section_id[1]] = match[0]
+    sections['final'] = (SHORT_SOURCE / 'final.html').read_text(encoding='utf-8').strip()
     return before + '<main>\n\n' + '\n\n'.join(sections[name] for name in SECTIONS) + '\n\n</main>' + after
 
 
@@ -91,6 +93,16 @@ def short_scripts(source):
         "      v.remove();card.classList.remove('is-on');\n"
         "    },{once:true});",
     )
+    # Reuse the footer reveal and trigger the same one-time reveal for the diagonal portrait.
+    _, final_script = modules['final'].split('(function(){', 1)
+    reveal, collage = final_script.split("  var fn=document.getElementById('final');", 1)
+    _, footer = collage.split("  var ft=document.getElementById('siteFoot');", 1)
+    modules['final'] = (
+        '\ntry{\n/* Финал короткой версии и подвал */\n(function(){' + reveal
+        + "  var fn=document.getElementById('final');\n"
+        + "  reveal(fn,fn&&fn.querySelector('.fn-photo'),false,'0px 0px -12% 0px');\n"
+        + "  var ft=document.getElementById('siteFoot');" + footer
+    )
     return ''.join(f'/* scripts/{name}.js */{modules[name]}' for name in SCRIPTS)
 
 
@@ -98,7 +110,7 @@ def short_styles(source):
     parts = STYLE_MARKER.split(source)
     modules = dict(zip(parts[1::2], parts[2::2]))
     css = ''.join(f'/* styles/{name}.css */{modules[name]}' for name in STYLES)
-    return css + (
+    return css + '\n' + (SHORT_SOURCE / 'final.css').read_text(encoding='utf-8') + (
         '\n#lesson{padding-top:clamp(36px,6vw,88px)}\n'
         '@media (max-width:720px){.les-card.bg{background-image:url(../img/lesson/cover-800.webp?v=20261117z3)}}\n'
     )
@@ -143,9 +155,18 @@ def main():
     page = replace_once(page, 'href="#how"', 'href="#route"')
     page = replace_once(
         page,
+        'class="btn btn-line" href="https://vi-motion.pro/quiz/"><span class="bt">Заполнить анкету</span>',
+        'class="btn btn-line" href="#final"><span class="bt">Узнать про ViMotion</span>',
+    )
+    page = replace_once(
+        page,
+        'class="btn btn-red" href="https://vi-motion.pro/quiz/"><span class="bt">Хочу на разбор</span>',
+        'class="btn btn-red" href="#final"><span class="bt">Узнать про ViMotion</span>',
+    )
+    page = replace_once(
+        page,
         'class="btn btn-o" href="#formats"><span class="bt">Выбрать формат участия</span>',
-        'class="btn btn-red" href="https://t.me/m/rUCmwDTQZGZi">'
-        '<span class="bt">Обсудить участие в Telegram</span>',
+        'class="btn btn-red" href="#final"><span class="bt">Узнать подробнее</span>',
     )
     page = replace_once(page, 'href="#faq"', 'href="../#faq"')
     page = replace_once(page, "a.href='quiz/'+q", "a.href='../quiz/'+q")
