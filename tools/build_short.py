@@ -61,7 +61,25 @@ def rebase_attribute(match):
 def short_scripts(source):
     parts = MODULE_MARKER.split(source)
     modules = dict(zip(parts[1::2], parts[2::2]))
-    modules['live-photo'] = modules['live-photo'].replace("'media/", "'../media/")
+    live_photo = modules['live-photo'].replace("'media/", "'../media/")
+    live_photo = replace_once(live_photo, '  function draw(){', '  function draw(){\n    if(swiping)return;')
+    live_photo = replace_once(live_photo, '  var timer=0,blocked=false,', '  var swiping=false,timer=0,blocked=false,')
+    live_photo = replace_once(live_photo, 'if(started&&inView&&visible&&!covered)', 'if(started&&inView&&visible&&!covered&&!swiping)')
+    for function in ('start', 'queue'):
+        live_photo = replace_once(
+            live_photo, f'  function {function}(){{',
+            f"  function {function}(){{\n    if(mobile&&(swiping||root.classList.contains('is-loading')))return;",
+        )
+    modules['live-photo'] = replace_once(
+        live_photo, "  document.addEventListener('visibilitychange',function(){visible=!document.hidden;sync();queue()});",
+        (SHORT_SOURCE / 'live-photo-touch.js').read_text(encoding='utf-8')
+        + "  document.addEventListener('visibilitychange',function(){visible=!document.hidden;sync();queue()});",
+    )
+    # Show the mobile hero as soon as the overlay releases, before video or entrance effects.
+    modules['hero'] = replace_once(
+        modules['hero'], "    root.classList.remove('is-loading');",
+        "    root.classList.remove('is-loading');\n    if(root.classList.contains('vm-touch'))return;",
+    )
     modules['menu'] = replace_once(
         modules['menu'], "    if(meta)meta.setAttribute('content',color);",
         "    if(meta&&!html.classList.contains('is-loading'))meta.setAttribute('content',color);",
@@ -133,7 +151,9 @@ def short_styles(source):
     )
     preloader = replace_once(
         preloader, 'html.is-loading,html.is-loading body{overflow:hidden;overscroll-behavior:none;touch-action:none}',
-        'html.is-loading,html.is-loading body{background:#fff;overflow:hidden;overscroll-behavior:none}'
+        'html.is-loading,html.is-loading body{background:#fff}'
+        '\nhtml.is-loading:not(.vm-touch),html.is-loading:not(.vm-touch) body{overflow:hidden;overscroll-behavior:none}'
+        '\n.vm-touch.is-loading .pre{pointer-events:auto;touch-action:none}'
         '\n.is-loading .hdr,.is-loading main,.is-loading #siteFoot{visibility:hidden}',
     )
     modules['preloader'] = replace_once(

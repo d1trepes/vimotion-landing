@@ -188,6 +188,7 @@ try{
   }
 
   function draw(){
+    if(swiping)return;
     if(video.readyState<2||!video.videoWidth)return;
     /* холст в размере показа (с учётом плотности экрана), но не больше самого видео */
     var vw=video.videoWidth,vh=video.videoHeight/2;
@@ -225,10 +226,10 @@ try{
   /* ---------- воспроизведение только на видимом первом экране ---------- */
   var observe=window.IntersectionObserver;
   var started=false,inView=!deferred||!observe,visible=!document.hidden,covered=root.classList.contains('hero-covered');
-  var timer=0,blocked=false,poster=pt.querySelector('img');
+  var swiping=false,timer=0,blocked=false,poster=pt.querySelector('img');
   function sync(){
     if(dead)return;
-    if(started&&inView&&visible&&!covered){
+    if(started&&inView&&visible&&!covered&&!swiping){
       if(!blocked&&video.paused){
         var p=video.play();
         if(p&&p.catch)p.catch(function(e){
@@ -239,6 +240,7 @@ try{
   }
   function retry(){blocked=false;sync()}
   function start(){
+    if(mobile&&(swiping||root.classList.contains('is-loading')))return;
     if(started||dead)return;
     if(!glOK&&!prepareRenderer()){dead=true;return}
     started=true;
@@ -246,10 +248,25 @@ try{
     setSrc();sync();
   }
   function queue(){
+    if(mobile&&(swiping||root.classList.contains('is-loading')))return;
     if(!deferred||started||dead||timer||!inView||!visible||covered||(poster&&!poster.complete))return;
     timer=setTimeout(function(){
       timer=0;if(inView&&visible&&!covered)start();
     },root.classList.contains('vm-low-data')?1200:240);
+  }
+  // Pause frame uploads while a swipe or scroll is in progress. Keep the last portrait frame visible.
+  var resumeTimer=0;
+  function pauseForScroll(){
+    if(!swiping&&(!inView||covered))return;
+    if(!swiping){swiping=true;sync()}
+    clearTimeout(resumeTimer);
+    resumeTimer=setTimeout(function(){swiping=false;sync();queue()},150);
+  }
+  if(mobile){
+    addEventListener('touchstart',pauseForScroll,{passive:true});
+    addEventListener('touchmove',pauseForScroll,{passive:true});
+    addEventListener('scroll',pauseForScroll,{passive:true});
+    document.addEventListener('vm:open',function(){requestAnimationFrame(queue)},{once:true});
   }
   document.addEventListener('visibilitychange',function(){visible=!document.hidden;sync();queue()});
   if(observe&&hero){
@@ -505,6 +522,7 @@ try{
 
   function open(){
     root.classList.remove('is-loading');
+    if(root.classList.contains('vm-touch'))return;
     void root.offsetWidth;
     root.classList.add('is-go');
     countUp();

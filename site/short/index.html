@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; connect-src 'none'; form-action 'none'; script-src 'self' 'sha256-AuZkG0GQpXGYXrNk+9wMsz3XTfc6SRpX9X9b+ZwrPUw=' 'sha256-/wfiscKSgJr4V1qZ6bOvUQz0nngWwZ6MYzYwBYC57MQ=' 'sha256-gp4Q9QOizaJVRFmmEOSgdhDcg7Bwsz9Fr3olGckzMKA='; style-src 'self' 'unsafe-inline'; style-src-elem 'self'; img-src 'self' data:; font-src 'self'; media-src 'self' https://vi-motion.pro">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; connect-src 'none'; form-action 'none'; script-src 'self' 'sha256-AuZkG0GQpXGYXrNk+9wMsz3XTfc6SRpX9X9b+ZwrPUw=' 'sha256-GZFcVawnJEYaH47J6f75qZUWiOAb9ZwL9z1vE7qBSQs=' 'sha256-gp4Q9QOizaJVRFmmEOSgdhDcg7Bwsz9Fr3olGckzMKA='; style-src 'self' 'unsafe-inline'; style-src-elem 'self'; img-src 'self' data:; font-src 'self'; media-src 'self' https://vi-motion.pro">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="format-detection" content="telephone=no,email=no,address=no">
@@ -53,12 +53,20 @@
   function dismiss(){
     if(!root.classList.contains('is-loading'))return;
     root.classList.remove('is-loading');
-    restoreTheme();
+    document.dispatchEvent(new Event('vm:open'));
   }
 
   root.classList.add('is-loading');
   theme.content='#ffffff';
   document.addEventListener('vm:open',restoreTheme,{once:true});
+  if(root.classList.contains('vm-touch')){
+    document.addEventListener('DOMContentLoaded',function(){
+      var pre=document.getElementById('pre');
+      function blockScroll(event){if(root.classList.contains('is-loading'))event.preventDefault()}
+      pre.addEventListener('touchmove',blockScroll,{passive:false});
+      pre.addEventListener('wheel',blockScroll,{passive:false});
+    },{once:true});
+  }
   setTimeout(dismiss,3500);
 })();
 </script>
@@ -66,8 +74,8 @@
 <link rel="preload" href="../fonts/inter-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="../img/wordmark.webp" imagesrcset="../img/wordmark-800.webp?v=20261117z6 800w, ../img/wordmark-1100.webp?v=20261117z6 1100w, ../img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
 <link rel="preload" as="image" type="image/webp" href="../img/valentin-poster.webp?v=20261117z3" imagesrcset="../img/valentin-poster-744.webp?v=20261117z6 744w, ../img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
-<link rel="stylesheet" href="site.css?v=882724ea" integrity="sha256-iCck6jvj7IQAP0tTc5rEDq261j5iUmiH8BCnVN5VD9M=">
-<script src="site.js?v=df117f56" integrity="sha256-3xF/Vre7W4YZhl0fUu7JKtm8K9+1bICtoWYArRkfOew=" defer></script>
+<link rel="stylesheet" href="site.css?v=d76124fd" integrity="sha256-12Ek/ctb1VunSOwu1QepC+16rya4+jEPgsECmvGdjRI=">
+<script src="site.js?v=26654aaf" integrity="sha256-JmVKr34gRBjB2cHFyeqsr25mOPZxpls8d1Tkdqmcekk=" defer></script>
 </head>
 <body>
 

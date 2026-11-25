@@ -8,11 +8,19 @@
   function dismiss(){
     if(!root.classList.contains('is-loading'))return;
     root.classList.remove('is-loading');
-    restoreTheme();
+    document.dispatchEvent(new Event('vm:open'));
   }
 
   root.classList.add('is-loading');
   theme.content='#ffffff';
   document.addEventListener('vm:open',restoreTheme,{once:true});
+  if(root.classList.contains('vm-touch')){
+    document.addEventListener('DOMContentLoaded',function(){
+      var pre=document.getElementById('pre');
+      function blockScroll(event){if(root.classList.contains('is-loading'))event.preventDefault()}
+      pre.addEventListener('touchmove',blockScroll,{passive:false});
+      pre.addEventListener('wheel',blockScroll,{passive:false});
+    },{once:true});
+  }
   setTimeout(dismiss,3500);
 })();
