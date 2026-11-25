@@ -593,8 +593,18 @@ a[x-apple-data-detectors],a[href^="tel:"]{color:inherit!important;text-decoratio
   .fn-photo{height:430px}
   .fn .btn{min-width:0;width:100%}
 }
+@media (pointer:coarse){
+  .hero~.fn,.fn{
+    display:block;min-height:0;padding:76px var(--m) 84px;
+    scroll-margin-top:calc(-1 * var(--header-height));
+  }
+  .fn-photo{height:clamp(430px,48vw,560px)}
+}
 @media (max-width:720px){
-  .hero~.fn,.fn{padding:clamp(max(56px,var(--hb)),8svh,80px) var(--m) clamp(64px,9svh,96px);text-align:center}
+  .hero~.fn,.fn{
+    display:block;min-height:0;padding:60px var(--m) 64px;text-align:center;
+    scroll-margin-top:calc(-1 * var(--header-height));
+  }
   .fn-in{
     grid-template-columns:minmax(0,1fr);grid-template-rows:auto;
     grid-template-areas:"lead" "photo" "action";gap:20px;max-width:450px;
@@ -604,7 +614,10 @@ a[x-apple-data-detectors],a[href^="tel:"]{color:inherit!important;text-decoratio
   .fn-action{margin-top:0}
   .fn-photo{height:clamp(260px,69vw,310px);clip-path:polygon(5% 0,100% 0,95% 100%,0 100%)}
   .fn-photo img{object-position:50% 45%}
-  .fn.is-pre .fn-photo{transform:translateX(-18px)}
+}
+@media (max-width:720px),(pointer:coarse){
+  .fn-photo{transition:opacity .3s var(--ease)}
+  .fn.is-pre .fn-photo{transform:none}
 }
 @media (prefers-reduced-motion:reduce){
   .fn.is-pre .fn-photo{opacity:1;transform:none}
