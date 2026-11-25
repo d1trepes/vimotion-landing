@@ -14,6 +14,5 @@
   root.classList.add('is-loading');
   theme.content='#ffffff';
   document.addEventListener('vm:open',restoreTheme,{once:true});
-  addEventListener('scroll',dismiss,{passive:true,once:true});
   setTimeout(dismiss,3500);
 })();

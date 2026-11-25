@@ -82,8 +82,8 @@ a[x-apple-data-detectors],a[href^="tel:"]{color:inherit!important;text-decoratio
 /* styles/preloader.css */
 .pre{display:none;position:fixed;inset:0;z-index:100;background:#fff;place-items:center;pointer-events:none}
 @supports (height:100lvh){.pre{bottom:auto;height:calc(100lvh + 160px);padding-bottom:160px;box-sizing:border-box}}
-html.is-loading,html.is-loading body{background:#fff}
-.is-loading .hdr{pointer-events:none}
+html.is-loading,html.is-loading body{background:#fff;overflow:hidden;overscroll-behavior:none}
+.is-loading .hdr,.is-loading main,.is-loading #siteFoot{visibility:hidden}
 .is-loading .pre,.is-leaving .pre{display:grid}
 .gauge{width:min(420px,86vw);text-align:center;transition:transform .6s var(--ease),opacity .4s}
 .gauge svg{display:block;width:100%;height:auto;overflow:visible}

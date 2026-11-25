@@ -133,7 +133,8 @@ def short_styles(source):
     )
     preloader = replace_once(
         preloader, 'html.is-loading,html.is-loading body{overflow:hidden;overscroll-behavior:none;touch-action:none}',
-        'html.is-loading,html.is-loading body{background:#fff}\n.is-loading .hdr{pointer-events:none}',
+        'html.is-loading,html.is-loading body{background:#fff;overflow:hidden;overscroll-behavior:none}'
+        '\n.is-loading .hdr,.is-loading main,.is-loading #siteFoot{visibility:hidden}',
     )
     modules['preloader'] = replace_once(
         preloader, '.is-leaving .pre{clip-path:inset(0 0 100% 0);transition:clip-path .75s cubic-bezier(.7,0,.2,1) .15s}',
