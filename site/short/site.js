@@ -51,7 +51,7 @@ try{
   var meta=document.querySelector('meta[name="theme-color"]'),html=document.documentElement,lastWidth=0;
   function tone(dark){
     var color=dark?'#0e0e0e':'#EFE6DE';
-    if(meta)meta.setAttribute('content',color);
+    if(meta&&!html.classList.contains('is-loading'))meta.setAttribute('content',color);
     html.style.setProperty('--vm-chrome',color);
   }
   function resize(){
@@ -617,7 +617,7 @@ try{
   function open(){
     root.classList.add('is-leaving');
     document.dispatchEvent(new Event('vm:open'));
-    setTimeout(function(){root.classList.remove('is-leaving')},1100);
+    setTimeout(function(){root.classList.remove('is-leaving')},330);
   }
 })();
 

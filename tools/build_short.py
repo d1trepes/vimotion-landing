@@ -62,15 +62,23 @@ def short_scripts(source):
     parts = MODULE_MARKER.split(source)
     modules = dict(zip(parts[1::2], parts[2::2]))
     modules['live-photo'] = modules['live-photo'].replace("'media/", "'../media/")
+    modules['menu'] = replace_once(
+        modules['menu'], "    if(meta)meta.setAttribute('content',color);",
+        "    if(meta&&!html.classList.contains('is-loading'))meta.setAttribute('content',color);",
+    )
     preloader = replace_once(
         modules['preloader'], "    if(!v||!matchMedia('(pointer:fine)').matches)return Promise.resolve();",
         "    if(!v||!v.getAttribute('src')||root.classList.contains('vm-touch')"
         "||!matchMedia('(pointer:fine)').matches)return Promise.resolve();",
     )
     # A backgrounded tab may resume after the inline timeout has dismissed the overlay.
-    modules['preloader'] = replace_once(
+    preloader = replace_once(
         preloader, '  function tick(now){',
         "  function tick(now){\n    if(!root.classList.contains('is-loading'))return;",
+    )
+    modules['preloader'] = replace_once(
+        preloader, "root.classList.remove('is-leaving')},1100)",
+        "root.classList.remove('is-leaving')},330)",
     )
     effect, _ = modules['perf'].split('/* Фоновая догрузка картинок.', 1)
     modules['perf'] = effect.rstrip() + '\n}catch(e){console.error("scripts/perf.js",e)}\n'
@@ -119,6 +127,18 @@ def short_scripts(source):
 def short_styles(source):
     parts = STYLE_MARKER.split(source)
     modules = dict(zip(parts[1::2], parts[2::2]))
+    preloader = replace_once(
+        modules['preloader'], 'background:var(--cream);place-items:center',
+        'background:#fff;place-items:center;pointer-events:none',
+    )
+    preloader = replace_once(
+        preloader, 'html.is-loading,html.is-loading body{overflow:hidden;overscroll-behavior:none;touch-action:none}',
+        'html.is-loading,html.is-loading body{background:#fff}\n.is-loading .hdr{pointer-events:none}',
+    )
+    modules['preloader'] = replace_once(
+        preloader, '.is-leaving .pre{clip-path:inset(0 0 100% 0);transition:clip-path .75s cubic-bezier(.7,0,.2,1) .15s}',
+        '.is-leaving .pre{opacity:0;transition:opacity .28s ease-out}',
+    )
     css = ''.join(f'/* styles/{name}.css */{modules[name]}' for name in STYLES)
     return css + '\n' + (SHORT_SOURCE / 'final.css').read_text(encoding='utf-8') + (
         '\n#lesson{padding-top:clamp(36px,6vw,88px)}\n'
@@ -180,12 +200,13 @@ def main():
     )
     page = replace_once(page, 'href="#faq"', 'href="../#faq"')
     page = replace_once(page, "a.href='quiz/'+q", "a.href='../quiz/'+q")
-    page = replace_once(
-        page,
-        'На телефоне, слабой сети и при переходе к разделу страница сразу доступна.',
-        'На слабой сети, без анимации и при переходе к разделу заставка пропускается.',
+    preloader_start = (SHORT_SOURCE / 'preloader-start.js').read_text(encoding='utf-8')
+    page, preloader_scripts = re.subn(
+        r'<script>\s*/\* На телефоне, слабой сети.*?</script>',
+        lambda _: f'<script>\n{preloader_start}</script>', page, flags=re.S,
     )
-    page = replace_once(page, "&&!page.classList.contains('vm-touch')", '')
+    if preloader_scripts != 1:
+        raise ValueError('Expected one preloader startup script')
     page = re.sub(r'^<link rel="preload" href="fonts/inter-tight-latin-700-normal\.woff2"[^\n]*>\n', '', page, count=1, flags=re.M)
     page = re.sub(r'src="scripts/site\.js\?v=[a-f0-9]+"', f'src="site.js?v={digest(scripts)}" integrity="{integrity(scripts)}"', page, count=1)
     page = re.sub(r'href="styles/site\.css\?v=[a-f0-9]+"', f'href="site.css?v={digest(styles)}" integrity="{integrity(styles)}"', page, count=1)

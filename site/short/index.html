@@ -3,7 +3,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; connect-src 'none'; form-action 'none'; script-src 'self' 'sha256-AuZkG0GQpXGYXrNk+9wMsz3XTfc6SRpX9X9b+ZwrPUw=' 'sha256-dVQSEVmu+0N+nIlkFMHtNIlSDg7weGGIEOjfft2ngQ4=' 'sha256-gp4Q9QOizaJVRFmmEOSgdhDcg7Bwsz9Fr3olGckzMKA='; style-src 'self' 'unsafe-inline'; style-src-elem 'self'; img-src 'self' data:; font-src 'self'; media-src 'self' https://vi-motion.pro">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; base-uri 'none'; object-src 'none'; frame-src 'none'; connect-src 'none'; form-action 'none'; script-src 'self' 'sha256-AuZkG0GQpXGYXrNk+9wMsz3XTfc6SRpX9X9b+ZwrPUw=' 'sha256-KMxcs9xASIVmycDvJySE1oA5BwA+Yys49PFSQFRrvEY=' 'sha256-gp4Q9QOizaJVRFmmEOSgdhDcg7Bwsz9Fr3olGckzMKA='; style-src 'self' 'unsafe-inline'; style-src-elem 'self'; img-src 'self' data:; font-src 'self'; media-src 'self' https://vi-motion.pro">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="format-detection" content="telephone=no,email=no,address=no">
@@ -43,19 +43,32 @@
 <meta name="theme-color" content="#EFE6DE">
 <link rel="icon" href="data:,">
 <script>
-  /* На слабой сети, без анимации и при переходе к разделу заставка пропускается. */
-  var page=document.documentElement;
-  if(!location.hash&&!page.classList.contains('vm-low-data')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){
-    page.classList.add('is-loading');
-    setTimeout(function(){page.classList.remove('is-loading')},3500);
+/* На слабой сети, без анимации и при переходе к разделу заставка пропускается. */
+(function(){
+  var root=document.documentElement;
+  if(location.hash||root.classList.contains('vm-low-data')||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+
+  var theme=document.querySelector('meta[name="theme-color"]'),initialColor=theme.content;
+  function restoreTheme(){theme.content=root.style.getPropertyValue('--vm-chrome')||initialColor}
+  function dismiss(){
+    if(!root.classList.contains('is-loading'))return;
+    root.classList.remove('is-loading');
+    restoreTheme();
   }
+
+  root.classList.add('is-loading');
+  theme.content='#ffffff';
+  document.addEventListener('vm:open',restoreTheme,{once:true});
+  addEventListener('scroll',dismiss,{passive:true,once:true});
+  setTimeout(dismiss,3500);
+})();
 </script>
 <link rel="preload" href="../fonts/fira-xc-900.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../fonts/inter-cyrillic-400-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" type="image/webp" href="../img/wordmark.webp" imagesrcset="../img/wordmark-800.webp?v=20261117z6 800w, ../img/wordmark-1100.webp?v=20261117z6 1100w, ../img/wordmark.webp 1600w" imagesizes="(max-width:720px) calc(100vw - 32px), (max-width:1180px) calc(100vw - 64px), calc(100vw - 112px)">
 <link rel="preload" as="image" type="image/webp" href="../img/valentin-poster.webp?v=20261117z3" imagesrcset="../img/valentin-poster-744.webp?v=20261117z6 744w, ../img/valentin-poster.webp?v=20261117z3 1104w" imagesizes="(max-width:720px) 96vw, (max-width:1180px) 52vw, 48vw" fetchpriority="high">
-<link rel="stylesheet" href="site.css?v=069047ef" integrity="sha256-BpBH7/eW0zZ4WqbXStnLb8gHsBrWOPRv0WbDVvXO/IM=">
-<script src="site.js?v=1e5f5321" integrity="sha256-Hl9TIYuh6jlySrnCiB1klfof7AyxN+DTNNq8VYqYin8=" defer></script>
+<link rel="stylesheet" href="site.css?v=1c687dbc" integrity="sha256-HGh9vK7J3BoSbqLs+JSte42TnIrpBmRp7EGYM4E2UGQ=">
+<script src="site.js?v=df117f56" integrity="sha256-3xF/Vre7W4YZhl0fUu7JKtm8K9+1bICtoWYArRkfOew=" defer></script>
 </head>
 <body>
 
