@@ -143,8 +143,9 @@ def main():
     page = replace_once(page, 'href="#how"', 'href="#route"')
     page = replace_once(
         page,
-        'href="#formats"><span class="bt">Выбрать формат участия</span>',
-        'href="https://t.me/m/rUCmwDTQZGZi"><span class="bt">Обсудить участие в Telegram</span>',
+        'class="btn btn-o" href="#formats"><span class="bt">Выбрать формат участия</span>',
+        'class="btn btn-red" href="https://t.me/m/rUCmwDTQZGZi">'
+        '<span class="bt">Обсудить участие в Telegram</span>',
     )
     page = replace_once(page, 'href="#faq"', 'href="../#faq"')
     page = replace_once(page, "a.href='quiz/'+q", "a.href='../quiz/'+q")
