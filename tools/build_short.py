@@ -11,11 +11,11 @@ SITE = Path(__file__).resolve().parents[1] / 'site'
 SHORT_SOURCE = Path(__file__).resolve().parent / 'short'
 SECTIONS = ('hero', 'lesson', 'route', 'author', 'final')
 SCRIPTS = (
-    'menu', 'live-photo', 'nowidow', 'perf', 'hero-fit', 'people', 'lesson',
+    'menu', 'live-photo', 'nowidow', 'perf', 'hero-fit', 'hero', 'preloader', 'people', 'lesson',
     'route', 'author', 'final',
 )
 STYLES = (
-    'fonts', 'tokens', 'blocks/00-header', 'blocks/01-hero', 'blocks/02-people',
+    'fonts', 'tokens', 'preloader', 'blocks/00-header', 'blocks/01-hero', 'blocks/02-people',
     'blocks/03-lesson', 'blocks/09-route', 'blocks/15-author',
     'blocks/20-footer',
 )
@@ -62,6 +62,16 @@ def short_scripts(source):
     parts = MODULE_MARKER.split(source)
     modules = dict(zip(parts[1::2], parts[2::2]))
     modules['live-photo'] = modules['live-photo'].replace("'media/", "'../media/")
+    preloader = replace_once(
+        modules['preloader'], "    if(!v||!matchMedia('(pointer:fine)').matches)return Promise.resolve();",
+        "    if(!v||!v.getAttribute('src')||root.classList.contains('vm-touch')"
+        "||!matchMedia('(pointer:fine)').matches)return Promise.resolve();",
+    )
+    # A backgrounded tab may resume after the inline timeout has dismissed the overlay.
+    modules['preloader'] = replace_once(
+        preloader, '  function tick(now){',
+        "  function tick(now){\n    if(!root.classList.contains('is-loading'))return;",
+    )
     effect, _ = modules['perf'].split('/* Фоновая догрузка картинок.', 1)
     modules['perf'] = effect.rstrip() + '\n}catch(e){console.error("scripts/perf.js",e)}\n'
     cover, _ = modules['people'].split('  /* ---------- видоискатель ---------- */', 1)
@@ -170,8 +180,12 @@ def main():
     )
     page = replace_once(page, 'href="#faq"', 'href="../#faq"')
     page = replace_once(page, "a.href='quiz/'+q", "a.href='../quiz/'+q")
-    page = re.sub(r'<script>\s*/\* На телефоне, слабой сети.*?</script>\s*', '', page, count=1, flags=re.S)
-    page = re.sub(r'<!-- Прелоадер: спидометр -->.*?(?=<header\b)', '', page, count=1, flags=re.S)
+    page = replace_once(
+        page,
+        'На телефоне, слабой сети и при переходе к разделу страница сразу доступна.',
+        'На слабой сети, без анимации и при переходе к разделу заставка пропускается.',
+    )
+    page = replace_once(page, "&&!page.classList.contains('vm-touch')", '')
     page = re.sub(r'^<link rel="preload" href="fonts/inter-tight-latin-700-normal\.woff2"[^\n]*>\n', '', page, count=1, flags=re.M)
     page = re.sub(r'src="scripts/site\.js\?v=[a-f0-9]+"', f'src="site.js?v={digest(scripts)}" integrity="{integrity(scripts)}"', page, count=1)
     page = re.sub(r'href="styles/site\.css\?v=[a-f0-9]+"', f'href="site.css?v={digest(styles)}" integrity="{integrity(styles)}"', page, count=1)
